@@ -1,11 +1,11 @@
 import React from 'react'
 
-function App() {
+function dashboard() {
   return (
     <div>
-      Hello Test message
+      Dashboard
     </div>
   )
 }
 
-export default App
+export default dashboard

@@ -1,11 +1,11 @@
 import React from 'react'
 
-function App() {
+function Expired() {
   return (
     <div>
-      Hello Test message
+      Expired
     </div>
   )
 }
 
-export default App
+export default Expired

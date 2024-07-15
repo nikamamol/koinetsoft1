@@ -1,11 +1,11 @@
 import React from 'react'
 
-function App() {
+function Active() {
   return (
     <div>
-      Hello Test message
+      Active
     </div>
   )
 }
 
-export default App
+export default Active

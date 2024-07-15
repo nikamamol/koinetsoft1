@@ -1,11 +1,11 @@
 import React from 'react'
 
-function App() {
+function Received() {
   return (
     <div>
-      Hello Test message
+      Received
     </div>
   )
 }
 
-export default App
+export default Received

@@ -1,11 +1,11 @@
 import React from 'react'
 
-function App() {
+function VieweUser() {
   return (
     <div>
-      Hello Test message
+      ViewUser
     </div>
   )
 }
 
-export default App
+export default VieweUser
