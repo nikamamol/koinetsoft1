@@ -27,7 +27,12 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@emotion/react';
+import { Collapse } from '@mui/material';
+import LogoImage from "../assets/demo1.png"
 
 const drawerWidth = 240;
 
@@ -59,37 +64,532 @@ function ResponsiveDrawer(props) {
     }
     // Add more conditions if needed
   };
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(true);
+  const [isCollapse, setIsCollapse] = React.useState(false);
+  const [isCollapseRFP, setIsCollapseRFP] = React.useState(false);
+  const [isCollapseEnterprise, setIsCollapseEnterprise] = React.useState(false);
+  const [isCollapseAgencies, setIsCollapseAgencies] = React.useState(false);
+  const [isCollapseCamp, setIsCollapseCamp] = React.useState(false);
+  const [isCollapseBilling, setIsCollapseBilling] = React.useState(false);
+  const [isCollapseSupport, setIsCollapseSupport] = React.useState(false);
+  const [isCollapseSetting, setIsCollapseSetting] = React.useState(false);
+  const [isCollapseLib, setIsCollapseLib] = React.useState(false);
+
+
+
+  const handleCollapseUser = () => {
+    setIsCollapse(!isCollapse);
+  };
+  const handleCollapseRFP = () => {
+    setIsCollapseRFP(!isCollapseRFP);
+  };
+  const handleCollapseEnterprise = () => {
+    setIsCollapseEnterprise(!isCollapseEnterprise);
+  };
+  const handleCollapseAgencies = () => {
+    setIsCollapseAgencies(!isCollapseAgencies);
+  };
+  const handleCollapseCamp = () => {
+    setIsCollapseCamp(!isCollapseCamp);
+  };
+
+  const handleCollapseBilling = () => {
+    setIsCollapseBilling(!isCollapseBilling);
+  };
+
+  const handleCollapseSupport = () => {
+    setIsCollapseSupport(!isCollapseSupport);
+  };
+  
+  const handleCollapseSetting = () => {
+    setIsCollapseSetting(!isCollapseSetting);
+  };
+  const handleCollapseLib = () => {
+    setIsCollapseLib(!isCollapseLib);
+  };
 
 
   const drawer = (
     <div>
 
-      <Toolbar />
-      <Divider />
+      {/* <Toolbar /> */}
+      <div className='text-center'>
+      {/* <img src={LogoImage} alt="Hello" width={150} height={100} /> */}
+      <h4>Logo</h4>
+
+      </div>
+      {/* <Divider /> */}
+      <hr />
+      {/* Dashboard Section */}
       <List>
-        {['Dashboard', 'User', 'RPF', 'Enterprise', 'Agency', 'Leads', 'Data Bank', 'Billing', 'Supports', 'Settings', 'Library'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton onClick={() => handleListItemClick(text)}>
-              <ListItemIcon>
-                {/* {index % 2 === 0 ? <HomeIcon /> : <MailIcon />} */}
-                {text === 'User' && <PersonIcon />}
-                {text === 'Dashboard' && <HomeIcon />}
-                {text === 'RPF' && <NoteAltIcon />}
-                {text === 'Enterprise' && <BusinessIcon />}
-                {text === 'Agency' && <GroupAddIcon />}
-                {text === 'Leads' && <VerifiedUserIcon />}
-                {text === 'Data Bank' && <StorageIcon />}
-                {text === 'Billing' && <BorderColorIcon />}
-                {text === 'Supports' && <SupportAgentIcon />}
-                {text === 'Settings' && <SettingsIcon />}
-                {text === 'Library' && <LibraryAddIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+      <ListItem disablePadding sx={{ display: 'block' }}>
+        <ListItemButton
+          sx={{
+            minHeight: 48,
+            justifyContent: open ? 'initial' : 'center',
+            px: 2.5,
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              mr: open ? 3 : 'auto',
+              justifyContent: 'center',
+            }}
+          >
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
+        </ListItemButton>
+      </ListItem>
+    </List>
+
+      {/* user section */}
+      <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseUser}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText primary="User" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapse ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapse} timeout="auto" unmountOnExit>
+          {["View User", "Add User", "Attendance"].map((text, index) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {text === "User" && <PersonIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
       </List>
-      <Divider />
+      {/* RFP Section */}
+      <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseRFP}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <NoteAltIcon />
+            </ListItemIcon>
+            <ListItemText primary="RFP" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseRFP ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapseRFP} timeout="auto" unmountOnExit>
+          {["Received", "Active", "Expired"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* No icon here for dropdown items */}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
+
+      {/* Enterprise Section */}
+      <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseEnterprise}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <BusinessIcon />
+            </ListItemIcon>
+            <ListItemText primary="Enterprise" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseEnterprise ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapseEnterprise} timeout="auto" unmountOnExit>
+          {["My Enterprise", "Invite Enterprise"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* No icon here for dropdown items */}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
+
+      {/* Agency Section */}
+      <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseAgencies}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <GroupAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Agency" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseAgencies ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapseAgencies} timeout="auto" unmountOnExit>
+          {["My Agencies", "Invite Agencies"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* No icon here for dropdown items */}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
+
+      {/* campaigns Section */}
+      <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseCamp}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <VerifiedUserIcon />
+            </ListItemIcon>
+            <ListItemText primary="Campaign" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseCamp ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapseCamp} timeout="auto" unmountOnExit>
+          {["Enterprises", "Agency", "In-House Campaign"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* No icon here for dropdown items */}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
+
+
+      {/* Billing Section */}
+      <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseBilling}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <BorderColorIcon />
+            </ListItemIcon>
+            <ListItemText primary="Billing" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseBilling ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapseBilling} timeout="auto" unmountOnExit>
+          {["Invoice Setting", "Add Client", "View Client", "View Invoices", "Create Invoice", "Process Payment"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* No icon here for dropdown items */}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
+
+
+       {/* Support Section */}
+       <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseSupport}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <SupportAgentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Support" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseSupport ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapseSupport} timeout="auto" unmountOnExit>
+          {["Online Chat", "Email"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* No icon here for dropdown items */}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
+
+        {/* Settings Section */}
+        <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseSetting}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseSetting ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapseSetting} timeout="auto" unmountOnExit>
+          {["IP Whitelist/Blocking"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* No icon here for dropdown items */}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
+
+        {/* Library Section */}
+        <List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseLib}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              <LibraryAddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Library" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseLib ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={isCollapseLib} timeout="auto" unmountOnExit>
+          {["Voice Library"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* No icon here for dropdown items */}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
+
+
+
+
 
     </div>
   );
@@ -117,8 +617,8 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" className='ms-auto'>
-            Bharat Pawar <span style={{
+          <Typography variant="p" noWrap component="div" className='ms-auto'>
+            User Name <span style={{
               display: 'inline-block',
               width: '40px',
               height: '40px',
@@ -128,7 +628,7 @@ function ResponsiveDrawer(props) {
               lineHeight: '40px',
               marginLeft: '10px'  // Adjust the margin as needed
             }}>
-              B
+              U
             </span>
           </Typography>
         </Toolbar>
