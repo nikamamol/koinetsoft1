@@ -38,18 +38,11 @@ import AllCampaignsIn from "../src/views/leads/inhousecampaign/AllCampaignsIn";
 import ClosedCampaignsIn from "../src/views/leads/inhousecampaign/ClosedCampaignsIn";
 import PausedCampaignsIn from "../src/views/leads/inhousecampaign/PausedCampaignsIn";
 import CreateCampaign from "../src/views/leads/inhousecampaign/CreateCampaign";
-
 // campaigns/enterprises
 import ActiveCampaignsEn from "../src/views/leads/enterprises/ActiveCampaignsEn";
 import AllCampaignsEn from "../src/views/leads/enterprises/AllCampaignsEn";
 import ClosedCampaignsEn from "../src/views/leads/enterprises/ClosedCampaignsEn";
 import PausedCampaignsEn from "../src/views/leads/enterprises/PausedCampaignsEn";
-
-
-// campaigns/inhouse
-// import ActiveCampaigns from "../src/views/leads/inhousecampaign/ActiveCampaigns";
-
-
 
 function App() {
   return (
@@ -82,12 +75,12 @@ function App() {
           <Route path="/campaigns/enterprises/allCampaigns" element={<AllCampaignsEn />} />
           <Route path="/campaigns/enterprises/closedCampaigns" element={<ClosedCampaignsEn />} />
           <Route path="/campaigns/enterprises/pausedCampaigns" element={<PausedCampaignsEn />} />
-               {/* campaign/inhouse */}
+          {/* campaign/inhouse */}
           <Route path="/campaigns/inhousecampaigns/activecampaigns" element={<ActiveCampaignsIn />} />
-          <Route path="/campaigns/enterprises/allCampaigns" element={<AllCampaignsIn />} />
-          <Route path="/campaigns/enterprises/closedCampaigns" element={<ClosedCampaignsIn />} />
-          <Route path="/campaigns/enterprises/pausedCampaigns" element={<PausedCampaignsIn />} />
-          <Route path="/campaigns/enterprises/createCampaign" element={<CreateCampaign />} />
+          <Route path="/campaigns/inhousecampaigns/allCampaigns" element={<AllCampaignsIn />} />
+          <Route path="/campaigns/inhousecampaigns/closedCampaigns" element={<ClosedCampaignsIn />} />
+          <Route path="/campaigns/inhousecampaigns/pausedCampaigns" element={<PausedCampaignsIn />} />
+          <Route path="/campaigns/inhousecampaigns/createCampaign" element={<CreateCampaign />} />
 
           {/* billing */}
           <Route path="/billing/addClient" element={<AddClient />} />
@@ -103,10 +96,6 @@ function App() {
           <Route path="/settings/ipwhitelist_blocklist" element={<IpWhiteList_BlockList />} />
           {/* library */}
           <Route path="/library/voiceLibrary" element={<VoiceLibrary />} />
-
-
-
-
         </Routes>
       </BrowserRouter>
 
