@@ -32,16 +32,32 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { Collapse } from '@mui/material';
-import LogoImage from "../assets/demo1.png"
+// import LogoImage from "../assets/demo1.png"
 
 const drawerWidth = 240;
 
 
 function ResponsiveDrawer(props) {
   let navigate = useNavigate()
+  const theme = useTheme();
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
+  const [isCollapse, setIsCollapse] = React.useState(false);
+  const [isCollapseRFP, setIsCollapseRFP] = React.useState(false);
+  const [isCollapseEnterprise, setIsCollapseEnterprise] = React.useState(false);
+  const [isCollapseAgencies, setIsCollapseAgencies] = React.useState(false);
+  const [isCollapseCamp, setIsCollapseCamp] = React.useState(false);
+  const [isCollapseBilling, setIsCollapseBilling] = React.useState(false);
+  const [isCollapseSupport, setIsCollapseSupport] = React.useState(false);
+  const [isCollapseSetting, setIsCollapseSetting] = React.useState(false);
+  const [isCollapseLib, setIsCollapseLib] = React.useState(false);
+  const [openCampaigns, setOpenCampaigns] = React.useState(false);
+  const [openEnterprises, setOpenEnterprises] = React.useState(false);
+  const [openAgency, SetOpenAgency] = React.useState(false);
+  const [openInHouse, SetOpenInHouse] = React.useState(false);
+
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -64,19 +80,6 @@ function ResponsiveDrawer(props) {
     }
     // Add more conditions if needed
   };
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
-  const [isCollapse, setIsCollapse] = React.useState(false);
-  const [isCollapseRFP, setIsCollapseRFP] = React.useState(false);
-  const [isCollapseEnterprise, setIsCollapseEnterprise] = React.useState(false);
-  const [isCollapseAgencies, setIsCollapseAgencies] = React.useState(false);
-  const [isCollapseCamp, setIsCollapseCamp] = React.useState(false);
-  const [isCollapseBilling, setIsCollapseBilling] = React.useState(false);
-  const [isCollapseSupport, setIsCollapseSupport] = React.useState(false);
-  const [isCollapseSetting, setIsCollapseSetting] = React.useState(false);
-  const [isCollapseLib, setIsCollapseLib] = React.useState(false);
-
-
 
   const handleCollapseUser = () => {
     setIsCollapse(!isCollapse);
@@ -90,9 +93,9 @@ function ResponsiveDrawer(props) {
   const handleCollapseAgencies = () => {
     setIsCollapseAgencies(!isCollapseAgencies);
   };
-  const handleCollapseCamp = () => {
-    setIsCollapseCamp(!isCollapseCamp);
-  };
+  // const handleCollapseCamp = () => {
+  //   setIsCollapseCamp(!isCollapseCamp);
+  // };
 
   const handleCollapseBilling = () => {
     setIsCollapseBilling(!isCollapseBilling);
@@ -101,7 +104,7 @@ function ResponsiveDrawer(props) {
   const handleCollapseSupport = () => {
     setIsCollapseSupport(!isCollapseSupport);
   };
-  
+
   const handleCollapseSetting = () => {
     setIsCollapseSetting(!isCollapseSetting);
   };
@@ -110,40 +113,56 @@ function ResponsiveDrawer(props) {
   };
 
 
+
+  const handleCampaignsClick = () => {
+    setOpenCampaigns(!openCampaigns);
+  };
+
+  const handleEnterprisesClick = () => {
+    setOpenEnterprises(!openEnterprises);
+  };
+  const handleAgencyClick = () => {
+    SetOpenAgency(!openAgency);
+  };
+  const handleInHouseClick = () => {
+    SetOpenInHouse(!openInHouse);
+  };
+
+
   const drawer = (
     <div>
 
       {/* <Toolbar /> */}
       <div className='text-center'>
-      {/* <img src={LogoImage} alt="Hello" width={150} height={100} /> */}
-      <h4>Logo</h4>
+        {/* <img src={LogoImage} alt="Hello" width={150} height={100} /> */}
+        <h4>Logo</h4>
 
       </div>
       {/* <Divider /> */}
       <hr />
       {/* Dashboard Section */}
       <List>
-      <ListItem disablePadding sx={{ display: 'block' }}>
-        <ListItemButton
-          sx={{
-            minHeight: 48,
-            justifyContent: open ? 'initial' : 'center',
-            px: 2.5,
-          }}
-        >
-          <ListItemIcon
+        <ListItem disablePadding sx={{ display: 'block' }} onClick={handleListItemClick}>
+          <ListItemButton
             sx={{
-              minWidth: 0,
-              mr: open ? 3 : 'auto',
-              justifyContent: 'center',
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 2.5,
             }}
           >
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
-        </ListItemButton>
-      </ListItem>
-    </List>
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <HomeIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+      </List>
 
       {/* user section */}
       <List>
@@ -342,7 +361,8 @@ function ResponsiveDrawer(props) {
 
       {/* campaigns Section */}
       <List>
-        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseCamp}>
+        {/* Campaigns */}
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleCampaignsClick}>
           <ListItemButton
             sx={{
               minHeight: 48,
@@ -359,33 +379,264 @@ function ResponsiveDrawer(props) {
             >
               <VerifiedUserIcon />
             </ListItemIcon>
-            <ListItemText primary="Campaign" sx={{ opacity: open ? 1 : 0 }} />
+            <ListItemText primary="Campaigns" sx={{ opacity: open ? 1 : 0 }} />
             {isCollapseCamp ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </ListItemButton>
         </ListItem>
-        <Collapse in={isCollapseCamp} timeout="auto" unmountOnExit>
-          {["Enterprises", "Agency", "In-House Campaign"].map((text) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+        {/* Enterprises */}
+        <Collapse in={openCampaigns} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={handleEnterprisesClick}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
+                  justifyContent: 'center',
+                  px: 7,
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  {/* No icon here for dropdown items */}
+                <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                  {/* No icon needed for Enterprise */}
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Enterprises" />
+                {openEnterprises ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItemButton>
             </ListItem>
-          ))}
+            {/* Options under Enterprises */}
+            <Collapse in={openEnterprises} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 1 */}
+                    </ListItemIcon>
+                    <ListItemText primary="All Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Active Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Paused Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Closed Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Collapse>
+          </List>
+        </Collapse>
+        <Collapse in={openCampaigns} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={handleAgencyClick}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: 'center',
+                  px: 7,
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                  {/* No icon needed for Enterprise */}
+                </ListItemIcon>
+                <ListItemText primary="Agency" />
+                {openAgency ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItemButton>
+            </ListItem>
+            {/* Options under Enterprises */}
+            <Collapse in={openAgency} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 1 */}
+                    </ListItemIcon>
+                    <ListItemText primary="All Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Active Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Paused Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Closed Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Collapse>
+          </List>
+        </Collapse>
+        <Collapse in={openCampaigns} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={handleInHouseClick}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: 'center',
+                  px: 7,
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                  {/* No icon needed for Enterprise */}
+                </ListItemIcon>
+                <ListItemText primary="In-House Campaigns" />
+                {openInHouse ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItemButton>
+            </ListItem>
+            {/* Options under Enterprises */}
+            <Collapse in={openInHouse} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 1 */}
+                    </ListItemIcon>
+                    <ListItemText primary="All Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Active Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Paused Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Closed Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: 'center',
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                      {/* No icon needed for Option 2 */}
+                    </ListItemIcon>
+                    <ListItemText primary="Create Campaigns" />
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Collapse>
+          </List>
         </Collapse>
       </List>
 
@@ -440,8 +691,8 @@ function ResponsiveDrawer(props) {
       </List>
 
 
-       {/* Support Section */}
-       <List>
+      {/* Support Section */}
+      <List>
         <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseSupport}>
           <ListItemButton
             sx={{
@@ -489,8 +740,8 @@ function ResponsiveDrawer(props) {
         </Collapse>
       </List>
 
-        {/* Settings Section */}
-        <List>
+      {/* Settings Section */}
+      <List>
         <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseSetting}>
           <ListItemButton
             sx={{
@@ -538,8 +789,8 @@ function ResponsiveDrawer(props) {
         </Collapse>
       </List>
 
-        {/* Library Section */}
-        <List>
+      {/* Library Section */}
+      <List>
         <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseLib}>
           <ListItemButton
             sx={{

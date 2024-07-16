@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ClousedCampaigns() {
+function ClosedCampaigns() {
   return (
     <div>
       ClousedCampaigns
@@ -9,4 +9,4 @@ function ClousedCampaigns() {
   )
 }
 
-export default ClousedCampaigns
+export default ClosedCampaigns

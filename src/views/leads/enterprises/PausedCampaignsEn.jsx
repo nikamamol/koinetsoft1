@@ -1,6 +1,6 @@
 import React from 'react'
 
-function PausedCampaigns() {
+function PausedCampaignsEn() {
   return (
     <div>
       PausedCampaigns
@@ -9,4 +9,4 @@ function PausedCampaigns() {
   )
 }
 
-export default PausedCampaigns
+export default PausedCampaignsEn

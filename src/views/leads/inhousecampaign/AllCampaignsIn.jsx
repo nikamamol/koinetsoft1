@@ -1,6 +1,6 @@
 import React from 'react'
 
-function AllCampaigns() {
+function AllCampaignsIn() {
   return (
     <div>
       AllCampaigns
@@ -9,4 +9,4 @@ function AllCampaigns() {
   )
 }
 
-export default AllCampaigns
+export default AllCampaignsIn
