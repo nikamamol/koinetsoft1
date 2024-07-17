@@ -23,7 +23,7 @@ function MainDashboard() {
                                     <div className="d-flex align-items-end row">
                                         <div className="col-sm-7">
                                             <div className="card-body">
-                                                <h5 className="card-title text-danger">Welcome Koinetmeida! 🎉</h5>
+                                                <h5 className="card-title text-danger">Welcome to Koinemedia! 🎉</h5>
                                                 <p className="mb-4">
                                                     You have <span className="fw-bold">0</span> active campaigns.
                                                 </p>
