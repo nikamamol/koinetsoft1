@@ -7,9 +7,7 @@ import DashboardTable from '../components/DashboardTable';
 import CampaignRevenue from "../chart/CampaignRevenue"
 
 function MainDashboard() {
-
-
-
+    
     return (
         <div>
             <Container fluid className='my-3'>

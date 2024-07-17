@@ -749,38 +749,41 @@ function ResponsiveDrawer(props) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="p" noWrap component="div" className='ms-auto'>
-            User Name <span style={{
-              display: 'inline-block',
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              backgroundColor: '#ccc',
-              textAlign: 'center',
-              lineHeight: '40px',
-              marginLeft: '10px'  // Adjust the margin as needed
-            }}>
-              U
-            </span>
-          </Typography>
-        </Toolbar>
-      </AppBar>
+  position="fixed"
+  sx={{
+    // backgroundColor: '#EE4E4E', 
+    width: { sm: `calc(100% - ${drawerWidth}px)` },
+    ml: { sm: `${drawerWidth}px` },
+  }}
+>
+  <Toolbar>
+    <IconButton
+      color="inherit"
+      aria-label="open drawer"
+      edge="start"
+      onClick={handleDrawerToggle}
+      sx={{ mr: 2, display: { sm: 'none' } }}
+    >
+      <MenuIcon />
+    </IconButton>
+    <Typography variant="p" noWrap component="div" className='ms-auto'>
+      User Name 
+      <span style={{
+        display: 'inline-block',
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        backgroundColor: '#ccc',
+        textAlign: 'center',
+        lineHeight: '40px',
+        marginLeft: '10px'  // Adjust the margin as needed
+      }}>
+        U
+      </span>
+    </Typography>
+  </Toolbar>
+</AppBar>
+
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}

@@ -53,7 +53,7 @@ function App() {
           <Route path="/" element={<MainDashboard />} />
           {/* user */}
           <Route path="/user/addUser" element={<AddUser />} />
-          <Route path="/user/VieweUser" element={<VieweUser />} />
+          <Route path="/user/viewUser" element={<VieweUser />} />
           <Route path="/user/attendance" element={<Attendance />} />
           {/* RFP */}
           <Route path="/rfp/active" element={<Active />} />
