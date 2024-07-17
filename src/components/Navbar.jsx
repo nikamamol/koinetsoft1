@@ -32,7 +32,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { Collapse } from '@mui/material';
-// import LogoImage from "../assets/demo1.png"
+import LogoImage from "../assets/koinetlogo.png"
 
 const drawerWidth = 240;
 
@@ -74,13 +74,10 @@ function ResponsiveDrawer(props) {
     }
   };
 
-  const handleListItemClick = (text) => {
-    if (text === 'Dashboard') {
-      navigate('/');
-    }
-    // Add more conditions if needed
+ 
+  const handleListItemClick = () => {
+    navigate('/');
   };
-
   const handleCollapseUser = () => {
     setIsCollapse(!isCollapse);
   };
@@ -136,8 +133,8 @@ function ResponsiveDrawer(props) {
 
       {/* <Toolbar /> */}
       <div className='text-center'>
-        {/* <img src={LogoImage} alt="Hello" width={150} height={100} /> */}
-        <h4>Logo</h4>
+        <img src={LogoImage} alt="logo" width={100} height={50} />
+        <p>Koinet Media Ites Pvt Ltd.</p>
 
       </div>
       {/* <Divider /> */}

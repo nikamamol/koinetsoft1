@@ -1,10 +1,19 @@
-/* .userIcon{
-    display: 'inline-block';
-    width: '40px';
-    height: '40px';
-    border-radius: '50%';
-    background-color: '#ccc';
-    text-align: 'center';
-    line-height: '40px';
-    margin-left: '10px'
-} */
+
+ .avatar{
+    background-color: #f50f1ec7;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+ }
+ .avatar:hover{
+   
+    box-shadow: 0 0 10px rgba(0,0,0,0.5),
+ }
+ .cardShadow{
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    
+}
+.bgColor{
+   background-color: #f50f1ec7;
+}
+
