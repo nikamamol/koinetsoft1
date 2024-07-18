@@ -5,10 +5,12 @@ import campiagn from "../assets/capiagn.png"
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
 import CampaignRevenue from "../chart/CampaignRevenue"
+import ClaintRevenue from "../chart/ClaintRevenue"
+import TotalClient from "../chart/TotalClient"
 import DashboardTable from '../table/DashboardTable';
 
 function MainDashboard() {
-    
+
     return (
         <div>
             <Container fluid className='my-3'>
@@ -129,6 +131,45 @@ function MainDashboard() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                       
+                        <div className="row my-5 ">
+                         
+                            <div className="col-lg-6">
+                                <div className="card h-100 border-0  rounded-3">
+                                    <div className="card-body">
+                                        <div className='text-start mb-5'>
+                                            <p className="card-title fs-4">Client Revenue - Jul 2024</p>
+                                        </div>
+                                        <h6 className="card-subtitle mb-2 text-muted">Total Client <span>: 555</span></h6>
+
+                                        <div className="my-3 text-center p-1 bg-danger  fw-bold text-white rounded-4">
+                                            <p className="fs-5">Total Revenue: $999</p>
+                                        </div>
+                                        <p>This section provides a snapshot of client revenue for July 2024, highlighting the total number of clients and the overall revenue generated. The information is presented in a concise and visually appealing card layout, featuring a bold, red background for the revenue figure to draw attention.</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-6 d-flex gap-2 justify-content-center align-items-center ms-auto shadow ">
+                                <div className="col-lg-6">
+                                    <div className='text-center'>
+                                        <h5>
+                                            Total Revenue :
+
+                                        </h5>
+                                    </div>
+                                    <ClaintRevenue /></div>
+                                <div className="col-lg-6">
+                                    <div className='text-center'>
+                                        <h5>
+                                            Total Client :
+                                        </h5>
+                                    </div>
+                                    <TotalClient />
+                                </div>
+                            </div>
+
                         </div>
                         {/* table */}
                         <DashboardTable />
