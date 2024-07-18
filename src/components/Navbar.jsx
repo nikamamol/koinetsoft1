@@ -129,16 +129,16 @@ function ResponsiveDrawer(props) {
   };
 
   const drawer = (
-    <div>
+    <div className='sidebar_bg'>
 
       {/* <Toolbar /> */}
-      <div className='text-center'>
+      <div className='text-center sticky-top sidebar_bg'>
         <img src={LogoImage} alt="logo" width={100} height={50} />
         <p>Koinet Media Ites Pvt Ltd.</p>
+       
 
       </div>
       {/* <Divider /> */}
-      <hr />
       {/* Dashboard Section */}
       <List>
         <ListItem disablePadding sx={{ display: 'block' }} onClick={handleListItemClick}>
@@ -284,10 +284,9 @@ function ResponsiveDrawer(props) {
         </ListItem>
         <Collapse in={isCollapseEnterprise} timeout="auto" unmountOnExit>
           {[
-            { text: 'Active Campaigns', path: '/campaigns/enterprises/activecampaigns' },
-            { text: 'All Campaigns', path: '/campaigns/enterprises/allCampaigns' },
-            { text: 'Closed Campaigns', path: '/campaigns/enterprises/closedCampaigns' },
-            { text: 'Paused Campaigns', path: '/campaigns/enterprises/pausedCampaigns' },
+            { text: 'MyEnterprise', path: '/enterprise/MyEnterprise' },
+            { text: 'Invite Enterprise', path: '/enterprise/inviteEnterprise' },
+           
           ].map((item) => (
             <ListItem key={item.text} disablePadding sx={{ display: 'block' }} onClick={() => handleNavigation(item.path)}>
               <ListItemButton
@@ -761,7 +760,7 @@ function ResponsiveDrawer(props) {
       >
         <Toolbar>
           <IconButton
-            color="inherit"
+            color="dark"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}

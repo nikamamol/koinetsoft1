@@ -118,7 +118,7 @@ function MainDashboard() {
                                         </div>
                                         <h6 className="card-subtitle mb-2 text-muted">Total Campaign <span>: 100</span></h6>
 
-                                        <div className="mt-5 text-center bgColor p-3 fw-bold text-white">
+                                        <div className="mt-5 text-center bg-danger p-3 fw-bold text-white">
                                             <p className="fs-6">Total Revenue: $500</p>
                                         </div>
                                         <div className='mt-3 text-center'>
