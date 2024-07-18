@@ -14,8 +14,8 @@ function AddUser() {
                   <h4 className='fw-bold py-3 ms-3 text_color'>Add New User</h4>
                 </div>
                 <div className="card border-0 shadow mb-4">
-                  <div className="card-header d-flex align-items-center justify-content-between">
-                    <small className="text-muted float-end">
+                  <div className="card-header  d-flex align-items-center justify-content-between">
+                    <small className="text-muted float-end p-2">
                       Fields marked <span className="text-danger">*</span> are mandatory
                     </small>
                   </div>
@@ -179,7 +179,7 @@ function AddUser() {
                             <button type="submit" className="btn btn-danger me-2">
                               Save
                             </button>
-                            <button type="button" id="reset" onClick={() => resetpage()} className="btn btn-outline-secondary">
+                            <button type="button" id="reset"  className="btn btn-outline-secondary">
                               Clear
                             </button>
                           </div>

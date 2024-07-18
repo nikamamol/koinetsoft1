@@ -109,7 +109,7 @@ function MainDashboard() {
                         <hr />
                         <div className="row my-5">
                             <div>
-                                <p className='fs-5 fw-bold'>Income Last 6 Month</p>
+                                <p className='fs-5 text_color fw-bold'>Income Last 6 Month</p>
                             </div>
                             <div className="col-lg-8"><CampaignRevenue /></div>
                             <div className="col-lg-4">
@@ -118,10 +118,10 @@ function MainDashboard() {
                                         <div className='text-center mb-5'>
                                             <p className="card-title fs-4">Campaign Revenue - Jul 2024</p>
                                         </div>
-                                        <h6 className="card-subtitle mb-2 text-muted">Total Campaign <span>: 100</span></h6>
+                                        <h6 className="card-subtitle mb-2">Total Campaign <span>: 100</span></h6>
 
-                                        <div className="mt-5 text-center bg-danger p-3 fw-bold text-white">
-                                            <p className="fs-6">Total Revenue: $500</p>
+                                        <div className="mt-5 text-center bg-danger p-2 fw-bold text-white">
+                                            <p className="fs-6 ">Total Revenue: $500</p>
                                         </div>
                                         <div className='mt-3 text-center'>
                                             <p className='fs-5'>Income This Month</p>
@@ -132,44 +132,44 @@ function MainDashboard() {
                                 </div>
                             </div>
                         </div>
-                       
-                        <div className="row my-5 ">
-                         
-                            <div className="col-lg-6">
-                                <div className="card h-100 border-0  rounded-3">
+
+                        <div className="row my-5 border p-5  rounded-3 sidebar_bg">
+
+                            <div className="col-lg-6 ">
+                                <div className="card h-100 border-0 rounded-3 sidebar_bg">
                                     <div className="card-body">
                                         <div className='text-start mb-5'>
                                             <p className="card-title fs-4">Client Revenue - Jul 2024</p>
                                         </div>
-                                        <h6 className="card-subtitle mb-2 text-muted">Total Client <span>: 555</span></h6>
+                                        <h6 className="card-subtitle mb-2 ">Total Client <span>: 555</span></h6>
 
-                                        <div className="my-3 text-center p-1 bg-danger  fw-bold text-white rounded-4">
-                                            <p className="fs-5">Total Revenue: $999</p>
+                                        <div className="my-3 text-start  fw-bold">
+                                            <p className="fs-5 text_color">Total Revenue: $999</p>
                                         </div>
-                                        <p>This section provides a snapshot of client revenue for July 2024, highlighting the total number of clients and the overall revenue generated. The information is presented in a concise and visually appealing card layout, featuring a bold, red background for the revenue figure to draw attention.</p>
+                                        <p className='mt-5'>This section provides a snapshot of client revenue for July 2024, highlighting the total number of clients and the overall revenue generated. </p>
 
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-6 d-flex gap-2 justify-content-center align-items-center ms-auto shadow ">
+                            <div className="col-lg-6 bg-white d-flex justify-content-center align-items-center ms-auto shadow ">
                                 <div className="row">
-                                <div className="col-lg-6">
-                                    <div className='text-center'>
-                                        <h5>
-                                            Total Revenue :
+                                    <div className="col-lg-6">
+                                        <div className='text-center'>
+                                            <h5>
+                                                Total Revenue :
 
-                                        </h5>
+                                            </h5>
+                                        </div>
+                                        <ClaintRevenue />
                                     </div>
-                                    <ClaintRevenue />
+                                    <div className="col-lg-6">
+                                        <div className='text-center'>
+                                            <h5>
+                                                Total Client :
+                                            </h5>
+                                        </div>
+                                        <TotalClient />
                                     </div>
-                                <div className="col-lg-6">
-                                    <div className='text-center'>
-                                        <h5>
-                                            Total Client :
-                                        </h5>
-                                    </div>
-                                    <TotalClient />
-                                </div>
                                 </div>
                             </div>
 
