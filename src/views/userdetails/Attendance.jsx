@@ -13,8 +13,8 @@ function Attendance() {
               {/* Basic Layout */}
             
               <div className="col-xxl">
-              <div className='bg-secondary rounded-3'>
-                <h3 className='fw-bold py-3 ms-3 text-white'>Attendance</h3>
+              <div className='bgColor rounded-3 shadow'>
+                <h4 className='fw-bold py-3 ms-3 text_color'>Attendance</h4>
               </div>
                 <div className="card shadow border-0 mb-4">
                   <div className="card-body">

@@ -11,8 +11,8 @@ function VieweUser() {
           <Col lg={3}>
           </Col>
           <Col lg={8}>
-          <div className='bg-secondary rounded-3'>
-            <h3 className='fw-bold py-3 ms-3 text-white'>User List</h3>
+          <div className='bgColor rounded-3 shadow'>
+            <h4 className='fw-bold py-3 ms-3 text_color'>User List</h4>
           </div>
             <VieweUserTable />
           </Col>

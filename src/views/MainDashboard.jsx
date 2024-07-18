@@ -3,8 +3,9 @@ import { Col, Container, Row } from 'react-bootstrap'
 import punchimage from "../assets/punchimage.jpeg"
 import campiagn from "../assets/capiagn.png"
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import DashboardTable from '../components/DashboardTable';
+
 import CampaignRevenue from "../chart/CampaignRevenue"
+import DashboardTable from '../table/DashboardTable';
 
 function MainDashboard() {
     

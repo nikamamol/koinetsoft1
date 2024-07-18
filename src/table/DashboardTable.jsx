@@ -107,8 +107,8 @@ export default function DashboardTable() {
 
     return (
         <TableContainer component={Paper} className='my-3'>
-               <div className='bg-secondary rounded-3 '>
-                    <h3 className='fw-bold py-3 ms-3 text-white'>Next 7 day shift</h3>
+               <div className='bgColor rounded-3 shadow'>
+                    <h4 className='fw-bold py-3 ms-3 text_color'>Next 7 day shift</h4>
                 </div>
             <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
              

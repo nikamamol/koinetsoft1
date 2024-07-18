@@ -74,7 +74,7 @@ function ResponsiveDrawer(props) {
     }
   };
 
- 
+
   const handleListItemClick = () => {
     navigate('/');
   };
@@ -749,40 +749,43 @@ function ResponsiveDrawer(props) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar
-  position="fixed"
-  sx={{
-    // backgroundColor: '#EE4E4E', 
-    width: { sm: `calc(100% - ${drawerWidth}px)` },
-    ml: { sm: `${drawerWidth}px` },
-  }}
->
-  <Toolbar>
-    <IconButton
-      color="inherit"
-      aria-label="open drawer"
-      edge="start"
-      onClick={handleDrawerToggle}
-      sx={{ mr: 2, display: { sm: 'none' } }}
-    >
-      <MenuIcon />
-    </IconButton>
-    <Typography variant="p" noWrap component="div" className='ms-auto'>
-      User Name 
-      <span style={{
-        display: 'inline-block',
-        width: '40px',
-        height: '40px',
-        borderRadius: '50%',
-        backgroundColor: '#ccc',
-        textAlign: 'center',
-        lineHeight: '40px',
-        marginLeft: '10px'  // Adjust the margin as needed
-      }}>
-        U
-      </span>
-    </Typography>
-  </Toolbar>
-</AppBar>
+        position="fixed"
+
+        sx={{
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+           backgroundColor: "#F8F4E1",
+       
+
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="p" noWrap component="div" className='ms-auto'>
+           <span className='text-dark'> User Name</span>
+            <span style={{
+              display: 'inline-block',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#dd1919',
+              textAlign: 'center',
+              lineHeight: '40px',
+              marginLeft: '10px'  // Adjust the margin as needed
+            }}>
+              U
+            </span>
+          </Typography>
+        </Toolbar>
+      </AppBar>
 
       <Box
         component="nav"
@@ -801,7 +804,12 @@ function ResponsiveDrawer(props) {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              '&::-webkit-scrollbar': { display: 'none' },
+              '&': { scrollbarWidth: 'none' }
+            },
           }}
         >
           {drawer}
@@ -810,7 +818,12 @@ function ResponsiveDrawer(props) {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              '&::-webkit-scrollbar': { display: 'none' },
+              '&': { scrollbarWidth: 'none' }
+            },
           }}
           open
         >
@@ -821,9 +834,9 @@ function ResponsiveDrawer(props) {
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
-
       </Box>
     </Box>
+
   );
 }
 

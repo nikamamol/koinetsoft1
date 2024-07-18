@@ -10,8 +10,8 @@ function AddUser() {
           <Col lg={8}>
             <div className="row">
               <div className="col-xxl">
-                <div className='bg-secondary rounded-3'>
-                  <h3 className='fw-bold py-3 ms-3 text-white'>Add New User</h3>
+                <div className='bgColor rounded-3 shadow'>
+                  <h4 className='fw-bold py-3 ms-3 text_color'>Add New User</h4>
                 </div>
                 <div className="card border-0 shadow mb-4">
                   <div className="card-header d-flex align-items-center justify-content-between">
