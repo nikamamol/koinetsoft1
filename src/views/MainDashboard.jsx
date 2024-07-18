@@ -152,6 +152,7 @@ function MainDashboard() {
                                 </div>
                             </div>
                             <div className="col-lg-6 d-flex gap-2 justify-content-center align-items-center ms-auto shadow ">
+                                <div className="row">
                                 <div className="col-lg-6">
                                     <div className='text-center'>
                                         <h5>
@@ -159,7 +160,8 @@ function MainDashboard() {
 
                                         </h5>
                                     </div>
-                                    <ClaintRevenue /></div>
+                                    <ClaintRevenue />
+                                    </div>
                                 <div className="col-lg-6">
                                     <div className='text-center'>
                                         <h5>
@@ -167,6 +169,7 @@ function MainDashboard() {
                                         </h5>
                                     </div>
                                     <TotalClient />
+                                </div>
                                 </div>
                             </div>
 
