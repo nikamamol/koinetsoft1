@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import {Link} from "react-router-dom"
 import ListItemIcon from '@mui/material/ListItemIcon';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -71,7 +72,8 @@ export default function UserProfile() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar /> <a href="/user/profile" className='text-decoration-none text-dark'>Profile</a>
+          <Avatar /> <Link to="/user/profile" className='text-decoration-none text-dark'>Profile</Link>
+          
         </MenuItem>
         {/* <MenuItem onClick={handleClose}>
           <ListItemIcon>
