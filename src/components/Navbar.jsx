@@ -33,6 +33,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { Collapse } from '@mui/material';
 import LogoImage from "../assets/koinetlogo.png"
+import UserProfile from './UserProfile';
 
 const drawerWidth = 240;
 
@@ -135,7 +136,7 @@ function ResponsiveDrawer(props) {
       <div className='text-center sticky-top sidebar_bg'>
         <img src={LogoImage} alt="logo" width={100} height={50} />
         <p>Koinet Media Ites Pvt Ltd.</p>
-       
+
 
       </div>
       {/* <Divider /> */}
@@ -286,7 +287,7 @@ function ResponsiveDrawer(props) {
           {[
             { text: 'MyEnterprise', path: '/enterprise/MyEnterprise' },
             { text: 'Invite Enterprise', path: '/enterprise/inviteEnterprise' },
-           
+
           ].map((item) => (
             <ListItem key={item.text} disablePadding sx={{ display: 'block' }} onClick={() => handleNavigation(item.path)}>
               <ListItemButton
@@ -753,8 +754,8 @@ function ResponsiveDrawer(props) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-           backgroundColor: "#F8F4E1",
-       
+          backgroundColor: "#F8F4E1",
+
 
         }}
       >
@@ -768,21 +769,10 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="p" noWrap component="div" className='ms-auto'>
-           <span className='text-dark'> User Name</span>
-            <span style={{
-              display: 'inline-block',
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              backgroundColor: '#dd1919',
-              textAlign: 'center',
-              lineHeight: '40px',
-              marginLeft: '10px'  // Adjust the margin as needed
-            }}>
-              U
-            </span>
-          </Typography>
+
+          <div variant="p" noWrap component="div" className='ms-auto'>
+            <UserProfile />
+          </div>
         </Toolbar>
       </AppBar>
 

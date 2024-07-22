@@ -43,6 +43,7 @@ import ActiveCampaignsEn from "../src/views/leads/enterprises/ActiveCampaignsEn"
 import AllCampaignsEn from "../src/views/leads/enterprises/AllCampaignsEn";
 import ClosedCampaignsEn from "../src/views/leads/enterprises/ClosedCampaignsEn";
 import PausedCampaignsEn from "../src/views/leads/enterprises/PausedCampaignsEn";
+import Profile from './views/userdetails/Profile';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
           <Route path="/user/addUser" element={<AddUser />} />
           <Route path="/user/viewUser" element={<VieweUser />} />
           <Route path="/user/attendance" element={<Attendance />} />
+          <Route path="/user/profile" element={<Profile />} />
           {/* RFP */}
           <Route path="/rfp/active" element={<Active />} />
           <Route path="/rfp/expired" element={<Expired />} />
