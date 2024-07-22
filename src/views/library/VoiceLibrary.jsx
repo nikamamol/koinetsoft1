@@ -12,7 +12,6 @@ function VoiceLibrary() {
             <div className='bgColor rounded-3 shadow'>
               <h4 className='fw-bold py-3 ms-3 text_color'>View Client</h4>
             </div>
-            {/* <BillingViewClient /> */}
             <div className="row">
               <div className="col-xxl">
                 <div className="card mb-4">
