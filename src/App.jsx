@@ -44,6 +44,7 @@ import AllCampaignsEn from "../src/views/leads/enterprises/AllCampaignsEn";
 import ClosedCampaignsEn from "../src/views/leads/enterprises/ClosedCampaignsEn";
 import PausedCampaignsEn from "../src/views/leads/enterprises/PausedCampaignsEn";
 import Profile from './views/userdetails/Profile';
+import ViewAllCampaignsClick from './views/leads/ViewAllCampaignsClick';
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<MainDashboard />} />
+          <Route path="/viewallcampaignsclick" element={<ViewAllCampaignsClick />} />
           {/* user */}
           <Route path="/user/addUser" element={<AddUser />} />
           <Route path="/user/viewUser" element={<VieweUser />} />

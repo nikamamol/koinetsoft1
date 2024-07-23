@@ -8,6 +8,7 @@ import CampaignRevenue from "../chart/CampaignRevenue"
 import ClaintRevenue from "../chart/ClaintRevenue"
 import TotalClient from "../chart/TotalClient"
 import DashboardTable from '../table/DashboardTable';
+import { Link } from 'react-router-dom';
 
 function MainDashboard() {
 
@@ -28,7 +29,7 @@ function MainDashboard() {
                                                 <p className="mb-4">
                                                     You have <span className="fw-bold">0</span> active campaigns.
                                                 </p>
-                                                <a href="" className="btn btn-sm btn-outline-primary">View All Campaigns</a>
+                                                <Link to="/viewallcampaignsclick" className="btn btn-sm btn-outline-primary">View All Campaigns</Link>
                                             </div>
                                         </div>
                                         <div className="col-sm-5 text-center text-sm-left">
