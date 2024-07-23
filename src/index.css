@@ -23,3 +23,9 @@
    background-color: #F8F4E1;
   
 }
+
+
+ 
+ .active-tab {
+   background-color: lightblue !important;
+ }

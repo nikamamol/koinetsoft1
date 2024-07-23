@@ -45,14 +45,22 @@ import ClosedCampaignsEn from "../src/views/leads/enterprises/ClosedCampaignsEn"
 import PausedCampaignsEn from "../src/views/leads/enterprises/PausedCampaignsEn";
 import Profile from './views/userdetails/Profile';
 import ViewAllCampaignsClick from './views/leads/ViewAllCampaignsClick';
+// import { SignIn, SignUp } from '@clerk/clerk-react';
+import Login from '../src/userloginsignup/Login';
+import Register from '../src/userloginsignup/Register';
 
 function App() {
   return (
     <>
       <BrowserRouter>
+    
         <Navbar />
         <Routes>
           <Route path="/" element={<MainDashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          {/* <Route path="/sign-in" element={<SignIn />} /> */}
+          {/* <Route path="/sign-up" element={<SignUp />} /> */}
           <Route path="/viewallcampaignsclick" element={<ViewAllCampaignsClick />} />
           {/* user */}
           <Route path="/user/addUser" element={<AddUser />} />
