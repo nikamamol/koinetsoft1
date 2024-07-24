@@ -48,20 +48,30 @@ import ViewAllCampaignsClick from './views/leads/ViewAllCampaignsClick';
 // import { SignIn, SignUp } from '@clerk/clerk-react';
 import Login from '../src/userloginsignup/Login';
 import Register from '../src/userloginsignup/Register';
+import NewLandingPage from '../src/views/landingpages/NewLandingPage';
+import ViewLandingPages from '../src/views/landingpages/ViewLandingPages';
+import TemplateOne from './template/TemplateOne';
+import TemplateTwo from './template/TemplateTwo';
+import TemplateThree from './template/TemplateThree';
 
 function App() {
   return (
     <>
       <BrowserRouter>
-    
+
         <Navbar />
         <Routes>
           <Route path="/" element={<MainDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* <Route path="/sign-in" element={<SignIn />} /> */}
-          {/* <Route path="/sign-up" element={<SignUp />} /> */}
           <Route path="/viewallcampaignsclick" element={<ViewAllCampaignsClick />} />
+          {/* landing pages */}
+          <Route path="/landingpages/createlandingpage" element={<NewLandingPage />} />
+          <Route path="/landingpages/viewalllandingpages" element={<ViewLandingPages />} />
+          <Route path="/template-1" element={<TemplateOne />} />
+          <Route path="/template-2" element={<TemplateTwo />} />
+          <Route path="/template-3" element={<TemplateThree />} />
+
           {/* user */}
           <Route path="/user/addUser" element={<AddUser />} />
           <Route path="/user/viewUser" element={<VieweUser />} />

@@ -5,6 +5,7 @@ import BillingViewInvoice from '../../table/BillingViewInvoice'
 function ViewInvoice() {
   return (
     <div>
+      
        <Container fluid className='my-5 '>
         <Row>
           <Col lg={3}>

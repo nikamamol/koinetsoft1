@@ -169,6 +169,10 @@ function ResponsiveDrawer(props) {
         </ListItem>
       </List>
       {/* landing page section */}
+
+      <div className='text-center'>
+        <p className='bg-light text-dark'>ADMIN</p>
+      </div>
       <List>
         <ListItem disablePadding sx={{ display: 'block' }} onClick={handleCollapseLandingPage}>
           <ListItemButton
@@ -193,9 +197,9 @@ function ResponsiveDrawer(props) {
         </ListItem>
         <Collapse in={landingPages} timeout="auto" unmountOnExit>
           {[
-            { text: 'View User', path: '/user/viewUser' },
-            { text: 'Add User', path: '/user/addUser' },
-            { text: 'Attendance', path: '/user/attendance' },
+            { text: 'New Landing Page', path: '/landingpages/createlandingpage' },
+            { text: 'View Landing Pages', path: '/landingpages/viewalllandingpages' },
+
           ].map((item) => (
             <ListItem key={item.text} disablePadding sx={{ display: 'block' }} onClick={() => handleNavigation(item.path)}>
               <ListItemButton
@@ -220,6 +224,9 @@ function ResponsiveDrawer(props) {
           ))}
         </Collapse>
       </List>
+      <div className='text-center'>
+        <p className='bg-light text-dark'>PUBLISHER</p>
+      </div>
       {/* user section */}
       <List>
         <ListItem disablePadding sx={{ display: 'block' }} onClick={handleCollapseUser}>

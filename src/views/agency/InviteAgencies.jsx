@@ -1,9 +1,10 @@
 import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
-
+import Navbar from "../../components/Navbar"
 function InviteAgencies() {
   return (
     <div>
+      <Navbar />
       <Container fluid className='my-5 '>
         <Row className=''>
           <Col lg={3}>
