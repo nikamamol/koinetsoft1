@@ -45,8 +45,8 @@ function NewLandingPage() {
                       >
                         <option value="">--Select Template--</option>
                         <option value="1">Template - 1</option>
-                        <option value="2">Template - 2</option>
-                        <option value="3">Template - 3</option>
+                        {/* <option value="2">Template - 2</option>
+                        <option value="3">Template - 3</option> */}
                       </select>
                     </div>
                   </div>
@@ -59,7 +59,7 @@ function NewLandingPage() {
                       >
                         Next
                       </button>
-                      {selectedTemplate && (
+                      {/* {selectedTemplate && (
                         <a
                           href="../assets/MacBookPro161.pdf"
                           target="_blank"
@@ -69,7 +69,7 @@ function NewLandingPage() {
                         >
                           View Demo
                         </a>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </form>
