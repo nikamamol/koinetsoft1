@@ -24,6 +24,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import StorageIcon from '@mui/icons-material/Storage';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
@@ -58,6 +59,7 @@ function ResponsiveDrawer(props) {
   const [openEnterprises, setOpenEnterprises] = React.useState(false);
   const [openAgency, SetOpenAgency] = React.useState(false);
   const [openInHouse, SetOpenInHouse] = React.useState(false);
+  const [landingPages, setLandingPages] = React.useState(false);
 
 
   const handleDrawerClose = () => {
@@ -111,6 +113,9 @@ function ResponsiveDrawer(props) {
   };
 
 
+  const handleCollapseLandingPage = () => {
+    setLandingPages(!landingPages);
+  };
 
   const handleCampaignsClick = () => {
     setOpenCampaigns(!openCampaigns);
@@ -163,7 +168,58 @@ function ResponsiveDrawer(props) {
           </ListItemButton>
         </ListItem>
       </List>
-
+      {/* landing page section */}
+      <List>
+        <ListItem disablePadding sx={{ display: 'block' }} onClick={handleCollapseLandingPage}>
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <LaptopChromebookIcon />
+            </ListItemIcon>
+            <ListItemText primary="Landing Pages" sx={{ opacity: open ? 1 : 0 }} />
+            {landingPages ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
+        <Collapse in={landingPages} timeout="auto" unmountOnExit>
+          {[
+            { text: 'View User', path: '/user/viewUser' },
+            { text: 'Add User', path: '/user/addUser' },
+            { text: 'Attendance', path: '/user/attendance' },
+          ].map((item) => (
+            <ListItem key={item.text} disablePadding sx={{ display: 'block' }} onClick={() => handleNavigation(item.path)}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {/* {item.text === 'Landing Pages' && <LaptopChromebookIcon />} */}
+                </ListItemIcon>
+                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Collapse>
+      </List>
       {/* user section */}
       <List>
         <ListItem disablePadding sx={{ display: 'block' }} onClick={handleCollapseUser}>

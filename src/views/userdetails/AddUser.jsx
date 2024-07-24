@@ -102,7 +102,7 @@ function AddUser() {
                           </label>
                           <select id="designation" required name="designation" className="form-select">
                             <option >--Select Designation--</option>
-                            <option value="3">Supervisor</option>
+                            <option value="3">OX Manager</option>
                             <option value="4">Agent</option>
                             <option value="5">Quality</option>
                             <option value="6">Delivery</option>
