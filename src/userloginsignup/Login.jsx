@@ -6,7 +6,7 @@ function Login() {
         <div className="container-fluid bgGradinet">
             <div className="row">
                 <div className="col-lg-12 d-flex justify-content-center align-items-center vh-100">
-                    <div className="col-lg-5 col-md-6 col-sm-11 card border-0 rounded-5 shadow p-5 cardbg" style={{ backgroundColor: "#F8F4E1" }}>
+                    <div className="col-lg-5 col-md-6 col-sm-11 card border-0  shadow p-5 cardbg" style={{ backgroundColor: "#F8F4E1" }}>
                         <div className='text-center'>
                             <p >
                                 <img src={LogoImge} alt="" width={200} height={100} />

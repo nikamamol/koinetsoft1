@@ -15,7 +15,7 @@ const Register = () => {
             <Row>
                 <Col lg={12} className="d-flex justify-content-center align-items-center vh-100 ">
                     <Col lg={6}>
-                        <Card className="rounded-5 border-0 shadow p-5" style={{ backgroundColor: '#F8F4E1' }}>
+                        <Card className=" border-0 shadow p-5" style={{ backgroundColor: '#F8F4E1' }}>
                             <div className='text-center'>
                                 <p >
                                     <img src={LogoImge1} alt="" width={200} height={100} />

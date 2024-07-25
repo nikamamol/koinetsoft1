@@ -7,6 +7,22 @@ import { Link } from 'react-router-dom';
 const TemplateOne = () => {
     const emailEditorRef = useRef(null);
     const [savedHtml, setSavedHtml] = useState(null);
+    const [formType, setFormType] = useState('0');
+    const [logoPreview, setLogoPreview] = useState('');
+    const [bannerPreview, setBannerPreview] = useState('');
+    const [documentPreview, setDocumentPreview] = useState('');
+    const [formLink, setFormLink] = useState('');
+
+    const handleFormTypeChange = (e) => {
+        setFormType(e.target.value);
+    };
+
+    const handleFileChange = (e, setter) => {
+        const file = e.target.files[0];
+        if (file) {
+            setter(URL.createObjectURL(file));
+        }
+    };
 
     const saveTemplate = () => {
         emailEditorRef.current.editor.exportHtml((data) => {
@@ -37,6 +53,65 @@ const TemplateOne = () => {
                         </div>
                         <div className='bgColor rounded-3 shadow'>
                             <h4 className='fw-bold py-3 ms-3 text_color'>Create Email Template</h4>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-xxl">
+                                <div className="card mb-4">
+                                    <div className="card-header p-3 d-flex align-items-center justify-content-between">
+                                        <small className="text-muted float-end">Fields marked <span className="text-danger">*</span> are mandatory</small>
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="card mb-4">
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="template_title" className="form-label">Title/Header<span className="text-danger">*</span></label>
+                                                        <input type="text" name="template_title" className="form-control" id="template_title" placeholder="Beyond on-demand for DDoS defense" />
+                                                    </div>
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="logo" className="form-label">Logo</label> (.png, .jpeg, .jpg, .svg) 200px × 74 px <span className="text-danger"> *</span>
+                                                        {logoPreview && <a href={logoPreview} target="_blank" id="view_logo">View Logo</a>}
+                                                        <input className="form-control" type="file" id="logo" name="logo" accept=".png, .jpeg, .jpg, .svg" onChange={(e) => handleFileChange(e, setLogoPreview)} />
+                                                    </div>
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="banner" className="form-label">Banner Image</label> (.png, .jpeg, .jpg) 1170px × 267 px <span className="text-danger"> *</span>
+                                                        {bannerPreview && <a href={bannerPreview} target="_blank" id="view_banner">View Banner</a>}
+                                                        <input className="form-control" type="file" id="banner" name="banner" accept=".png, .jpeg, .jpg" onChange={(e) => handleFileChange(e, setBannerPreview)} />
+                                                    </div>
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="client_form" className="form-label">Script / Custom Form</label>
+                                                        <span className="text-danger"> *</span>
+                                                        <select id="client_form" className="form-select" onChange={handleFormTypeChange}>
+                                                            <option value="1">Script</option>
+                                                            <option value="0" selected="">Custom</option>
+                                                        </select>
+                                                    </div>
+                                                    {formType === '0' && (
+                                                        <div className="mb-3 col-md-6">
+                                                            <label htmlFor="form_link" className="form-label">Client Form Link</label>
+                                                            <span className="text-danger"> *</span>
+                                                            <input className="form-control" type="text" placeholder="" name="form_link" id="form_link" value={formLink} onChange={(e) => setFormLink(e.target.value)} />
+                                                        </div>
+                                                    )}
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="receive_comminication" className="form-label">Receive marketing communications</label>
+                                                        <span className="text-danger"> *</span>
+                                                        <input className="form-control" type="text" placeholder="I agree to receive marketing communications and promotional offers from Cloudflare." name="receive_comminication" id="receive_comminication" />
+                                                    </div>
+
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="document" className="form-label">Browse/Documents</label>
+                                                        <span className="text-danger"> *</span>
+                                                        {documentPreview && <a href={documentPreview} target="_blank" id="view_document">View Document</a>}
+                                                        <input className="form-control" type="file" id="document" name="document" onChange={(e) => handleFileChange(e, setDocumentPreview)} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <EmailEditor
                             ref={emailEditorRef}
