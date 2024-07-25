@@ -35,3 +35,10 @@ background: -webkit-linear-gradient(to right, #FDB99B, #CF8BF3, #A770EF);  /* Ch
 background: linear-gradient(to right, #FDB99B, #CF8BF3, #A770EF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
  }
+ .MyInput {
+   font-family: sans-serif;
+   text-align: center;
+   background-color: #f3f3f3;
+   padding: 20px;
+   
+ }

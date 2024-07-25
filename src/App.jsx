@@ -53,10 +53,11 @@ import ViewLandingPages from '../src/views/landingpages/ViewLandingPages';
 import TemplateOne from './template/TemplateOne';
 import TemplateTwo from './template/TemplateTwo';
 import TemplateThree from './template/TemplateThree';
+import OtpInput from '../src/userloginsignup/OtpInput';
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const hideNavbarRoutes = ['/login', '/register','/template-1'];
+  const hideNavbarRoutes = ['/login', '/register', '/template-1', '/enterotp'];
 
   return (
     <>
@@ -74,6 +75,7 @@ function App() {
           <Route path="/" element={<MainDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/enterotp" element={<OtpInput />} />
           <Route path="/viewallcampaignsclick" element={<ViewAllCampaignsClick />} />
           {/* landing pages */}
           <Route path="/landingpages/createlandingpage" element={<NewLandingPage />} />
