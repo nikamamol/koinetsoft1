@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import AttendanceTable from '../../table/AttendanceTable';
 
+
 function Attendance() {
   return (
     <div>

@@ -11,11 +11,11 @@ const Register = () => {
     };
 
     return (
-        <Container fluid>
+        <Container fluid className='bgGradinet'>
             <Row>
-                <Col lg={12} className="d-flex justify-content-center align-items-center  ">
-                    <Col lg={7}>
-                        <Card className="rounded-5 border-0 shadow p-3" style={{ backgroundColor: '#F8F4E1' }}>
+                <Col lg={12} className="d-flex justify-content-center align-items-center vh-100 ">
+                    <Col lg={6}>
+                        <Card className="rounded-5 border-0 shadow p-5" style={{ backgroundColor: '#F8F4E1' }}>
                             <div className='text-center'>
                                 <p >
                                     <img src={LogoImge1} alt="" width={200} height={100} />
@@ -57,7 +57,9 @@ const Register = () => {
                                         <option value="admin">Admin</option>
                                         <option value="user">User</option>
                                         <option value="supervisor">Supervisor</option>
+                                        <option value="oxmanager">OX Manager</option>
                                         <option value="agent">Agent</option>
+                                        <option value="client">Client</option>
                                         <option value="quality">Quality</option>
                                         <option value="delivery">Delivery</option>
                                     </Form.Control>

@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Col, Container, Row, Button, Card } from 'react-bootstrap';
 import EmailEditor from 'react-email-editor';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { Link } from 'react-router-dom';
 
 const TemplateOne = () => {
     const emailEditorRef = useRef(null);
@@ -28,18 +30,22 @@ const TemplateOne = () => {
         <div>
             <Container fluid className='my-5'>
                 <Row>
-                    <Col lg={3}></Col>
-                    <Col lg={8}>
+                    {/* <Col lg={3}></Col> */}
+                    <Col lg={12}>
+                        <div>
+                            <Link to='/' className='btn btn-outline-danger my-4 btn-sm'><KeyboardBackspaceIcon className='me-2' />Back to Dashboard</Link>
+                        </div>
                         <div className='bgColor rounded-3 shadow'>
-                            <h4 className='fw-bold py-3 ms-3 text_color'>Enterprise</h4>
+                            <h4 className='fw-bold py-3 ms-3 text_color'>Create Email Template</h4>
                         </div>
                         <EmailEditor
                             ref={emailEditorRef}
                             onLoad={onLoad}
                             onReady={onReady}
                         />
-                        <div className='my-3'>
+                        <div className='my-3 d-flex gap-2'>
                             <Button variant='primary' onClick={saveTemplate}>Save Template</Button>
+                            <Button variant='danger' href='/landingpages/viewalllandingpages'>View All Template</Button>
                         </div>
                         {savedHtml && (
                             <Card className='mt-3'>

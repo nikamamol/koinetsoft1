@@ -1,9 +1,9 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from "../src/components/Navbar";
+import HeadNavbar from "./components/HeadNavbar";
 import MainDashboard from '../src/views/MainDashboard';
-import AddUser from "../src/views/userdetails/AddUser"
+import AddUser from "../src/views/userdetails/AddUser";
 import VieweUser from "../src/views/userdetails/VieweUser";
 import Attendance from "../src/views/userdetails/Attendance";
 import Expired from "../src/views/rfp/Expired";
@@ -54,12 +54,22 @@ import TemplateOne from './template/TemplateOne';
 import TemplateTwo from './template/TemplateTwo';
 import TemplateThree from './template/TemplateThree';
 
-function App() {
+const Layout = ({ children }) => {
+  const location = useLocation();
+  const hideNavbarRoutes = ['/login', '/register','/template-1'];
+
   return (
     <>
-      <BrowserRouter>
+      {!hideNavbarRoutes.includes(location.pathname) && <HeadNavbar />}
+      {children}
+    </>
+  );
+};
 
-        <Navbar />
+function App() {
+  return (
+    <BrowserRouter>
+      <Layout>
         <Routes>
           <Route path="/" element={<MainDashboard />} />
           <Route path="/login" element={<Login />} />
@@ -119,10 +129,9 @@ function App() {
           {/* library */}
           <Route path="/library/voiceLibrary" element={<VoiceLibrary />} />
         </Routes>
-      </BrowserRouter>
-
-    </>
-  )
+      </Layout>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

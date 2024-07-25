@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import UserProfile from "../../assets/userProfile.jpeg"
 
+
 function Profile() {
     const previewImage = (event) => {
         const reader = new FileReader();

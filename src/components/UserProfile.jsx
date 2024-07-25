@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import ListItemIcon from '@mui/material/ListItemIcon';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -73,7 +73,7 @@ export default function UserProfile() {
       >
         <MenuItem onClick={handleClose}>
           <Avatar /> <Link to="/user/profile" className='text-decoration-none text-dark'>Profile</Link>
-          
+
         </MenuItem>
         {/* <MenuItem onClick={handleClose}>
           <ListItemIcon>
@@ -85,7 +85,7 @@ export default function UserProfile() {
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          <a href="" className='text-decoration-none text-dark'>Log-Out</a>
+          <Link to="/login" className='text-decoration-none text-dark'>Log-Out</Link>
         </MenuItem>
       </Menu>
     </React.Fragment>

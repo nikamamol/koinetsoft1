@@ -1,7 +1,7 @@
 import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import AgencyMyAgency from '../../table/AgencyMyAgency'
-import Navbar from "../../components/Navbar"
+import Navbar from "../../components/HeadNavbar"
 
 function MyEngencies() {
   return (
