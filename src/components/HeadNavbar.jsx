@@ -79,7 +79,7 @@ function ResponsiveDrawer(props) {
 
 
   const handleListItemClick = () => {
-    navigate('/');
+    navigate('/dashboard');
   };
   const handleCollapseUser = () => {
     setIsCollapse(!isCollapse);

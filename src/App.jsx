@@ -54,6 +54,7 @@ import TemplateOne from './template/TemplateOne';
 import TemplateTwo from './template/TemplateTwo';
 import TemplateThree from './template/TemplateThree';
 import OtpInput from '../src/userloginsignup/OtpInput';
+import PrivateRoutes from './utils/PrivateRoutes';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -72,64 +73,67 @@ function App() {
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/dashboard" element={<MainDashboard />} />
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/enterotp" element={<OtpInput />} />
-          <Route path="/viewallcampaignsclick" element={<ViewAllCampaignsClick />} />
-          {/* landing pages */}
-          <Route path="/landingpages/createlandingpage" element={<NewLandingPage />} />
-          <Route path="/landingpages/viewalllandingpages" element={<ViewLandingPages />} />
-          <Route path="/template-1" element={<TemplateOne />} />
-          <Route path="/template-2" element={<TemplateTwo />} />
-          <Route path="/template-3" element={<TemplateThree />} />
+          {/* all route are private */}
+          <Route element={<PrivateRoutes />}>
+            <Route path="/dashboard" element={<MainDashboard />} />
+            <Route path="/viewallcampaignsclick" element={<ViewAllCampaignsClick />} />
+            {/* landing pages */}
+            <Route path="/landingpages/createlandingpage" element={<NewLandingPage />} />
+            <Route path="/landingpages/viewalllandingpages" element={<ViewLandingPages />} />
+            <Route path="/template-1" element={<TemplateOne />} />
+            <Route path="/template-2" element={<TemplateTwo />} />
+            <Route path="/template-3" element={<TemplateThree />} />
 
-          {/* user */}
-          <Route path="/user/addUser" element={<AddUser />} />
-          <Route path="/user/viewUser" element={<VieweUser />} />
-          <Route path="/user/attendance" element={<Attendance />} />
-          <Route path="/user/profile" element={<Profile />} />
-          {/* RFP */}
-          <Route path="/rfp/active" element={<Active />} />
-          <Route path="/rfp/expired" element={<Expired />} />
-          <Route path="/rfp/received" element={<Received />} />
-          {/* Agency */}
-          <Route path="/agency/myengencies" element={<MyEngencies />} />
-          <Route path="/agency/inviteagency" element={<InviteAgencies />} />
-          {/* enterprise */}
-          <Route path="/enterprise/MyEnterprise" element={<MyEnterprise />} />
-          <Route path="/enterprise/inviteEnterprise" element={<InviteEnterprise />} />
-          {/* campaign/agency */}
-          <Route path="/campaigns/agency/activecampaigns" element={<ActiveCampaigns />} />
-          <Route path="/campaigns/agency/allCampaigns" element={<AllCampaigns />} />
-          <Route path="/campaigns/agency/closedCampaigns" element={<ClosedCampaigns />} />
-          <Route path="/campaigns/agency/pausedCampaigns" element={<PausedCampaigns />} />
-          {/* campaign/Enterprise */}
-          <Route path="/campaigns/enterprises/activecampaigns" element={<ActiveCampaignsEn />} />
-          <Route path="/campaigns/enterprises/allCampaigns" element={<AllCampaignsEn />} />
-          <Route path="/campaigns/enterprises/closedCampaigns" element={<ClosedCampaignsEn />} />
-          <Route path="/campaigns/enterprises/pausedCampaigns" element={<PausedCampaignsEn />} />
-          {/* campaign/inhouse */}
-          <Route path="/campaigns/inhousecampaigns/activecampaigns" element={<ActiveCampaignsIn />} />
-          <Route path="/campaigns/inhousecampaigns/allCampaigns" element={<AllCampaignsIn />} />
-          <Route path="/campaigns/inhousecampaigns/closedCampaigns" element={<ClosedCampaignsIn />} />
-          <Route path="/campaigns/inhousecampaigns/pausedCampaigns" element={<PausedCampaignsIn />} />
-          <Route path="/campaigns/inhousecampaigns/createCampaign" element={<CreateCampaign />} />
+            {/* user */}
+            <Route path="/user/addUser" element={<AddUser />} />
+            <Route path="/user/viewUser" element={<VieweUser />} />
+            <Route path="/user/attendance" element={<Attendance />} />
+            <Route path="/user/profile" element={<Profile />} />
+            {/* RFP */}
+            <Route path="/rfp/active" element={<Active />} />
+            <Route path="/rfp/expired" element={<Expired />} />
+            <Route path="/rfp/received" element={<Received />} />
+            {/* Agency */}
+            <Route path="/agency/myengencies" element={<MyEngencies />} />
+            <Route path="/agency/inviteagency" element={<InviteAgencies />} />
+            {/* enterprise */}
+            <Route path="/enterprise/MyEnterprise" element={<MyEnterprise />} />
+            <Route path="/enterprise/inviteEnterprise" element={<InviteEnterprise />} />
+            {/* campaign/agency */}
+            <Route path="/campaigns/agency/activecampaigns" element={<ActiveCampaigns />} />
+            <Route path="/campaigns/agency/allCampaigns" element={<AllCampaigns />} />
+            <Route path="/campaigns/agency/closedCampaigns" element={<ClosedCampaigns />} />
+            <Route path="/campaigns/agency/pausedCampaigns" element={<PausedCampaigns />} />
+            {/* campaign/Enterprise */}
+            <Route path="/campaigns/enterprises/activecampaigns" element={<ActiveCampaignsEn />} />
+            <Route path="/campaigns/enterprises/allCampaigns" element={<AllCampaignsEn />} />
+            <Route path="/campaigns/enterprises/closedCampaigns" element={<ClosedCampaignsEn />} />
+            <Route path="/campaigns/enterprises/pausedCampaigns" element={<PausedCampaignsEn />} />
+            {/* campaign/inhouse */}
+            <Route path="/campaigns/inhousecampaigns/activecampaigns" element={<ActiveCampaignsIn />} />
+            <Route path="/campaigns/inhousecampaigns/allCampaigns" element={<AllCampaignsIn />} />
+            <Route path="/campaigns/inhousecampaigns/closedCampaigns" element={<ClosedCampaignsIn />} />
+            <Route path="/campaigns/inhousecampaigns/pausedCampaigns" element={<PausedCampaignsIn />} />
+            <Route path="/campaigns/inhousecampaigns/createCampaign" element={<CreateCampaign />} />
 
-          {/* billing */}
-          <Route path="/billing/addClient" element={<AddClient />} />
-          <Route path="/billing/createInvoice" element={<CreateInvoice />} />
-          <Route path="/billing/invoiceSetting" element={<InvoiceSetting />} />
-          <Route path="/billing/processPayment" element={<ProcessPayment />} />
-          <Route path="/billing/vieweClient" element={<VieweClient />} />
-          <Route path="/billing/viewInvoice" element={<ViewInvoice />} />
-          {/* support */}
-          <Route path="/support/email" element={<Emails />} />
-          <Route path="/support/onlinechat" element={<OnlineChat />} />
-          {/* settings */}
-          <Route path="/settings/ipwhitelist_blocklist" element={<IpWhiteList_BlockList />} />
-          {/* library */}
-          <Route path="/library/voiceLibrary" element={<VoiceLibrary />} />
+            {/* billing */}
+            <Route path="/billing/addClient" element={<AddClient />} />
+            <Route path="/billing/createInvoice" element={<CreateInvoice />} />
+            <Route path="/billing/invoiceSetting" element={<InvoiceSetting />} />
+            <Route path="/billing/processPayment" element={<ProcessPayment />} />
+            <Route path="/billing/vieweClient" element={<VieweClient />} />
+            <Route path="/billing/viewInvoice" element={<ViewInvoice />} />
+            {/* support */}
+            <Route path="/support/email" element={<Emails />} />
+            <Route path="/support/onlinechat" element={<OnlineChat />} />
+            {/* settings */}
+            <Route path="/settings/ipwhitelist_blocklist" element={<IpWhiteList_BlockList />} />
+            {/* library */}
+            <Route path="/library/voiceLibrary" element={<VoiceLibrary />} />
+          </Route>
         </Routes>
       </Layout>
     </BrowserRouter>
