@@ -16,7 +16,7 @@ function Login() {
         setMessage('');
 
         try {
-            const response = await axios.post(`${process.env.BASE_URL}user/login`, { email, password });
+            const response = await axios.post(`http://localhost:4000/user/login`, { email, password });
             if (response.data.message) {
                 setMessage(response.data.message);
                 navigate('/enterotp', { state: { email } });  // Redirect to send-otp route with email in state

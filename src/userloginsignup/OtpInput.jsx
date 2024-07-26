@@ -17,7 +17,7 @@ export default function MyOtpInput() {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post(`${process.env.BASE_URL}user/verify-otp`, { otp: code });
+            const response = await axios.post("http://localhost:4000/user/verify-otp", { otp: code });
             if (response.status === 200) {
                 const { token } = response.data;
                 localStorage.setItem('authToken', token);

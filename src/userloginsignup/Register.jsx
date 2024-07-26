@@ -25,7 +25,7 @@ const Register = () => {
     const submitForm = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${process.env.BASE_URL}user/signup`, formData);
+            const response = await axios.post('http://localhost:4000/user/signup', formData);
             console.log("User registered successfully:", response.data);
             navigate('/'); // Redirect to login page after successful registration
         } catch (error) {
