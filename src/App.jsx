@@ -57,7 +57,7 @@ import OtpInput from '../src/userloginsignup/OtpInput';
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const hideNavbarRoutes = ['/login', '/register', '/template-1', '/enterotp'];
+  const hideNavbarRoutes = ['/', '/register', '/template-1', '/enterotp'];
 
   return (
     <>
@@ -72,8 +72,8 @@ function App() {
     <BrowserRouter>
       <Layout>
         <Routes>
-          <Route path="/" element={<MainDashboard />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<MainDashboard />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/enterotp" element={<OtpInput />} />
           <Route path="/viewallcampaignsclick" element={<ViewAllCampaignsClick />} />
