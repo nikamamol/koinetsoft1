@@ -4,31 +4,34 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const VieweUserTable = () => {
   const [data, setData] = useState([]);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://koinetsoft-backend.onrender.com/user/getallusers');
-        console.log('API Response:', response.data); // Log the response data
-    
-        const users = response.data.users; // Adjust based on actual response structure
+        console.log('API Response:', response.data);
+        
+        const users = response.data.users;
     
         if (Array.isArray(users)) {
           const transformedData = users.map((user, index) => ({
+            id: user._id, // Include _id here
             serialNumber: index + 1,
             name: {
               firstName: user.fullname.split(' ')[0],
               lastName: user.fullname.split(' ').slice(1).join(' ') || '',
             },
-            address: '', // Not available in API response
-            city: '', // Not available in API response
-            state: '', // Not available in API response
+            address: '',
+            city: '',
+            state: '',
             mobileNumber: user.mobile,
             email: user.email,
-            vendor: 'Koinet Media', 
+            vendor: 'Koinet Media',
             designation: user.designation,
             supervisor: user.supervisor,
             profileStatus: user.profileStatus === 'completed' ? 'Completed' : (user.profileStatus === 'pending' ? 'Pending' : 'Not Added'),
@@ -43,11 +46,9 @@ const VieweUserTable = () => {
       }
     };
     
-
     fetchData();
   }, []);
 
-  // Memoize the columns definition
   const columns = useMemo(
     () => [
       {
@@ -57,7 +58,7 @@ const VieweUserTable = () => {
         Cell: ({ row }) => row.index + 1,
       },
       {
-        accessorKey: 'name', // Access the whole name object
+        accessorKey: 'name',
         header: 'Full Name',
         size: 200,
         Cell: ({ row }) => `${row.original.name.firstName} ${row.original.name.lastName}`,
@@ -102,18 +103,32 @@ const VieweUserTable = () => {
         header: 'Actions',
         Cell: ({ row }) => (
           <div className='d-flex'>
-            <button className='btn btn-info btn-sm me-1' onClick={() => alert(`Viewing ${row.original.name.firstName}`)}>View</button>
-            <button className='btn btn-primary btn-sm me-1' onClick={() => alert(`Editing ${row.original.name.firstName}`)}>Edit</button>
-            <button className="btn btn-danger btn-sm me-1" onClick={() => alert(`Deleting ${row.original.name.firstName}`)}>Delete</button>
+            <button 
+              className='btn btn-info btn-sm me-1' 
+              onClick={() => navigate(`/user/${row.original.id}`)} // Use row.original.id
+            >
+              View
+            </button>
+            <button 
+              className='btn btn-primary btn-sm me-1' 
+              onClick={() => alert(`Editing ${row.original.name.firstName}`)}
+            >
+              Edit
+            </button>
+            <button 
+              className="btn btn-danger btn-sm me-1" 
+              onClick={() => alert(`Deleting ${row.original.name.firstName}`)}
+            >
+              Delete
+            </button>
           </div>
         ),
         size: 150,
       },
     ],
-    [],
+    [navigate], // Add navigate to dependencies
   );
 
-  // Initialize the table using the hook
   const table = useMaterialReactTable({
     columns,
     data,

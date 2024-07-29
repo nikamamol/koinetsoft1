@@ -57,6 +57,7 @@ import OtpInput from '../src/userloginsignup/OtpInput';
 import PrivateRoutes from './utils/PrivateRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import UserDetailsByID from './views/userdetails/UserDetailsByID';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -95,6 +96,7 @@ function App() {
             <Route path="/user/viewUser" element={<VieweUser />} />
             <Route path="/user/attendance" element={<Attendance />} />
             <Route path="/user/profile" element={<Profile />} />
+            <Route path="/user/:id" element={<UserDetailsByID />} />
             {/* RFP */}
             <Route path="/rfp/active" element={<Active />} />
             <Route path="/rfp/expired" element={<Expired />} />
