@@ -55,6 +55,8 @@ import TemplateTwo from './template/TemplateTwo';
 import TemplateThree from './template/TemplateThree';
 import OtpInput from '../src/userloginsignup/OtpInput';
 import PrivateRoutes from './utils/PrivateRoutes';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -71,6 +73,7 @@ const Layout = ({ children }) => {
 function App() {
   return (
     <BrowserRouter>
+    <ToastContainer/>
       <Layout>
         <Routes>
           <Route path="/" element={<Login />} />

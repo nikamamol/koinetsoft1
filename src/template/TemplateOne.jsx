@@ -49,7 +49,7 @@ const TemplateOne = () => {
                     {/* <Col lg={3}></Col> */}
                     <Col lg={12}>
                         <div>
-                            <Link to='/' className='btn btn-outline-danger my-4 btn-sm'><KeyboardBackspaceIcon className='me-2' />Back to Dashboard</Link>
+                            <Link to='/dashboard' className='btn btn-outline-danger my-4 btn-sm'><KeyboardBackspaceIcon className='me-2' />Back to Dashboard</Link>
                         </div>
                         <div className='bgColor rounded-3 shadow'>
                             <h4 className='fw-bold py-3 ms-3 text_color'>Create Email Template</h4>

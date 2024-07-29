@@ -1,64 +1,52 @@
-import { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
-
-// updated data structure with new fields
-const data = [
-  {
-    name: {
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    address: '261 Erdman Ford',
-    city: 'East Daphne',
-    state: 'Kentucky',
-    mobileNumber: '123-456-7890',
-    email: 'john.doe@example.com',
-    vendor: 'Vendor A',
-    designation: 'Manager',
-    supervisor: 'Jane Smith',
-    profileStatus: 'Active',
-    status: 'Approved',
-  },
-  {
-    name: {
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    address: '261 Erdman Ford',
-    city: 'East Daphne',
-    state: 'Kentucky',
-    mobileNumber: '123-456-7890',
-    email: 'john.doe@example.com',
-    vendor: 'Vendor A',
-    designation: 'Manager',
-    supervisor: 'Jane Smith',
-    profileStatus: 'Active',
-    status: 'Approved',
-  },
-  {
-    name: {
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-    address: '261 Erdman Ford',
-    city: 'East Daphne',
-    state: 'Kentucky',
-    mobileNumber: '123-456-7890',
-    email: 'john.doe@example.com',
-    vendor: 'Vendor A',
-    designation: 'Manager',
-    supervisor: 'Jane Smith',
-    profileStatus: 'Active',
-    status: 'Approved',
-  },
-  
-  // Add other data entries as needed...
-];
+import axios from 'axios';
 
 const VieweUserTable = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/user/getallusers');
+        console.log('API Response:', response.data); // Log the response data
+    
+        const users = response.data.users; // Adjust based on actual response structure
+    
+        if (Array.isArray(users)) {
+          const transformedData = users.map((user, index) => ({
+            serialNumber: index + 1,
+            name: {
+              firstName: user.fullname.split(' ')[0],
+              lastName: user.fullname.split(' ').slice(1).join(' ') || '',
+            },
+            address: '', // Not available in API response
+            city: '', // Not available in API response
+            state: '', // Not available in API response
+            mobileNumber: user.mobile,
+            email: user.email,
+            vendor: 'Koinet Media', 
+            designation: user.designation,
+            supervisor: user.supervisor,
+            profileStatus: user.profileStatus === 'completed' ? 'Completed' : (user.profileStatus === 'pending' ? 'Pending' : 'Not Added'),
+            status: user.status === 'active' ? 'Active' : 'Not Mentioned',
+          }));
+          setData(transformedData);
+        } else {
+          console.error('API response is not an array:', users);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
+
+    fetchData();
+  }, []);
+
   // Memoize the columns definition
   const columns = useMemo(
     () => [
@@ -73,21 +61,6 @@ const VieweUserTable = () => {
         header: 'Full Name',
         size: 200,
         Cell: ({ row }) => `${row.original.name.firstName} ${row.original.name.lastName}`,
-      },
-      {
-        accessorKey: 'address',
-        header: 'Address',
-        size: 200,
-      },
-      {
-        accessorKey: 'city',
-        header: 'City',
-        size: 150,
-      },
-      {
-        accessorKey: 'state',
-        header: 'State',
-        size: 150,
       },
       {
         accessorKey: 'mobileNumber',
@@ -128,7 +101,7 @@ const VieweUserTable = () => {
         accessorKey: 'actions',
         header: 'Actions',
         Cell: ({ row }) => (
-          <div>
+          <div className='d-flex'>
             <button className='btn btn-info btn-sm me-1' onClick={() => alert(`Viewing ${row.original.name.firstName}`)}>View</button>
             <button className='btn btn-primary btn-sm me-1' onClick={() => alert(`Editing ${row.original.name.firstName}`)}>Edit</button>
             <button className="btn btn-danger btn-sm me-1" onClick={() => alert(`Deleting ${row.original.name.firstName}`)}>Delete</button>
