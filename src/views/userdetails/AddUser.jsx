@@ -40,7 +40,7 @@ function AddUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/user/addnewuser', formData);
+      const response = await axios.post('https://koinetsoft-backend.onrender.com/user/addnewuser', formData);
       console.log('User added successfully:', response.data);
       toast.success('User added successfully!');
       resetForm(); // Reset the form data after successful submission

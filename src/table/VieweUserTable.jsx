@@ -11,7 +11,7 @@ const VieweUserTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/user/getallusers');
+        const response = await axios.get('https://koinetsoft-backend.onrender.com/user/getallusers');
         console.log('API Response:', response.data); // Log the response data
     
         const users = response.data.users; // Adjust based on actual response structure
