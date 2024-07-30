@@ -1,37 +1,51 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
-
-// updated data structure with new fields
-const data = [
-  {
-    serialNumber: 1,
-    agencyName: 'Agency A',
-    companyType: 'Enterprise',
-    email: 'agencyA@example.com',
-    phoneNumber: '123-456-7890',
-  },
-  {
-    serialNumber: 2,
-    agencyName: 'Agency B',
-    companyType: 'Agency',
-    email: 'agencyB@example.com',
-    phoneNumber: '987-654-3210',
-  },
-  {
-    serialNumber: 3,
-    agencyName: 'Agency C',
-    companyType: 'Enterprise',
-    email: 'agencyC@example.com',
-    phoneNumber: '456-789-0123',
-  },
-  // Add other data entries as needed...
-];
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { toast } from 'react-toastify';
 
 const AgencyMyAgency = () => {
-  // Memoize the columns definition
+  const [data, setData] = useState([]);
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios.get('http://localhost:4000/user/myagencies')
+      .then(response => {
+        // Map the response data to the desired structure
+        const fetchedData = response.data.map((item, index) => ({
+          id: item._id, // Add the ID to the data structure
+          serialNumber: index + 1,
+          agencyName: item.company_name,
+          companyType: item.company_type,
+          email: item.primary_email,
+          phoneNumber: item.primary_phone_no,
+        }));
+        setData(fetchedData);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:4000/user/deletevendor/${id}`)
+      .then(() => {
+        // Filter out the deleted item from the data
+        setData((prevData) => prevData.filter(item => item.id !== id));
+        toast.success("Agency Delete Succsessfully")
+      })
+      .catch((error) => {
+        console.error('Error deleting item:', error);
+        toast.error("Getting Error Delete Agency")
+      });
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -63,34 +77,23 @@ const AgencyMyAgency = () => {
         accessorKey: 'actions',
         header: 'Actions',
         Cell: ({ row }) => (
-          <div>
-            <button
-              className='btn btn-info btn-sm me-1'
-              onClick={() => alert(`Viewing ${row.original.agencyName}`)}
-            >
-              View
-            </button>
-            <button
-              className='btn btn-primary btn-sm me-1'
-              onClick={() => alert(`Editing ${row.original.agencyName}`)}
-            >
-              Edit
-            </button>
-            <button
-              className='btn btn-danger btn-sm me-1'
-              onClick={() => alert(`Deleting ${row.original.agencyName}`)}
-            >
-              Delete
-            </button>
+          <div className='d-flex gap-4'>
+            <RemoveRedEyeIcon
+              style={{ cursor: 'pointer', color: 'darkblue' }} 
+              onClick={() => navigate(`/agency/viewAgencyDetails/${row.original.id}`)} // Navigate on click
+            />
+            <AutoDeleteIcon 
+              style={{ cursor: 'pointer', color: 'red' }} 
+              onClick={() => handleDelete(row.original.id)} // Call handleDelete on click
+            />
           </div>
         ),
         size: 200,
       },
     ],
-    [],
+    [navigate],
   );
 
-  // Initialize the table using the hook
   const table = useMaterialReactTable({
     columns,
     data,

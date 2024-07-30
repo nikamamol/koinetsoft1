@@ -1,32 +1,34 @@
 import React, { useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 function InviteAgencies() {
   // State variables for form data
-  const [resetFormData,setResetForm] = useState({
-    company_name: '',
-    company_type: '',
-    vendor_profile: '',
-    agency_id: '',
-    country: '',
-    state: '',
-    city: '',
-    pincode: '',
-    address: '',
-    primary_first_name: '',
-    primary_last_name: '',
-    primary_phone_no: '',
-    primary_email: '',
-    primary_designation: '',
-    password: '',
-    secondary_first_name: '',
-    secondary_last_name: '',
-    secondary_phone_no: '',
-    secondary_email: '',
-    secondary_designation: '',
-  })
+  const [resetFormData, setResetFormData] = useState(
+    {
+      company_name: '',
+      company_type: '',
+      vendor_profile: '',
+      agency_id: '',
+      country: '',
+      state: '',
+      city: '',
+      pincode: '',
+      address: '',
+      primary_first_name: '',
+      primary_last_name: '',
+      primary_phone_no: '',
+      primary_email: '',
+      primary_designation: '',
+      password: '',
+      secondary_first_name: '',
+      secondary_last_name: '',
+      secondary_phone_no: '',
+      secondary_email: '',
+      secondary_designation: '',
+    }
+  )
   const [formData, setFormData] = useState({
     company_name: '',
     company_type: '',
@@ -226,15 +228,13 @@ function InviteAgencies() {
     { value: "209", name: "Zambia" },
     { value: "210", name: "Zimbabwe" },
   ];
-
   const updatedCountryOptions = countryOptions.map(country => ({
-    value: country.value,
+    value: country.name,
     name: country.name,
   }));
-
   const resetForm = () => {
-    setFormData(resetFormData);
-  };
+    setFormData(resetFormData)
+  }
   // State variable for success message
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -249,15 +249,14 @@ function InviteAgencies() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://koinetsoft-backend.onrender.com/user/invitagency', formData);
+      const response = await axios.post('http://localhost:4000/user/invitagency', formData);
       if (response.data.message) {
         setSuccessMessage(response.data.message);
-        toast.success(response.data.message);
+        toast.success(response.data.message)
         resetForm()
       }
     } catch (error) {
-      // Ensure to handle errors correctly and display error messages
-      toast.error(error.response?.data?.error || 'An error occurred. Please try again.');
+      toast.error(response.data.error)
     }
   };
 
@@ -352,9 +351,7 @@ function InviteAgencies() {
                             required
                           >
                             <option value="0">--Select Agency--</option>
-                            <option value="agency-1">Agency 1</option>
-                            <option value="agency-2">Agency 2</option>
-                            <option value="agency-3">Agency 3</option>
+                            <option value="21">ButterflyAI, LLC</option>
                           </select>
                         </div>
 
@@ -379,6 +376,7 @@ function InviteAgencies() {
                           </select>
                         </div>
 
+
                         <div className="mb-3 col-md-6">
                           <label htmlFor="state" className="col-sm-6 col-form-label">State <span className="text-danger">*</span></label>
                           <input
@@ -392,6 +390,7 @@ function InviteAgencies() {
                             onChange={handleChange}
                           />
                         </div>
+                        {/* More fields as needed */}
                         <div className="mb-3 col-md-6">
                           <label htmlFor="city" className="form-label">City <span className="text-danger">*</span></label>
                           <input
@@ -471,11 +470,11 @@ function InviteAgencies() {
                             Phone No <span className="text-danger">*</span>
                           </label>
                           <input
-                            type="text"
+                            type="tel"
                             className="form-control"
                             id="primary_phone_no"
                             name="primary_phone_no"
-                            placeholder="1234567890"
+                            placeholder="9876543210"
                             value={formData.primary_phone_no}
                             onChange={handleChange}
                             required
@@ -511,12 +510,28 @@ function InviteAgencies() {
                             required
                           />
                         </div>
-
+                        <div className="mb-3 col-md-6">
+                          <label htmlFor="password" className="form-label">
+                            Password <span className="text-danger">*</span>
+                          </label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="********"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                          />
+                        </div>
                         <div className="">
                           <div className="text-center py-2 bg-light">Secondary Contact</div>
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_first_name" className="form-label">First Name</label>
+                          <label htmlFor="secondary_first_name" className="form-label">
+                            First Name
+                          </label>
                           <input
                             type="text"
                             className="form-control"
@@ -528,7 +543,9 @@ function InviteAgencies() {
                           />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_last_name" className="form-label">Last Name</label>
+                          <label htmlFor="secondary_last_name" className="form-label">
+                            Last Name
+                          </label>
                           <input
                             type="text"
                             className="form-control"
@@ -540,19 +557,23 @@ function InviteAgencies() {
                           />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_phone_no" className="form-label">Phone No</label>
+                          <label htmlFor="secondary_phone_no" className="form-label">
+                            Phone No
+                          </label>
                           <input
-                            type="text"
+                            type="tel"
                             className="form-control"
                             id="secondary_phone_no"
                             name="secondary_phone_no"
-                            placeholder="1234567890"
+                            placeholder="9876543210"
                             value={formData.secondary_phone_no}
                             onChange={handleChange}
                           />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_email" className="form-label">Email</label>
+                          <label htmlFor="secondary_email" className="form-label">
+                            Email
+                          </label>
                           <input
                             type="email"
                             className="form-control"
@@ -564,44 +585,33 @@ function InviteAgencies() {
                           />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_designation" className="form-label">Designation</label>
+                          <label htmlFor="secondary_designation" className="form-label">
+                            Designation
+                          </label>
                           <input
                             type="text"
                             className="form-control"
                             id="secondary_designation"
                             name="secondary_designation"
-                            placeholder="Assistant"
+                            placeholder="Assistant Manager"
                             value={formData.secondary_designation}
                             onChange={handleChange}
                           />
                         </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="password" className="form-label">Password</label>
-                          <input
-                            type="password"
-                            className="form-control"
-                            id="password"
-                            name="password"
-                            placeholder="********"
-                            value={formData.password}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className="text-center py-2">
-                          <button type="submit" className="btn btn-primary">Submit</button>
-                        </div>
+                      </div>
+                      <div className="text-center my-4">
+                        <button type="submit" className="btn btn-primary">
+                          Submit
+                        </button>
                       </div>
                     </form>
-                    {successMessage && (
-                      <div className="alert alert-success mt-3" role="alert">
-                        {successMessage}
-                      </div>
-                    )}
+                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
                   </div>
                 </div>
               </div>
             </div>
           </Col>
+          <Col lg={1}></Col>
         </Row>
       </Container>
     </div>

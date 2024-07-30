@@ -58,6 +58,7 @@ import PrivateRoutes from './utils/PrivateRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UserDetailsByID from './views/userdetails/UserDetailsByID';
+import ViewAgencyDetailsById from './views/agency/ViewAgencyDetailsById';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -104,6 +105,7 @@ function App() {
             {/* Agency */}
             <Route path="/agency/myengencies" element={<MyEngencies />} />
             <Route path="/agency/inviteagency" element={<InviteAgencies />} />
+            <Route path="/agency/viewAgencyDetails/:id" element={<ViewAgencyDetailsById />} />
             {/* enterprise */}
             <Route path="/enterprise/MyEnterprise" element={<MyEnterprise />} />
             <Route path="/enterprise/inviteEnterprise" element={<InviteEnterprise />} />
