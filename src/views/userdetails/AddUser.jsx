@@ -152,6 +152,8 @@ function AddUser() {
                           <option value="agent">Agent</option>
                           <option value="quality">Quality</option>
                           <option value="delivery">Delivery</option>
+                          <option value="client">Client</option>
+                          <option value="guest">Guest</option>
                         </Form.Select>
                       </Form.Group>
                       <Form.Group className="mb-3 col-md-6" controlId="supervisor">
@@ -165,7 +167,7 @@ function AddUser() {
                           required
                         >
                           <option>--Select Supervisor--</option>
-                          <option value="john">John</option>
+                          <option value="john">Ankush Surywanshi</option>
                           <option value="shon">Shon</option>
                           <option value="shantanu">Shantanu</option>
                         </Form.Select>
@@ -210,7 +212,7 @@ function AddUser() {
                           Other Designation <span className="text-danger">*</span>
                         </Form.Label>
                         <div className="list-group">
-                          {['1', '2', '3', '4'].map((value) => (
+                          {['1', '2', '3', '4','5','6'].map((value) => (
                             <Form.Check
                               key={value}
                               type="checkbox"
@@ -223,6 +225,8 @@ function AddUser() {
                                   2: 'Agent',
                                   3: 'Quality',
                                   4: 'Delivery',
+                                  5: 'Client',
+                                  6: 'Guest',
                                 }[value]
                               }
                               checked={formData.other_designation.includes(value)}

@@ -1,14 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const VieweUserTable = () => {
   const [data, setData] = useState([]);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,10 +20,10 @@ const VieweUserTable = () => {
         console.log('API Response:', response.data);
         
         const users = response.data.users;
-    
+
         if (Array.isArray(users)) {
           const transformedData = users.map((user, index) => ({
-            id: user._id, // Include _id here
+            id: user._id,
             serialNumber: index + 1,
             name: {
               firstName: user.fullname.split(' ')[0],
@@ -48,6 +51,27 @@ const VieweUserTable = () => {
     
     fetchData();
   }, []);
+
+  const deleteUser = async (userId) => {
+    try {
+      await axios.delete(`https://koinetsoft-backend.onrender.com/user/deleteuser/${userId}`);
+      setData(data.filter(user => user.id !== userId));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const handleDeleteClick = async (userId, userName) => {
+    if (window.confirm(`Are you sure you want to delete ${userName}?`)) {
+      try {
+        // Assuming deleteUser is an async function that deletes the user
+        await deleteUser(userId);
+        toast.success(`User ${userName} deleted successfully!`);
+      } catch (error) {
+        toast.error(`Failed to delete user ${userName}.`);
+      }
+    }
+  };
 
   const columns = useMemo(
     () => [
@@ -102,31 +126,22 @@ const VieweUserTable = () => {
         accessorKey: 'actions',
         header: 'Actions',
         Cell: ({ row }) => (
-          <div className='d-flex'>
-            <button 
-              className='btn btn-info btn-sm me-1' 
-              onClick={() => navigate(`/user/${row.original.id}`)} // Use row.original.id
-            >
-              View
-            </button>
-            <button 
-              className='btn btn-primary btn-sm me-1' 
-              onClick={() => alert(`Editing ${row.original.name.firstName}`)}
-            >
-              Edit
-            </button>
-            <button 
-              className="btn btn-danger btn-sm me-1" 
-              onClick={() => alert(`Deleting ${row.original.name.firstName}`)}
-            >
-              Delete
-            </button>
+          <div className='d-flex gap-4'>
+       
+            <RemoveRedEyeIcon 
+              style={{ cursor: 'pointer', color: 'Dark' }} 
+              onClick={() => navigate(`/user/${row.original.id}`)} 
+            />
+            <AutoDeleteIcon 
+              style={{ cursor: 'pointer', color: 'red' }} 
+              onClick={() => handleDeleteClick(row.original.id, row.original.name.firstName)} 
+            />
           </div>
         ),
         size: 150,
       },
     ],
-    [navigate], // Add navigate to dependencies
+    [navigate, data], // Add navigate and data to dependencies
   );
 
   const table = useMaterialReactTable({

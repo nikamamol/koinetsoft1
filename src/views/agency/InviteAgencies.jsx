@@ -1,20 +1,276 @@
-import React from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
-import Navbar from "../../components/HeadNavbar"
+import React, { useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
 function InviteAgencies() {
+  // State variables for form data
+  const [resetFormData,setResetForm] = useState({
+    company_name: '',
+    company_type: '',
+    vendor_profile: '',
+    agency_id: '',
+    country: '',
+    state: '',
+    city: '',
+    pincode: '',
+    address: '',
+    primary_first_name: '',
+    primary_last_name: '',
+    primary_phone_no: '',
+    primary_email: '',
+    primary_designation: '',
+    password: '',
+    secondary_first_name: '',
+    secondary_last_name: '',
+    secondary_phone_no: '',
+    secondary_email: '',
+    secondary_designation: '',
+  })
+  const [formData, setFormData] = useState({
+    company_name: '',
+    company_type: '',
+    vendor_profile: '',
+    agency_id: '',
+    country: '',
+    state: '',
+    city: '',
+    pincode: '',
+    address: '',
+    primary_first_name: '',
+    primary_last_name: '',
+    primary_phone_no: '',
+    primary_email: '',
+    primary_designation: '',
+    password: '',
+    secondary_first_name: '',
+    secondary_last_name: '',
+    secondary_phone_no: '',
+    secondary_email: '',
+    secondary_designation: '',
+  });
+
+  const countryOptions = [
+    { value: "95", name: "Albania" },
+    { value: "96", name: "Algeria" },
+    { value: "86", name: "American Samoa" },
+    { value: "97", name: "Andorra" },
+    { value: "98", name: "Angola" },
+    { value: "45", name: "APAC" },
+    { value: "61", name: "Australia" },
+    { value: "99", name: "Austria" },
+    { value: "100", name: "Bahrain" },
+    { value: "50", name: "Bangladesh" },
+    { value: "101", name: "Belarus" },
+    { value: "102", name: "Belgium" },
+    { value: "103", name: "Benin" },
+    { value: "72", name: "Bhutan" },
+    { value: "104", name: "Bosnia and Herzegovina" },
+    { value: "105", name: "Botswana" },
+    { value: "214", name: "Brazil" },
+    { value: "75", name: "Brunei" },
+    { value: "106", name: "Bulgaria" },
+    { value: "107", name: "Burkina Faso" },
+    { value: "108", name: "Burundi" },
+    { value: "64", name: "Cambodia" },
+    { value: "109", name: "Cameroon" },
+    { value: "212", name: "Canada" },
+    { value: "110", name: "Cape Verde" },
+    { value: "111", name: "Central African Republic" },
+    { value: "112", name: "Chad" },
+    { value: "46", name: "China" },
+    { value: "113", name: "Comoros" },
+    { value: "88", name: "Cook Islands" },
+    { value: "114", name: "Croatia" },
+    { value: "115", name: "Cyprus" },
+    { value: "116", name: "Czech Republic" },
+    { value: "117", name: "Democratic Republic of the Congo" },
+    { value: "118", name: "Denmark" },
+    { value: "119", name: "Djibouti" },
+    { value: "120", name: "Egypt" },
+    { value: "94", name: "EMEA" },
+    { value: "121", name: "Equatorial Guinea" },
+    { value: "122", name: "Eritrea" },
+    { value: "123", name: "Estonia" },
+    { value: "124", name: "Ethiopia" },
+    { value: "1", name: "Europe" },
+    { value: "125", name: "Faroe Islands" },
+    { value: "71", name: "Fiji" },
+    { value: "126", name: "Finland" },
+    { value: "127", name: "France" },
+    { value: "78", name: "French Polynesia" },
+    { value: "128", name: "Gabon" },
+    { value: "129", name: "Gambia" },
+    { value: "130", name: "Georgia" },
+    { value: "131", name: "Germany" },
+    { value: "132", name: "Ghana" },
+    { value: "133", name: "Gibraltar" },
+    { value: "134", name: "Greece" },
+    { value: "80", name: "Guam" },
+    { value: "135", name: "Guernsey" },
+    { value: "136", name: "Guinea" },
+    { value: "137", name: "Guinea-Bissau" },
+    { value: "44", name: "Holy See" },
+    { value: "215", name: "Hong Kong" },
+    { value: "138", name: "Hungary" },
+    { value: "139", name: "Iceland" },
+    { value: "47", name: "India" },
+    { value: "48", name: "Indonesia" },
+    { value: "140", name: "Iran" },
+    { value: "141", name: "Iraq" },
+    { value: "142", name: "Ireland" },
+    { value: "143", name: "Isle Of Man" },
+    { value: "144", name: "Israel" },
+    { value: "145", name: "Italy" },
+    { value: "146", name: "Ivory Coast" },
+    { value: "52", name: "Japan" },
+    { value: "147", name: "Jersey" },
+    { value: "148", name: "Jordan" },
+    { value: "149", name: "Kenya" },
+    { value: "81", name: "Kiribati" },
+    { value: "150", name: "Kuwait" },
+    { value: "66", name: "Laos" },
+    { value: "151", name: "Latvia" },
+    { value: "152", name: "Lebanon" },
+    { value: "153", name: "Lesotho" },
+    { value: "154", name: "Liberia" },
+    { value: "155", name: "Libya" },
+    { value: "156", name: "Liechtenstein" },
+    { value: "157", name: "Lithuania" },
+    { value: "158", name: "Luxembourg" },
+    { value: "159", name: "Macedonia" },
+    { value: "160", name: "Madagascar" },
+    { value: "161", name: "Malawi" },
+    { value: "58", name: "Malaysia" },
+    { value: "74", name: "Maldives" },
+    { value: "162", name: "Mali" },
+    { value: "163", name: "Malta" },
+    { value: "84", name: "Marshall Islands" },
+    { value: "164", name: "Mauritania" },
+    { value: "165", name: "Mauritius" },
+    { value: "213", name: "Mexico" },
+    { value: "82", name: "Micronesia" },
+    { value: "166", name: "Moldova" },
+    { value: "167", name: "Monaco" },
+    { value: "69", name: "Mongolia" },
+    { value: "168", name: "Montenegro" },
+    { value: "169", name: "Morocco" },
+    { value: "170", name: "Mozambique" },
+    { value: "56", name: "Myanmar" },
+    { value: "171", name: "Namibia" },
+    { value: "91", name: "Nauru" },
+    { value: "59", name: "Nepal" },
+    { value: "172", name: "Netherlands" },
+    { value: "77", name: "New Caledonia" },
+    { value: "68", name: "New Zealand" },
+    { value: "173", name: "Niger" },
+    { value: "174", name: "Nigeria" },
+    { value: "92", name: "Niue" },
+    { value: "60", name: "North Korea" },
+    { value: "32", name: "North Macedonia" },
+    { value: "85", name: "Northern Mariana Islands" },
+    { value: "175", name: "Norway" },
+    { value: "176", name: "Oman" },
+    { value: "49", name: "Pakistan" },
+    { value: "87", name: "Palau" },
+    { value: "177", name: "Palestine" },
+    { value: "65", name: "Papua New Guinea" },
+    { value: "53", name: "Philippines" },
+    { value: "178", name: "Poland" },
+    { value: "179", name: "Portugal" },
+    { value: "180", name: "Qatar" },
+    { value: "181", name: "Romania" },
+    { value: "51", name: "Russia" },
+    { value: "182", name: "Rwanda" },
+    { value: "79", name: "Samoa" },
+    { value: "183", name: "San Marino" },
+    { value: "184", name: "Sao Tome & Principe" },
+    { value: "185", name: "Saudi Arabia" },
+    { value: "186", name: "Senegal" },
+    { value: "187", name: "Serbia" },
+    { value: "67", name: "Singapore" },
+    { value: "188", name: "Slovakia" },
+    { value: "189", name: "Slovenia" },
+    { value: "73", name: "Solomon Islands" },
+    { value: "190", name: "Somalia" },
+    { value: "191", name: "South Africa" },
+    { value: "57", name: "South Korea" },
+    { value: "192", name: "Spain" },
+    { value: "63", name: "Sri Lanka" },
+    { value: "193", name: "Sudan" },
+    { value: "194", name: "Swaziland" },
+    { value: "195", name: "Sweden" },
+    { value: "196", name: "Switzerland" },
+    { value: "197", name: "Syria" },
+    { value: "62", name: "Taiwan" },
+    { value: "198", name: "Tanzania" },
+    { value: "55", name: "Thailand" },
+    { value: "70", name: "Timor Leste" },
+    { value: "199", name: "Togo" },
+    { value: "93", name: "Tokelau" },
+    { value: "83", name: "Tonga" },
+    { value: "200", name: "Tunisia" },
+    { value: "201", name: "Turkey" },
+    { value: "89", name: "Tuvalu" },
+    { value: "202", name: "Uganda" },
+    { value: "203", name: "Ukraine" },
+    { value: "204", name: "United Arab Emirates" },
+    { value: "3", name: "United Kingdom" },
+    { value: "211", name: "United States" },
+    { value: "76", name: "Vanuatu" },
+    { value: "206", name: "Vatican City" },
+    { value: "54", name: "Vietnam" },
+    { value: "90", name: "Wallis And Futuna" },
+    { value: "207", name: "Western Sahara" },
+    { value: "208", name: "Yemen" },
+    { value: "209", name: "Zambia" },
+    { value: "210", name: "Zimbabwe" },
+  ];
+
+  const updatedCountryOptions = countryOptions.map(country => ({
+    value: country.value,
+    name: country.name,
+  }));
+
+  const resetForm = () => {
+    setFormData(resetFormData);
+  };
+  // State variable for success message
+  const [successMessage, setSuccessMessage] = useState('');
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('https://koinetsoft-backend.onrender.com/user/invitagency', formData);
+      if (response.data.message) {
+        setSuccessMessage(response.data.message);
+        toast.success(response.data.message);
+        resetForm()
+      }
+    } catch (error) {
+      // Ensure to handle errors correctly and display error messages
+      toast.error(error.response?.data?.error || 'An error occurred. Please try again.');
+    }
+  };
+
   return (
     <div>
-      <Navbar />
-      <Container fluid className='my-5 '>
-        <Row className=''>
-          <Col lg={3}>
-          </Col>
+      <Container fluid className='my-5'>
+        <Row>
+          <Col lg={3}></Col>
           <Col lg={8}>
             <div className='bgColor rounded-3 shadow'>
               <h4 className='fw-bold py-3 ms-3 text_color'>Add New Vendor</h4>
             </div>
             <div className="row">
-
               <div className="col-xxl">
                 <div className="card mb-4">
                   <div className="card-header d-flex align-items-center justify-content-between">
@@ -23,8 +279,10 @@ function InviteAgencies() {
                     </small>
                   </div>
                   <div className="card-body">
-                    <form action="" method="post">
+                    <form onSubmit={handleSubmit}>
+                      {/* Add hidden input for token if needed */}
                       <input type="hidden" name="_token" />
+
                       <div className="row">
                         <div className="mb-3 col-md-6">
                           <label htmlFor="company_name" className="col-sm-6 col-form-label">
@@ -36,6 +294,8 @@ function InviteAgencies() {
                             id="company_name"
                             name="company_name"
                             placeholder="Marathon B2B"
+                            value={formData.company_name}
+                            onChange={handleChange}
                             required
                           />
                         </div>
@@ -43,7 +303,14 @@ function InviteAgencies() {
                           <label htmlFor="company_type" className="col-sm-6 col-form-label">
                             Company Type <span className="text-danger">*</span>
                           </label>
-                          <select id="company_type" name="company_type" className="form-select" required>
+                          <select
+                            id="company_type"
+                            name="company_type"
+                            className="form-select"
+                            value={formData.company_type}
+                            onChange={handleChange}
+                            required
+                          >
                             <option value="">--Select Company Type--</option>
                             <option value="Privately held">Privately held</option>
                             <option value="Publicly held">Publicly held</option>
@@ -52,26 +319,42 @@ function InviteAgencies() {
                             <option value="Unregistered">Unregistered</option>
                           </select>
                         </div>
+                        {/* Other fields here */}
                         <div className="mb-3 col-md-6">
                           <label htmlFor="vendor_profile" className="col-sm-6 col-form-label">
                             Vendor Profile <span className="text-danger">*</span>
                           </label>
-                          <select id="vendor_profile" name="vendor_profile" className="form-select" required>
+                          <select
+                            id="vendor_profile"
+                            name="vendor_profile"
+                            className="form-select"
+                            value={formData.vendor_profile}
+                            onChange={handleChange}
+                            required
+                          >
                             <option value="">--Select Profile--</option>
                             <option value="Enterprise">Enterprise</option>
                             <option value="Agency">Agency</option>
                             <option value="Publisher">Publisher</option>
                           </select>
                         </div>
-                        {/* 1 */}
 
                         <div className="mb-3 col-md-6">
                           <label htmlFor="agency_id" className="col-sm-6 col-form-label">
                             Agency
                           </label>
-                          <select id="agency_id" name="agency_id" className="form-select" required >
+                          <select
+                            id="agency_id"
+                            name="agency_id"
+                            className="form-select"
+                            value={formData.agency_id}
+                            onChange={handleChange}
+                            required
+                          >
                             <option value="0">--Select Agency--</option>
-                            <option value="21">ButterflyAI, LLC</option>
+                            <option value="agency-1">Agency 1</option>
+                            <option value="agency-2">Agency 2</option>
+                            <option value="agency-3">Agency 3</option>
                           </select>
                         </div>
 
@@ -79,202 +362,76 @@ function InviteAgencies() {
                           <label htmlFor="country" className="col-sm-6 col-form-label">
                             Country <span className="text-danger">*</span>
                           </label>
-                          <select id="country" name="country" className="form-select" required>
+                          <select
+                            id="country"
+                            name="country"
+                            className="form-select"
+                            value={formData.country}
+                            onChange={handleChange}
+                            required
+                          >
                             <option value="">--Select Country--</option>
-                            <option value="95">Albania</option>
-                            <option value="96">Algeria</option>
-                            <option value="86">American Samoa</option>
-                            <option value="97">Andorra</option>
-                            <option value="98">Angola</option>
-                            <option value="45">APAC</option>
-                            <option value="61">Australia</option>
-                            <option value="99">Austria</option>
-                            <option value="100">Bahrain</option>
-                            <option value="50">Bangladesh</option>
-                            <option value="101">Belarus</option>
-                            <option value="102">Belgium</option>
-                            <option value="103">Benin</option>
-                            <option value="72">Bhutan</option>
-                            <option value="104">Bosnia and Herzegovina</option>
-                            <option value="105">Botswana</option>
-                            <option value="214">Brazil</option>
-                            <option value="75">Brunei</option>
-                            <option value="106">Bulgaria</option>
-                            <option value="107">Burkina Faso</option>
-                            <option value="108">Burundi</option>
-                            <option value="64">Cambodia</option>
-                            <option value="109">Cameroon</option>
-                            <option value="212">Canada</option>
-                            <option value="110">Cape Verde</option>
-                            <option value="111">Central African Republic</option>
-                            <option value="112">Chad</option>
-                            <option value="46">China</option>
-                            <option value="113">Comoros</option>
-                            <option value="88">Cook Islands</option>
-                            <option value="114">Croatia</option>
-                            <option value="115">Cyprus</option>
-                            <option value="116">Czech Republic</option>
-                            <option value="117">Democratic Republic of the Congo</option>
-                            <option value="118">Denmark</option>
-                            <option value="119">Djibouti</option>
-                            <option value="120">Egypt</option>
-                            <option value="94">EMEA</option>
-                            <option value="121">Equatorial Guinea</option>
-                            <option value="122">Eritrea</option>
-                            <option value="123">Estonia</option>
-                            <option value="124">Ethiopia</option>
-                            <option value="1">Europe</option>
-                            <option value="125">Faroe Islands</option>
-                            <option value="71">Fiji</option>
-                            <option value="126">Finland</option>
-                            <option value="127">France</option>
-                            <option value="78">French Polynesia</option>
-                            <option value="128">Gabon</option>
-                            <option value="129">Gambia</option>
-                            <option value="130">Georgia</option>
-                            <option value="131">Germany</option>
-                            <option value="132">Ghana</option>
-                            <option value="133">Gibraltar</option>
-                            <option value="134">Greece</option>
-                            <option value="80">Guam</option>
-                            <option value="135">Guernsey</option>
-                            <option value="136">Guinea</option>
-                            <option value="137">Guinea-Bissau</option>
-                            <option value="44">Holy See</option>
-                            <option value="215">Hong Kong</option>
-                            <option value="138">Hungary</option>
-                            <option value="139">Iceland</option>
-                            <option value="47">India</option>
-                            <option value="48">Indonesia</option>
-                            <option value="140">Iran</option>
-                            <option value="141">Iraq</option>
-                            <option value="142">Ireland</option>
-                            <option value="143">Isle Of Man</option>
-                            <option value="144">Israel</option>
-                            <option value="145">Italy</option>
-                            <option value="146">Ivory Coast</option>
-                            <option value="52">Japan</option>
-                            <option value="147">Jersey</option>
-                            <option value="148">Jordan</option>
-                            <option value="149">Kenya</option>
-                            <option value="81">Kiribati</option>
-                            <option value="150">Kuwait</option>
-                            <option value="66">Laos</option>
-                            <option value="151">Latvia</option>
-                            <option value="152">Lebanon</option>
-                            <option value="153">Lesotho</option>
-                            <option value="154">Liberia</option>
-                            <option value="155">Libya</option>
-                            <option value="156">Liechtenstein</option>
-                            <option value="157">Lithuania</option>
-                            <option value="158">Luxembourg</option>
-                            <option value="159">Macedonia</option>
-                            <option value="160">Madagascar</option>
-                            <option value="161">Malawi</option>
-                            <option value="58">Malaysia</option>
-                            <option value="74">Maldives</option>
-                            <option value="162">Mali</option>
-                            <option value="163">Malta</option>
-                            <option value="84">Marshall Islands</option>
-                            <option value="164">Mauritania</option>
-                            <option value="165">Mauritius</option>
-                            <option value="213">Mexico</option>
-                            <option value="82">Micronesia</option>
-                            <option value="166">Moldova</option>
-                            <option value="167">Monaco</option>
-                            <option value="69">Mongolia</option>
-                            <option value="168">Montenegro</option>
-                            <option value="169">Morocco</option>
-                            <option value="170">Mozambique</option>
-                            <option value="56">Myanmar</option>
-                            <option value="171">Namibia</option>
-                            <option value="91">Nauru</option>
-                            <option value="59">Nepal</option>
-                            <option value="172">Netherlands</option>
-                            <option value="77">New Caledonia</option>
-                            <option value="68">New Zealand</option>
-                            <option value="173">Niger</option>
-                            <option value="174">Nigeria</option>
-                            <option value="92">Niue</option>
-                            <option value="60">North Korea</option>
-                            <option value="32">North Macedonia</option>
-                            <option value="85">Northern Mariana Islands</option>
-                            <option value="175">Norway</option>
-                            <option value="176">Oman</option>
-                            <option value="49">Pakistan</option>
-                            <option value="87">Palau</option>
-                            <option value="177">Palestine</option>
-                            <option value="65">Papua New Guinea</option>
-                            <option value="53">Philippines</option>
-                            <option value="178">Poland</option>
-                            <option value="179">Portugal</option>
-                            <option value="180">Qatar</option>
-                            <option value="181">Romania</option>
-                            <option value="51">Russia</option>
-                            <option value="182">Rwanda</option>
-                            <option value="79">Samoa</option>
-                            <option value="183">San Marino</option>
-                            <option value="184">Sao Tome &amp; Principe</option>
-                            <option value="185">Saudi Arabia</option>
-                            <option value="186">Senegal</option>
-                            <option value="187">Serbia</option>
-                            <option value="67">Singapore</option>
-                            <option value="188">Slovakia</option>
-                            <option value="189">Slovenia</option>
-                            <option value="73">Solomon Islands</option>
-                            <option value="190">Somalia</option>
-                            <option value="191">South Africa</option>
-                            <option value="57">South Korea</option>
-                            <option value="192">Spain</option>
-                            <option value="63">Sri Lanka</option>
-                            <option value="193">Sudan</option>
-                            <option value="194">Swaziland</option>
-                            <option value="195">Sweden</option>
-                            <option value="196">Switzerland</option>
-                            <option value="197">Syria</option>
-                            <option value="62">Taiwan</option>
-                            <option value="198">Tanzania</option>
-                            <option value="55">Thailand</option>
-                            <option value="70">Timor Leste</option>
-                            <option value="199">Togo</option>
-                            <option value="93">Tokelau</option>
-                            <option value="83">Tonga</option>
-                            <option value="200">Tunisia</option>
-                            <option value="201">Turkey</option>
-                            <option value="89">Tuvalu</option>
-                            <option value="202">Uganda</option>
-                            <option value="203">Ukraine</option>
-                            <option value="204">United Arab Emirates</option>
-                            <option value="3">United Kingdom</option>
-                            <option value="211">United States</option>
-                            <option value="76">Vanuatu</option>
-                            <option value="206">Vatican City</option>
-                            <option value="54">Vietnam</option>
-                            <option value="90">Wallis And Futuna</option>
-                            <option value="207">Western Sahara</option>
-                            <option value="208">Yemen</option>
-                            <option value="209">Zambia</option>
-                            <option value="210">Zimbabwe</option>
+                            {updatedCountryOptions.map(option => (
+                              <option key={option.value} value={option.value}>
+                                {option.name} ({option.value})
+                              </option>
+                            ))}
                           </select>
                         </div>
+
                         <div className="mb-3 col-md-6">
-                          <label for="state" className="col-sm-6 col-form-label">State <span className="text-danger">*</span></label>
-                          <input type="text" required="" name="state" id="state" className="form-control" placeholder="Maharashtra" />
+                          <label htmlFor="state" className="col-sm-6 col-form-label">State <span className="text-danger">*</span></label>
+                          <input
+                            type="text"
+                            required
+                            name="state"
+                            id="state"
+                            className="form-control"
+                            placeholder="Maharashtra"
+                            value={formData.state}
+                            onChange={handleChange}
+                          />
                         </div>
-                        {/* 2 */}
                         <div className="mb-3 col-md-6">
                           <label htmlFor="city" className="form-label">City <span className="text-danger">*</span></label>
-                          <input type="text" required name="city" id="city" className="form-control" placeholder="Pune" />
+                          <input
+                            type="text"
+                            required
+                            name="city"
+                            id="city"
+                            className="form-control"
+                            placeholder="Pune"
+                            value={formData.city}
+                            onChange={handleChange}
+                          />
                         </div>
                         <div className="mb-3 col-md-6">
                           <label htmlFor="pincode" className="form-label">Pincode <span className="text-danger">*</span></label>
-                          <input type="text" required name="pincode" id="pincode" maxLength="6" className="form-control" placeholder="400001" />
+                          <input
+                            type="text"
+                            required
+                            name="pincode"
+                            id="pincode"
+                            maxLength="6"
+                            className="form-control"
+                            placeholder="400001"
+                            value={formData.pincode}
+                            onChange={handleChange}
+                          />
                         </div>
                         <div className="mb-3 col-md-6">
                           <label htmlFor="address" className="form-label">Address <span className="text-danger">*</span></label>
-                          <input type="text" required name="address" id="address" className="form-control" placeholder="1300, Corporate Avenue, Pune" />
+                          <input
+                            type="text"
+                            required
+                            name="address"
+                            id="address"
+                            className="form-control"
+                            placeholder="1300, Corporate Avenue, Pune"
+                            value={formData.address}
+                            onChange={handleChange}
+                          />
                         </div>
-                        {/* 3 */}
 
                         <div className="">
                           <div className="text-center py-2 bg-light">Primary Contact</div>
@@ -289,6 +446,8 @@ function InviteAgencies() {
                             id="primary_first_name"
                             name="primary_first_name"
                             placeholder="John"
+                            value={formData.primary_first_name}
+                            onChange={handleChange}
                             required
                           />
                         </div>
@@ -302,12 +461,11 @@ function InviteAgencies() {
                             id="primary_last_name"
                             name="primary_last_name"
                             placeholder="Doe"
+                            value={formData.primary_last_name}
+                            onChange={handleChange}
                             required
                           />
                         </div>
-                      </div>
-
-                      <div className="row d-flex ">
                         <div className="mb-3 col-md-6">
                           <label htmlFor="primary_phone_no" className="form-label">
                             Phone No <span className="text-danger">*</span>
@@ -317,13 +475,12 @@ function InviteAgencies() {
                             className="form-control"
                             id="primary_phone_no"
                             name="primary_phone_no"
-                            placeholder="9000000000"
-                            maxLength="12"
+                            placeholder="1234567890"
+                            value={formData.primary_phone_no}
+                            onChange={handleChange}
                             required
-
                           />
                         </div>
-
                         <div className="mb-3 col-md-6">
                           <label htmlFor="primary_email" className="form-label">
                             Email <span className="text-danger">*</span>
@@ -333,14 +490,12 @@ function InviteAgencies() {
                             className="form-control"
                             id="primary_email"
                             name="primary_email"
-                            placeholder="john.doe@domain.com"
+                            placeholder="john.doe@example.com"
+                            value={formData.primary_email}
+                            onChange={handleChange}
                             required
                           />
                         </div>
-                      </div>
-
-
-                      <div className="row d-flex">
                         <div className="mb-3 col-md-6">
                           <label htmlFor="primary_designation" className="form-label">
                             Designation <span className="text-danger">*</span>
@@ -350,68 +505,107 @@ function InviteAgencies() {
                             className="form-control"
                             id="primary_designation"
                             name="primary_designation"
-                            placeholder="CEO"
+                            placeholder="Manager"
+                            value={formData.primary_designation}
+                            onChange={handleChange}
                             required
                           />
                         </div>
-                        <div className="mb-3 col-md-6">
-                          <label for="password" className="col-sm-6 col-form-label">Password <span className="text-danger">*</span></label>
-                          <input type="text" className="form-control" id="password" name="password" placeholder="*********" required="" />
-                        </div>
-                      </div>
 
-                      {/* 5 */}
-
-
-                      <div className="bg-light py-2 text-center">Secondary Contact</div>
-
-
-                      <div className="row d-flex">
-                        <div className="mb-3 col-md-6">
-                          <label for="secondary_first_name" className="col-sm-6 col-form-label">First Name </label>
-                          <input type="text" className="form-control" id="secondary_first_name" name="secondary_first_name" placeholder="John" required="" />
+                        <div className="">
+                          <div className="text-center py-2 bg-light">Secondary Contact</div>
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label for="secondary_last_name" className="col-sm-6 col-form-label">Last Name </label>
-                          <input type="text" className="form-control" id="secondary_last_name" name="secondary_last_name" placeholder="Doe" required="" />
+                          <label htmlFor="secondary_first_name" className="form-label">First Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="secondary_first_name"
+                            name="secondary_first_name"
+                            placeholder="Jane"
+                            value={formData.secondary_first_name}
+                            onChange={handleChange}
+                          />
                         </div>
-
-                      </div>
-                      <div className="row d-flex">
                         <div className="mb-3 col-md-6">
-                          <label for="secondary_phone_no" className="col-sm-6 col-form-label">Phone No </label>
-                          <input type="text" className="form-control" id="secondary_phone_no" name="secondary_phone_no" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" placeholder="9000000000" maxlength="12" required="" />
+                          <label htmlFor="secondary_last_name" className="form-label">Last Name</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="secondary_last_name"
+                            name="secondary_last_name"
+                            placeholder="Doe"
+                            value={formData.secondary_last_name}
+                            onChange={handleChange}
+                          />
                         </div>
-
                         <div className="mb-3 col-md-6">
-                          <label for="secondary_email" className="col-sm-6 col-form-label">Email </label>
-                          <input type="email" className="form-control" id="secondary_email" name="secondary_email" placeholder="john.doe@domain.com" required="" />
+                          <label htmlFor="secondary_phone_no" className="form-label">Phone No</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="secondary_phone_no"
+                            name="secondary_phone_no"
+                            placeholder="1234567890"
+                            value={formData.secondary_phone_no}
+                            onChange={handleChange}
+                          />
                         </div>
-                      </div>
-                      <div className="row d-flex">
-
                         <div className="mb-3 col-md-6">
-                          <label for="secondary_designation">Designation </label>
-                          <input type="text" className="form-control" id="secondary_designation" name="secondary_designation" placeholder="CEO" required="" />
+                          <label htmlFor="secondary_email" className="form-label">Email</label>
+                          <input
+                            type="email"
+                            className="form-control"
+                            id="secondary_email"
+                            name="secondary_email"
+                            placeholder="jane.doe@example.com"
+                            value={formData.secondary_email}
+                            onChange={handleChange}
+                          />
                         </div>
-                        <div className="row ">
-                          <div className="col-12 text-center ">
-                            <button type="button" className="btn btn-danger me-2">Save</button>
-                            <button type="button" id="reset" className="btn btn-outline-secondary">Clear</button>
-                          </div>
-
+                        <div className="mb-3 col-md-6">
+                          <label htmlFor="secondary_designation" className="form-label">Designation</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="secondary_designation"
+                            name="secondary_designation"
+                            placeholder="Assistant"
+                            value={formData.secondary_designation}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="mb-3 col-md-6">
+                          <label htmlFor="password" className="form-label">Password</label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="********"
+                            value={formData.password}
+                            onChange={handleChange}
+                          />
+                        </div>
+                        <div className="text-center py-2">
+                          <button type="submit" className="btn btn-primary">Submit</button>
                         </div>
                       </div>
                     </form>
+                    {successMessage && (
+                      <div className="alert alert-success mt-3" role="alert">
+                        {successMessage}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </Col>
         </Row>
-      </Container >
-    </div >
-  )
+      </Container>
+    </div>
+  );
 }
 
-export default InviteAgencies
+export default InviteAgencies;

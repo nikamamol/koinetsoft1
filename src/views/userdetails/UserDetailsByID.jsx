@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function UserDetailsByID() {
   const { id } = useParams();
@@ -15,11 +16,10 @@ function UserDetailsByID() {
     supervisor: '',
     salary: '',
     shift: '',
-    other_designation: '', // Initialize as empty string
+    other_designation: '',
   });
 
   useEffect(() => {
-    // Fetch user data when the component mounts
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/user/viewuserbyid/${id}`);
@@ -29,13 +29,13 @@ function UserDetailsByID() {
           fullname: userData.fullname || '',
           mobile: userData.mobile || '',
           email: userData.email || '',
-          password: '', // Password should not be populated for security reasons
-          date_of_hiring: userData.date_of_hiring.slice(0, 10) || '',
+          password: '', // Do not populate password for security reasons
+          date_of_hiring: userData.date_of_hiring ? userData.date_of_hiring.slice(0, 10) : '',
           designation: userData.designation || '',
           supervisor: userData.supervisor || '',
           salary: userData.salary || '',
           shift: userData.shift || '',
-          other_designation: userData.other_designation.join(',') || '',
+          other_designation: userData.other_designation ? userData.other_designation.join(',') : '',
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -67,6 +67,17 @@ function UserDetailsByID() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(`https://koinetsoft-backend.onrender.com/user/updateuser/${id}`, formData);
+      toast.success("User Update Successfully !")
+    } catch (error) {
+      console.error("Error updating user data:", error);
+      toast.error("Failed to update user !")
+    }
+  };
+
   return (
     <Container fluid className='my-5'>
       <Row>
@@ -82,7 +93,7 @@ function UserDetailsByID() {
                   <small className="text-muted float-end">Fields marked <span className="text-danger">*</span> are mandatory</small>
                 </div>
                 <div className="card-body">
-                  <form>
+                  <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="mb-3 col-md-6">
                         <label htmlFor="fullname">Name <span className="text-danger">*</span></label>
@@ -160,10 +171,12 @@ function UserDetailsByID() {
                           required
                         >
                           <option value="">--Select Designation--</option>
-                          <option value="3">Supervisor</option>
-                          <option value="4">Agent</option>
-                          <option value="5">Quality</option>
-                          <option value="6">Delivery</option>
+                          <option value="supervisor">Supervisor</option>
+                          <option value="agent">Agent</option>
+                          <option value="quality">Quality</option>
+                          <option value="delivery">Delivery</option>
+                          <option value="client">Client</option>
+                          <option value="guest">Guest</option>
                         </select>
                       </div>
                       <div className="mb-3 col-md-6">
@@ -177,7 +190,7 @@ function UserDetailsByID() {
                           required
                         >
                           <option value="">--Select Supervisor--</option>
-                          <option value="134">supriya mhaske</option>
+                          <option value="ankush">Ankush</option>
                         </select>
                       </div>
                       <div className="mb-3 col-md-6">
@@ -218,11 +231,12 @@ function UserDetailsByID() {
                       <div className="mb-3 col-md-12">
                         <label htmlFor="other_designation" className="form-label">Other Designation<span className="text-danger">*</span></label>
                         <div className="list-group">
-                          {['3', '4', '5', '6'].map(value => (
+                          {['3', '4', '5', '6','7','8'].map(value => (
                             <label key={value} className="list-group-item">
                               <input
                                 className="form-check-input me-1 checkbox_designation"
                                 type="checkbox"
+                                name="other_designation"
                                 value={value}
                                 checked={formData.other_designation.split(',').includes(value)}
                                 onChange={handleCheckboxChange}
@@ -231,28 +245,14 @@ function UserDetailsByID() {
                               {value === '4' && 'Agent'}
                               {value === '5' && 'Quality'}
                               {value === '6' && 'Delivery'}
+                              {value === '7' && 'Client'}
+                              {value === '8' && 'Guest'}
                             </label>
                           ))}
                         </div>
                       </div>
                     </div>
-                    <div className="row justify-content-end">
-                      <div className="col-sm-10">
-                        <button type="submit" className="btn btn-primary">Save</button>
-                        <button type="button" id="reset" onClick={() => setFormData({
-                          fullname: '',
-                          mobile: '',
-                          email: '',
-                          password: '',
-                          date_of_hiring: '',
-                          designation: '',
-                          supervisor: '',
-                          salary: '',
-                          shift: '',
-                          other_designation: '',
-                        })} className="btn btn-outline-secondary">Clear</button>
-                      </div>
-                    </div>
+                    <button type="submit" className="btn btn-primary">Save changes</button>
                   </form>
                 </div>
               </div>
