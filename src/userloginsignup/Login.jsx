@@ -1,38 +1,29 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from "../redux/reducer/registeruser/Login";
 import LogoImge from "../assets/koinetlogo.png";
 import Hourglass from "../assets/Hourglass.gif";
+import { toast } from 'react-toastify';
 
 function Login() {
+    const dispatch = useDispatch();
+    const { error, message, isLoading } = useSelector(state => state.auth);
+    const navigate = useNavigate();
+    
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError('');
-        setMessage('');
-        setIsLoading(true);
-
-        try {
-            const response = await axios.post(`https://koinetsoft-backend.onrender.com/user/login`, { email, password });
-            setIsLoading(false);
-            if (response.data.message) {
-                setMessage(response.data.message);
+        dispatch(loginUser({ email, password }))
+            .unwrap()
+            .then(() => {
                 navigate('/enterotp', { state: { email } });
-            }
-        } catch (error) {
-            setIsLoading(false);
-            if (error.response && error.response.data && error.response.data.message) {
-                setError(error.response.data.message);
-            } else {
-                setError('An error occurred. Please try again.');
-            }
-        }
+            })
+            .catch(() => {
+                toast.error('Invalid email or password');
+            });
     };
 
     return (
@@ -86,7 +77,7 @@ function Login() {
                             <div className="g-recaptcha" data-sitekey="6Lf6gQEqAAAAAJKaLIjO4drMp-GMKAvId5yejdE5"></div>
 
                             <div className="text-center mt-3">
-                                {isLoading ? <div><img src={Hourglass} alt="" height={40} width={40} /></div> : <button type="submit" className="btn btn-danger rounded-5 w-50" >Log In </button>                               }
+                                {isLoading ? <div><img src={Hourglass} alt="" height={40} width={40} /></div> : <button type="submit" className="btn btn-danger rounded-5 w-50" >Log In </button>}
                             </div>
                         </form>
                     </div>

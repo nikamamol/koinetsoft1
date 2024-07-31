@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import axios from 'axios';
-import LogoImge1 from "../assets/koinetlogo.png";
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../redux/reducer/registeruser/Register';
+
+import LogoImge1 from "../assets/koinetlogo.png";
 
 const Register = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { userInfo, status, error } = useSelector((state) => state.userRegister);// Ensure 'state.user' points to the correct part of the state
+
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
         password: '',
         phone: '',
-        role: 'user', // Set default value for role
+        role: 'user',
     });
 
     const handleChange = (e) => {
@@ -22,16 +27,15 @@ const Register = () => {
         });
     };
 
-    const submitForm = async (event) => {
+    const submitForm = (event) => {
         event.preventDefault();
-        try {
-            const response = await axios.post('https://koinetsoft-backend.onrender.com/user/signup', formData);
-            console.log("User registered successfully:", response.data);
-            navigate('/'); // Redirect to login page after successful registration
-        } catch (error) {
-            console.error("Error during signup:", error.response.data);
-            // Handle error (e.g., show an error message)
-        }
+        dispatch(registerUser(formData)).unwrap()
+            .then(() => {
+                navigate('/'); // Redirect on successful registration
+            })
+            .catch((err) => {
+                console.error("Error during signup:", err);
+            });
     };
 
     return (
@@ -126,6 +130,8 @@ const Register = () => {
                                     </Button>
                                 </div>
                             </Form>
+                            {status === 'loading' && <p>Loading...</p>}
+                            {error && <p className="text-danger">{error.message || 'An error occurred'}</p>}
                         </Card>
                     </Col>
                 </Col>

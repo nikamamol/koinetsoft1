@@ -1,50 +1,32 @@
-import React, { useState } from "react";
-import { Button } from "react-bootstrap";
-import OtpInput from "react-otp-input";
-import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Assuming you're using react-router-dom for navigation
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button } from 'react-bootstrap';
+import OtpInput from 'react-otp-input';
+import { useNavigate } from 'react-router-dom';
+import { setOtp, verifyOtp } from '../redux/reducer/registeruser/OtpVerify'; // Adjust the path as necessary
 
-export default function MyOtpInput() {
-    const [code, setCode] = useState("");
-    const [error, setError] = useState("");
-    const navigate = useNavigate(); // Hook to navigate to different routes
+const MyOtpInput = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const otp = useSelector(state => state.otp.otp);
+    const error = useSelector(state => state.otp.error);
+    const loading = useSelector(state => state.otp.loading);
 
     const handleChange = (code) => {
-        setCode(code);
-        setError(""); // Clear error on input change
+        dispatch(setOtp(code));
     };
 
-
-    const handleSubmit = async () => {
-        try {
-            const response = await axios.post("https://koinetsoft-backend.onrender.com/user/verify-otp", { otp: code });
-            if (response.status === 200) {
-                const { token } = response.data;
-                localStorage.setItem('authToken', token);
-                // Redirect to dashboard on successful OTP verification
+    const handleSubmit = () => {
+        dispatch(verifyOtp(otp))
+            .unwrap() // Unwraps the promise and allows you to handle the result
+            .then(() => {
                 navigate("/dashboard");
-            }
-        } catch (error) {
-            setError(error.response?.data?.message || "Error verifying OTP");
-        }
+            })
+            .catch((err) => {
+                // Handle errors if needed
+                console.error("Verification failed:", err);
+            });
     };
-
-    const renderCustomInput = (props) => (
-        <input
-            {...props}
-            style={{
-                border: "1px solid transparent",
-                borderRadius: "8px",
-                width: "54px",
-                height: "54px",
-                fontSize: "12px",
-                color: "#000",
-                fontWeight: "400",
-                caretColor: "blue",
-                marginRight: "10px"
-            }}
-        />
-    );
 
     return (
         <div className="container">
@@ -54,17 +36,36 @@ export default function MyOtpInput() {
                         <h5>Please Enter Your OTP...</h5>
                         {error && <p className="text-danger">{error}</p>}
                         <OtpInput
-                            value={code}
+                            value={otp}
                             onChange={handleChange}
                             numInputs={6}
                             separator={<span style={{ width: "8px" }}></span>}
                             isInputNum={true}
                             shouldAutoFocus={true}
-                            renderInput={renderCustomInput}
+                            renderInput={(props) => (
+                                <input
+                                    {...props}
+                                    style={{
+                                        border: "1px solid transparent",
+                                        borderRadius: "8px",
+                                        width: "54px",
+                                        height: "54px",
+                                        fontSize: "12px",
+                                        color: "#000", // Make sure this is applied
+                                        fontWeight: "400",
+                                        caretColor: "blue",
+                                        marginRight: "10px"
+                                    }}
+                                />
+                            )}
                         />
                         <div className="text-center mt-3">
-                            <Button className="btn btn-danger btn-lg" onClick={handleSubmit}>
-                                Submit
+                            <Button
+                                className="btn btn-danger btn-lg"
+                                onClick={handleSubmit}
+                                disabled={loading}
+                            >
+                                {loading ? 'Submitting...' : 'Submit'}
                             </Button>
                         </div>
                     </div>
@@ -72,4 +73,6 @@ export default function MyOtpInput() {
             </div>
         </div>
     );
-}
+};
+
+export default MyOtpInput;

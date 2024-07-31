@@ -59,6 +59,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UserDetailsByID from './views/userdetails/UserDetailsByID';
 import ViewAgencyDetailsById from './views/agency/ViewAgencyDetailsById';
+import ViewClientDetailsId from './views/billing/ViewClientDetailsId';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -75,7 +76,7 @@ const Layout = ({ children }) => {
 function App() {
   return (
     <BrowserRouter>
-    <ToastContainer/>
+      <ToastContainer />
       <Layout>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -132,6 +133,7 @@ function App() {
             <Route path="/billing/invoiceSetting" element={<InvoiceSetting />} />
             <Route path="/billing/processPayment" element={<ProcessPayment />} />
             <Route path="/billing/vieweClient" element={<VieweClient />} />
+           <Route path="/billing/viewClient/:id" element={<ViewClientDetailsId />} />
             <Route path="/billing/viewInvoice" element={<ViewInvoice />} />
             {/* support */}
             <Route path="/support/email" element={<Emails />} />
