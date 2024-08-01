@@ -298,7 +298,7 @@ function ResponsiveDrawer(props) {
             >
               <NoteAltIcon />
             </ListItemIcon>
-            <ListItemText primary="RFP" sx={{ opacity: open ? 1 : 0 }} />
+            <ListItemText primary="RPF" sx={{ opacity: open ? 1 : 0 }} />
             {isCollapseRFP ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </ListItemButton>
         </ListItem>
