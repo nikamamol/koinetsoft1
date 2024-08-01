@@ -91,20 +91,20 @@ function CreateCampaign() {
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="campaign_name" className="form-label">Campaign Name <span className="text-danger">*</span></label>
-                        <input type="text" className="form-control" id="campaign_name" name="campaign_name" value="" placeholder="Melt the Ice Campaign" aria-label="Melt the Ice Campaign" aria-describedby="basic-icon-default-fullname2" required="" />
+                        <input type="text" className="form-control" id="campaign_name" name="campaign_name" placeholder="Melt the Ice Campaign" aria-label="Melt the Ice Campaign" aria-describedby="basic-icon-default-fullname2" required="" />
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="campaign_code" className="form-label">Campaign Code <span className="text-danger">*</span></label>
-                        <input type="text" name="campaign_code" id="campaign_code" className="form-control phone-mask" placeholder="ICE" aria-label="ICE" aria-describedby="basic-icon-default-phone2" required />
+                        <input type="text" id="campaign_code" className="form-control phone-mask" placeholder="ICE" aria-label="ICE" aria-describedby="basic-icon-default-phone2" required />
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="start_date" className="form-label">Start Date <span className="text-danger">*</span></label>
-                        <input type="date" name="start_date" id="start_date" className="form-control" min="2024-07-19" required />
+                        <input type="date"  id="start_date" className="form-control" min="2024-07-19" required />
                       </div>
 
                       <div className="mb-3 col-md-6">
                         <label for="end_date" className="form-label">End Date <span className="text-danger">*</span></label>
-                        <input className="form-control" type="date" value="" min="2024-07-19" required="" name="end_date" id="end_date" />
+                        <input className="form-control" type="date"  min="2024-07-19" required="" name="end_date" id="end_date" />
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="campaign_type" className="form-label">Type Of Campaign  <span className="text-danger">*</span></label>
@@ -116,7 +116,7 @@ function CreateCampaign() {
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="campaign_nature" className="form-label">Nature Of Campaign<span className="text-danger">*</span></label>
-                        <select id="campaign_nature" required="" name="campaign_nature" className="form-select">
+                        <select id="campaign_nature" required=""  className="form-select">
                           <option value="">--Select Campaign Nature--</option>
                           <option value="HQL">HQL</option>
                           <option value="SQL">SQL</option>
@@ -129,15 +129,15 @@ function CreateCampaign() {
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="target" className="form-label">Target</label>  <span className="text-danger"> *</span>
-                        <input className="form-control" type="number" required="" placeholder="3000" name="target" value="" id="target" />
+                        <input className="form-control" type="number" required="" placeholder="3000"  value="" id="target" />
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="lead_per_day" className="form-label">Lead Per Day</label> <span className="text-danger"> *</span>
-                        <input className="form-control" type="number" placeholder="100" value="" name="lead_per_day" required="" id="lead_per_day" />
+                        <input className="form-control" type="number" placeholder="100"  required="" id="lead_per_day" />
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="voice_log_required" className="form-label">Voice Log Required</label> <span className="text-danger"> *</span>
-                        <select id="voice_log_required" required="" name="voice_log_required" className="form-select">
+                        <select id="voice_log_required" required=""  className="form-select">
                           <option value="">--Voice Log Required--</option>
                           <option value="Yes">Yes</option>
                           <option value="No">No</option>
@@ -145,7 +145,7 @@ function CreateCampaign() {
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="billing_day" className="form-label">Billing Day</label> <span className="text-danger"> *</span>
-                        <select id="billing_day" required="" name="billing_day" className="form-select">
+                        <select id="billing_day" required="" className="form-select">
                           <option value="">--Billing Day--</option>
                           <option value="1">1st of the month</option>
                           <option value="2">2nd of the month</option>
@@ -186,7 +186,7 @@ function CreateCampaign() {
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="template" className="form-label">Landing Page</label>
-                        <select id="template" required="" name="template" className="form-select">
+                        <select id="template" required="" className="form-select">
                           <option value="">--Landing Template--</option>
                           <option value="1">
                             Template - 1
@@ -218,12 +218,12 @@ function CreateCampaign() {
                         <div className="mb-3 col-md-12 d-flex">
                           <div className="col-md-6">
                             <label className="list-group-item">
-                              <input className="form-check-input me-1 " name="" type="checkbox" value="ankush" />
+                              <input className="form-check-input me-1 " name="" type="checkbox"  />
                               Ankush Surywanshi
                             </label>
                           </div>
                           <div className="col-md-6">
-                            <input className="form-control list-group-item" type="number" maxlength="5" disabled="" id="target_134" name="" min="1" placeholder="100" />
+                            <input className="form-control list-group-item" type="number" maxlength="5" disabled="" id="target_134" min="1" placeholder="100" />
                           </div>
                         </div>
                       </div>
@@ -254,11 +254,11 @@ function CreateCampaign() {
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="revenue" className="form-label">Revenue</label> <span className="text-danger"> *</span>
-                        <input className="form-control" type="text" placeholder="1000000" name="revenue" value="" required="" id="revenue" />
+                        <input className="form-control" type="text" placeholder="1000000" name="revenue"  required="" id="revenue" />
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="company_size" className="form-label">Company Size</label><span className="text-danger"> *</span>
-                        <input className="form-control" type="text" placeholder="50" name="company_size" value="" required="" id="company_size" />
+                        <input className="form-control" type="text" placeholder="50" name="company_size"  required="" id="company_size" />
                       </div>
                       <div className="mb-3 col-md-6">
                         <label for="job_title" className="form-label">Job Title</label> <span className="text-danger"> *</span>
@@ -335,7 +335,7 @@ function CreateCampaign() {
                             <label for="industry_filter" className="form-label">Industry</label>
                             <div className="autocomplete-container">
 
-                              <input type="text" id="industry_filter" name="industry_filter" placeholder="Select Industry" value="" className="form-control choices__inner" />
+                              <input type="text" id="industry_filter" name="industry_filter" placeholder="Select Industry" className="form-control choices__inner" />
                               <ul className="autocomplete-list" id="industry-list"></ul>
                               <div className="selected-items" id="industry-items"></div>
                             </div>
@@ -344,7 +344,7 @@ function CreateCampaign() {
                             <label for="function_filter" className="form-label">Function  <span className="text-danger">*</span></label>
                             <div className="autocomplete-container">
 
-                              <input type="text" id="function_filter" name="function_filter" placeholder="Select Function" value="" className="form-control choices__inner" />
+                              <input type="text" id="function_filter" name="function_filter" placeholder="Select Function" className="form-control choices__inner" />
                               <ul className="autocomplete-list" id="function-list"></ul>
                               <div className="selected-items" id="function-items"></div>
                             </div>
@@ -430,7 +430,7 @@ function CreateCampaign() {
                             <label for="company_filter" className="form-label">Company</label>
                             <div className="autocomplete-container">
 
-                              <input type="text" id="company_filter" name="company_filter" placeholder="Select Company" value="" className="form-control choices__inner" />
+                              <input type="text" id="company_filter" name="company_filter" placeholder="Select Company" className="form-control choices__inner" />
                               <ul className="autocomplete-list" id="company-list"></ul>
                               <div className="selected-items" id="company-items"></div>
                             </div>
@@ -440,7 +440,7 @@ function CreateCampaign() {
                             <label for="jobtitle_filter" className="form-label">Job Title</label>
                             <div className="autocomplete-container">
 
-                              <input type="text" id="jobtitle_filter" name="jobtitle_filter" placeholder="Select Jobtile" value="" className="form-control choices__inner" />
+                              <input type="text" id="jobtitle_filter" name="jobtitle_filter" placeholder="Select Jobtile" className="form-control choices__inner" />
                               <ul className="autocomplete-list" id="jobtitle-list"></ul>
                               <div className="selected-items" id="jobtitle-items"></div>
                             </div>
@@ -491,7 +491,7 @@ function CreateCampaign() {
                             <label for="country_filter" className="form-label">Country</label>
                             <div className="autocomplete-container">
 
-                              <input type="text" id="company_filter" name="country_filter" placeholder="Select Country" value="" className="form-control choices__inner" />
+                              <input type="text" id="company_filter" name="country_filter" placeholder="Select Country"  className="form-control choices__inner" />
                               <ul className="autocomplete-list" id="country-list"></ul>
                               <div className="selected-items" id="country-items"></div>
                             </div>
@@ -501,7 +501,7 @@ function CreateCampaign() {
                             <label for="city_filter" className="form-label">City</label>
                             <div className="autocomplete-container">
 
-                              <input type="text" id="city_filter" name="company_filter" placeholder="Select Company" value="" className="form-control choices__inner" />
+                              <input type="text" id="city_filter" name="company_filter" placeholder="Select Company"  className="form-control choices__inner" />
                               <ul className="autocomplete-list" id="city-list"></ul>
                               <div className="selected-items" id="city-items"></div>
                             </div>
@@ -511,7 +511,7 @@ function CreateCampaign() {
                             <label for="zipCode_filter" className="form-label">Zip Code</label>
                             <div className="autocomplete-container">
 
-                              <input type="text" id="jobtitle_filter" name="zipCode_filter" placeholder="Select Zip Code" value="" className="form-control choices__inner" />
+                              <input type="text" id="jobtitle_filter" name="zipCode_filter" placeholder="Select Zip Code"  className="form-control choices__inner" />
                               <ul className="autocomplete-list" id="zipCode-list"></ul>
                               <div className="selected-items" id="zipCode-items"></div>
                             </div>
