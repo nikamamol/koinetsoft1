@@ -3,6 +3,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import baseUrl from '../../constant/ConstantApi';
 
 function UserDetailsByID() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ function UserDetailsByID() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/user/viewuserbyid/${id}`);
+        const response = await axios.get(`${baseUrl}user/viewuserbyid/${id}`);
         const userData = response.data.user;
         
         setFormData({

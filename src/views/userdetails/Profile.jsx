@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import UserProfile from "../../assets/userProfile.jpeg";
 import axios from 'axios';
+import baseUrl from '../../constant/ConstantApi';
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -10,7 +11,7 @@ function Profile() {
     // Fetch user profile data
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/user/getuserProfile', {
+        const response = await axios.get(`${baseUrl}user/getuserProfile`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
           }

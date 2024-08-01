@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import baseUrl from '../constant/ConstantApi';
 
 const VieweUserTable = () => {
   const [data, setData] = useState([]);
@@ -16,7 +17,7 @@ const VieweUserTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://koinetsoft-backend.onrender.com/user/getallusers');
+        const response = await axios.get(`${baseUrl}user/getallusers`);
         console.log('API Response:', response.data);
         
         const users = response.data.users;

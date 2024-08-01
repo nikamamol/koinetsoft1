@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import baseUrl from '../../../constant/ConstantApi';
 
 export const fetchClients = createAsyncThunk('clients/fetchClients', async () => {
-  const response = await axios.get('http://localhost:4000/user/getAllClient');
+  const response = await axios.get(`${baseUrl}user/getAllClient`);
   return response.data;
 });
 
 export const deleteClient = createAsyncThunk('clients/deleteClient', async (clientId) => {
-  await axios.delete(`http://localhost:4000/user/deleteClient/${clientId}`);
+  await axios.delete(`${baseUrl}user/deleteClient/${clientId}`);
   return clientId;
 });
 

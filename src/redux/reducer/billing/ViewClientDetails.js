@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import baseUrl from '../../../constant/ConstantApi';
 
 // Async thunk for fetching client details
 export const fetchClientDetails = createAsyncThunk(    
     'client/fetchClientDetails',
     async (id) => {
-        const response = await axios.get(`http://localhost:4000/user/clientDetails/${id}`);
+        const response = await axios.get(`${baseUrl}user/clientDetails/${id}`);
         return response.data;
     }
 );
@@ -14,7 +15,7 @@ export const fetchClientDetails = createAsyncThunk(
 export const updateClientDetails = createAsyncThunk(
     'client/viewClient',
     async ({ id, details }) => {
-        await axios.put(`http://localhost:4000/user/updateClient/${id}`, details);
+        await axios.put(`${baseUrl}user/updateClient/${id}`, details);
         return details;
     }
   );

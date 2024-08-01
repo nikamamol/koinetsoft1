@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Col, Container, Row, Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import baseUrl from '../../constant/ConstantApi';
 
 function AddClient() {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ function AddClient() {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:4000/user/addnewClient', formData)
+    axios.post(`${baseUrl}user/addnewClient`, formData)
       .then(response => {
         // console.log('Client added:', response.data);
         toast.success("Client Added Successfully !")

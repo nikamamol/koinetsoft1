@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Col, Container, Row, Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import baseUrl from '../../constant/ConstantApi';
 
 function AddUser() {
   const initialFormData = {
@@ -40,7 +41,7 @@ function AddUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://koinetsoft-backend.onrender.com/user/addnewuser', formData);
+      const response = await axios.post(`${baseUrl}user/addnewuser`, formData);
       console.log('User added successfully:', response.data);
       toast.success('User added successfully!');
       resetForm(); // Reset the form data after successful submission
