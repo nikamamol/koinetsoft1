@@ -170,9 +170,9 @@ function ResponsiveDrawer(props) {
       </List>
       {/* landing page section */}
 
-      <div className='text-center'>
+      {/* <div className='text-center'>
         <p className='bg-light text-dark text-muted'>ADMIN</p>
-      </div>
+      </div> */}
       <List>
         <ListItem disablePadding sx={{ display: 'block' }} onClick={handleCollapseLandingPage}>
           <ListItemButton
@@ -224,9 +224,9 @@ function ResponsiveDrawer(props) {
           ))}
         </Collapse>
       </List>
-      <div className='text-center'>
+      {/* <div className='text-center'>
         <p className='bg-light text-dark text-muted'>PUBLISHER</p>
-      </div>
+      </div> */}
       {/* user section */}
       <List>
         <ListItem disablePadding sx={{ display: 'block' }} onClick={handleCollapseUser}>
