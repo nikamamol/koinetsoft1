@@ -18,6 +18,7 @@ import EmailText from '../../../texteditor/EmailText';
 import InitialEmail from '../../../texteditor/InitialEmail';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCampaign } from '../../../redux/reducer/createcampaign/CreateNewCampaign';
+import { toast } from 'react-toastify';
 
 function CreateCampaign() {
   const dispatch = useDispatch();
@@ -84,19 +85,14 @@ function CreateCampaign() {
     supervisor: '',
     supervisorTarget: 0,
     template: '',
-    name: '',
-    originalName: '',
-    mimeType: '',
-    size: 0,
-    path: '',
-    revenue: 0,
-    companySize: 0,
+    revenue: [],
+    companySize: [],
     jobTitle: '',
     geo: '',
     industry: '',
     note: '',
-    suppressionList: '',
-    abmList: '',
+    suppressionList: [],  // Only one entry for suppressionList
+    abmList: [],          // Only one entry for abmList
     contactsPerCampaign: false,
     abmCpc: 'Company',
     nonAbmCpc: 'Company',
@@ -112,26 +108,31 @@ function CreateCampaign() {
     cityFilter: [],
     zipCodeFilter: []
   });
-
+  const [files, setFiles] = useState({
+    assets: [],
+    script: [],
+    suppression: [],
+    tal: [],
+    suppressionList: [],
+    abmList: []
+  });
 
   const handleChange = (event) => {
     const { name, type, files } = event.target;
-    
+
     if (type === 'file') {
-        // For file inputs, use the files property
-        setFormData({
-            ...formData,
-            [name]: files[0]  // Assuming you are only uploading one file at a time
-        });
+      setFiles(prevFiles => ({
+        ...prevFiles,
+        [name]: files
+      }));
     } else {
-        // For other inputs, use the value property
-        const { value } = event.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        [name]: event.target.value
+      }));
     }
-};
+  };
+
 
   const handleEmployeeSizeChange = (event) => {
     const {
@@ -143,10 +144,91 @@ function CreateCampaign() {
     // Update the formData state with the new selected values
     setFormData({ ...formData, seniorityLevel: newValue });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createCampaign(formData));
+
+    const payload = new FormData();
+
+    // Append form data
+    Object.keys(formData).forEach(key => {
+      if (Array.isArray(formData[key])) {
+        formData[key].forEach(item => payload.append(key, item));
+      } else {
+        payload.append(key, formData[key]);
+      }
+    });
+
+    // Append files
+    Object.keys(files).forEach(key => {
+      Array.from(files[key]).forEach(file => {
+        payload.append(key, file);
+      });
+    });
+
+    try {
+      // Dispatch the action and wait for it to complete
+      await dispatch(createCampaign(payload));
+
+      // Show success toast
+      toast.success('Campaign created successfully');
+
+      // Reset form data and files state
+      setFormData({
+        clientSelect: '',
+        campaignName: '',
+        campaignCode: '',
+        startDate: '',
+        endDate: '',
+        campaignType: '',
+        campaignNature: '',
+        target: 0,
+        leadPerDay: 0,
+        voiceLogRequired: '',
+        billingDay: 0,
+        cpl: 0,
+        supervisor: '',
+        supervisorTarget: 0,
+        template: '',
+        revenue: [],
+        companySize: [],
+        jobTitle: '',
+        geo: '',
+        industry: '',
+        note: '',
+        suppressionList: [],  // Reset suppressionList
+        abmList: [],          // Reset abmList
+        contactsPerCampaign: false,
+        abmCpc: 'Company',
+        nonAbmCpc: 'Company',
+        noOfContacts: 0,
+        industryFilter: [],
+        functionFilter: [],
+        seniorityLevel: [],
+        employeeSize: [],
+        companyFilter: [],
+        jobTitleFilter: [],
+        revenueFilter: [],
+        countryFilter: [],
+        cityFilter: [],
+        zipCodeFilter: []
+      });
+
+      setFiles({
+        assets: [],
+        script: [],
+        suppression: [],
+        tal: [],
+        suppressionList: [], // Reset suppressionList
+        abmList: []          // Reset abmList
+      });
+
+    } catch (error) {
+      // Show error toast
+      toast.error('Failed to create campaign. Please try again.');
+      console.error('Error submitting form:', error);
+    }
   };
+
   return (
     <div>
       <Container fluid className='my-5 '>
@@ -328,22 +410,22 @@ function CreateCampaign() {
 
                         <div className="mb-3 col-md-6 mt-2">
                           <label htmlFor="assets" className="form-label">Assets/Whitepaper</label> (.pdf) <span className="text-danger" id="validation_assets"> *</span>
-                          <input className="form-control" type="file" id="assets" name="assets" accept=".pdf" multiple onChange={handleChange} />
+                          <input className="form-control" type="file" id="assets" name="assets" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
                         </div>
 
                         <div className="mb-3 col-md-6">
                           <label htmlFor="script" className="form-label">Script</label> (.docx, .doc) <span className="text-danger" id="validation_script"> *</span>
-                          <input className="form-control" type="file" id="script" name="script" accept=".docx, .doc" multiple onChange={handleChange} />
+                          <input className="form-control" type="file" id="script" name="script" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
                         </div>
 
                         <div className="mb-3 col-md-6">
                           <label htmlFor="suppression" className="form-label">Suppression</label> (.xlsx, .xls, .csv) <span className="text-danger" id="validation_suppression"> *</span>
-                          <input className="form-control" type="file" id="suppression" name="suppression" accept=".xlsx, .xls, .csv" multiple onChange={handleChange} />
+                          <input className="form-control" type="file" id="suppression" name="suppression" accept=".pdf, .xlsx, .xls, .csv" multiple onChange={handleChange} />
                         </div>
 
                         <div className="mb-3 col-md-6">
                           <label htmlFor="tal" className="form-label">TAL</label> (.xlsx, .xls, .csv) <span className="text-danger" id="validation_tal"> *</span>
-                          <input className="form-control" type="file" id="tal" name="tal" accept=".xlsx, .xls, .csv" multiple onChange={handleChange} />
+                          <input className="form-control" type="file" id="tal" name="tal" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
                         </div>
                         {/* third part */}
                         <div className="">
@@ -391,11 +473,11 @@ function CreateCampaign() {
                           <input
                             className="form-control"
                             type="file"
-                            multiple onChange={handleChange}
+                            multiple
+                            onChange={handleChange}
                             required
-                            accept=".xlsx, .xls, .csv"
-                            id="supression_list"
-                            name="supression_list"
+                            accept=".pdf, .xlsx, .xls, .csv"
+                            name="suppressionList"
                           />
                         </div>
 
@@ -418,9 +500,9 @@ function CreateCampaign() {
                             type="file"
                             required
                             multiple onChange={handleChange}
-                            accept=".xlsx, .xls, .csv"
+                            accept=".pdf, .xlsx, .xls, .csv"
                             id="abm_list"
-                            name="abm_list"
+                            name="abmList"
                           />
                         </div>
                         <div id="div_view_contact_per_campaign">
