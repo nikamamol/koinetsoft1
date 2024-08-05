@@ -60,6 +60,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import UserDetailsByID from './views/userdetails/UserDetailsByID';
 import ViewAgencyDetailsById from './views/agency/ViewAgencyDetailsById';
 import ViewClientDetailsId from './views/billing/ViewClientDetailsId';
+import ViewCampaignDetails from './views/leads/inhousecampaign/ViewCampaignDetails';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -126,6 +127,7 @@ function App() {
             <Route path="/campaigns/inhousecampaigns/closedCampaigns" element={<ClosedCampaignsIn />} />
             <Route path="/campaigns/inhousecampaigns/pausedCampaigns" element={<PausedCampaignsIn />} />
             <Route path="/campaigns/inhousecampaigns/createCampaign" element={<CreateCampaign />} />
+            <Route path="/campaigns/inhousecampaigns/campaigndetail/:id" element={<ViewCampaignDetails />} />
 
             {/* billing */}
             <Route path="/billing/addClient" element={<AddClient />} />

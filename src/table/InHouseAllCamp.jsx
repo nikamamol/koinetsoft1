@@ -1,60 +1,53 @@
-import { useMemo } from 'react';
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from 'material-react-table';
+import { useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { MaterialReactTable } from 'material-react-table';
+import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import { useNavigate } from 'react-router-dom';
 
-// updated data structure with the 'name' field
-const data = [
-  {
-    name: 'Campaign One',
-    code: 'C001',
-    enterpriseAgency: 'Enterprise A',
-    startDate: '2023-01-01',
-    endDate: '2023-12-31',
-    campaignStatus: 'Ongoing',
-  },
-  {
-    name: 'Campaign Two',
-    code: 'C002',
-    enterpriseAgency: 'Agency B',
-    startDate: '2023-02-01',
-    endDate: '2023-11-30',
-    campaignStatus: 'Paused',
-  },
-  {
-    name: 'Campaign Three',
-    code: 'C003',
-    enterpriseAgency: 'Enterprise C',
-    startDate: '2023-03-01',
-    endDate: '2023-10-31',
-    campaignStatus: 'Completed',
-  },
-  // Add other data entries as needed...
-];
+
+const formatDate = (dateString) => {
+  if (!dateString) return 'No Date Provided';
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+  const options = { day: '2-digit', month: 'short', year: 'numeric' };
+  return date.toLocaleDateString('en-GB', options);
+};
 
 const InHouseAllCamp = () => {
-  // Memoize the columns definition
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const { campaigns, status, error } = useSelector((state) => state.campaigns);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchCampaigns());
+    }
+  }, [dispatch, status]);
+
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'serialNumber',
+        accessorKey: '_id',
         header: 'S.No',
         size: 50,
         Cell: ({ row }) => row.index + 1,
       },
       {
-        accessorKey: 'name',
+        accessorKey: 'campaignName',
         header: 'Name',
         size: 150,
       },
       {
-        accessorKey: 'code',
+        accessorKey: 'campaignCode',
         header: 'Code',
         size: 100,
       },
       {
-        accessorKey: 'enterpriseAgency',
+        accessorKey: 'clientSelect',
         header: 'Enterprise/Agency',
         size: 200,
       },
@@ -62,11 +55,13 @@ const InHouseAllCamp = () => {
         accessorKey: 'startDate',
         header: 'Start Date',
         size: 150,
+        Cell: ({ cell }) => formatDate(cell.getValue()),
       },
       {
         accessorKey: 'endDate',
         header: 'End Date',
         size: 150,
+        Cell: ({ cell }) => formatDate(cell.getValue()),
       },
       {
         accessorKey: 'campaignStatus',
@@ -78,9 +73,15 @@ const InHouseAllCamp = () => {
         header: 'Actions',
         Cell: ({ row }) => (
           <div>
-            <button className='btn btn-info btn-sm me-1' onClick={() => alert(`Viewing ${row.original.code}`)}>View</button>
-            <button className='btn btn-primary btn-sm me-1' onClick={() => alert(`Editing ${row.original.code}`)}>Edit</button>
-            <button className="btn btn-danger btn-sm me-1" onClick={() => alert(`Deleting ${row.original.code}`)}>Delete</button>
+            <RemoveRedEyeIcon onClick={() => navigate(`/campaigns/inhousecampaigns/campaigndetail/${row.original._id}`)}
+              style={{ cursor: 'pointer', color: 'Dark', marginRight: '15px' }}
+            />
+            <ModeEditIcon onClick={() => alert(`Viewing ${row.original._id}`)}
+              style={{ cursor: 'pointer', color: 'Dark' }}
+            />
+            {/* <button className='btn btn-info btn-sm me-1' onClick={() => alert(`Viewing ${row.original.campaignCode}`)}>View</button> */}
+            {/* <button className='btn btn-primary btn-sm me-1' onClick={() => alert(`Editing ${row.original.campaignCode}`)}>Edit</button> */}
+            {/* <button className="btn btn-danger btn-sm me-1" onClick={() => alert(`Deleting ${row.original.campaignCode}`)}>Delete</button> */}
           </div>
         ),
         size: 200,
@@ -89,13 +90,10 @@ const InHouseAllCamp = () => {
     [],
   );
 
-  // Initialize the table using the hook
-  const table = useMaterialReactTable({
-    columns,
-    data,
-  });
+  if (status === 'loading') return <p>Loading...</p>;
+  if (status === 'failed') return <p>Error: {error}</p>;
 
-  return <MaterialReactTable table={table} />;
+  return <MaterialReactTable columns={columns} data={campaigns} />;
 };
 
 export default InHouseAllCamp;

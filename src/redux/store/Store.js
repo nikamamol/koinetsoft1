@@ -5,6 +5,7 @@ import userSlice from "../reducer/registeruser/Register";
 import authSlice from "../reducer/registeruser/Login";
 import otpSlice from "../reducer/registeruser/OtpVerify";
 import rootReducer from "../reducer/createcampaign/CreateNewCampaign";
+import campaignsSlice from "../reducer/createcampaign/GetCampaignData";
 
 
 const store = configureStore({
@@ -15,6 +16,7 @@ const store = configureStore({
     auth: authSlice,
     otp: otpSlice,
     reducer: rootReducer,
+    campaigns: campaignsSlice,
   },
 });
 
