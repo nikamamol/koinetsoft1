@@ -1,15 +1,18 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { styled } from '@mui/material/styles';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
-import MuiAccordion from '@mui/material/Accordion';
-import MuiAccordionSummary from '@mui/material/AccordionSummary';
-import MuiAccordionDetails from '@mui/material/AccordionDetails';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import { Col, Container, Row } from 'react-bootstrap';
+import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
+import { useNavigate } from 'react-router-dom';
 
-const Accordion = styled((props) => (
-  <MuiAccordion disableGutters elevation={0} square {...props} />
-))(({ theme }) => ({
+
+
+const CustomAccordion = styled(Accordion)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
   '&:not(:last-child)': {
     borderBottom: 0,
@@ -19,16 +22,8 @@ const Accordion = styled((props) => (
   },
 }));
 
-const AccordionSummary = styled((props) => (
-  <MuiAccordionSummary
-    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: '0.9rem' }} />}
-    {...props}
-  />
-))(({ theme }) => ({
-  backgroundColor:
-    theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, .05)'
-      : 'rgba(0, 0, 0, .03)',
+const CustomAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, .05)' : 'rgba(0, 0, 0, .03)',
   flexDirection: 'row-reverse',
   '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
     transform: 'rotate(90deg)',
@@ -38,24 +33,48 @@ const AccordionSummary = styled((props) => (
   },
 }));
 
-const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+const CustomAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-export default function ViewAllCampaignsClick() {
+const ViewAllCampaignsClick = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { campaigns, status, error } = useSelector((state) => state.campaigns);
   const [expanded, setExpanded] = React.useState('panel1');
   const [activeTab, setActiveTab] = React.useState('tele_marketing');
 
+  useEffect(() => {
+    dispatch(fetchCampaigns());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (campaigns) {
+      console.log('Campaigns:', campaigns); // Log all campaign data
+    }
+  }, [campaigns]);
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
-
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+
+  if (status === 'loading') {
+    return <p>Loading...</p>;
+  }
+
+  if (status === 'failed') {
+    return <p>Error: {error}</p>;
+  }
+
+  const handleViewCampaign = (campaignId) => {
+    navigate(`/campaigns/inhousecampaigns/campaigndetail/${campaignId}`);
+  
+  }
   return (
 
     <div>
@@ -94,7 +113,28 @@ export default function ViewAllCampaignsClick() {
                           <div className="row ms-3" id="div_ongoing_tele_marketing">
                             <div className="col-md-12">
                               <h3>Tele Marketing Campaigns</h3>
-                              <p>Here you can view ongoing Tele Marketing campaigns. Add details and data related to your Tele Marketing campaigns here.</p>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Tele Marketing" && campaign.campaignStatus === "Ongoing" &&
+                                      <Card className="shadow-sm h-100 border-0">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
+
                             </div>
                           </div>
                         </div>
@@ -102,7 +142,27 @@ export default function ViewAllCampaignsClick() {
                           <div className="row  ms-3" id="div_ongoing_email_marketing">
                             <div className="col-md-12">
                               <h3>Email Marketing Campaigns</h3>
-                              <p>Here you can view ongoing Email Marketing campaigns. Add details and data related to your Email Marketing campaigns here.</p>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Email Marketing" && campaign.campaignStatus === "Ongoing" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
                             </div>
                           </div>
                         </div>
@@ -138,7 +198,27 @@ export default function ViewAllCampaignsClick() {
                           <div className="row ms-3" id="div_ongoing_tele_marketing">
                             <div className="col-md-12">
                               <h3>Tele Marketing Campaigns</h3>
-                              <p>Here you can view ongoing Tele Marketing campaigns. Add details and data related to your Tele Marketing campaigns here.</p>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Tele Marketing" && campaign.campaignStatus === "Expired" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
                             </div>
                           </div>
                         </div>
@@ -146,7 +226,27 @@ export default function ViewAllCampaignsClick() {
                           <div className="row  ms-3" id="div_ongoing_email_marketing">
                             <div className="col-md-12">
                               <h3>Email Marketing Campaigns</h3>
-                              <p>Here you can view ongoing Email Marketing campaigns. Add details and data related to your Email Marketing campaigns here.</p>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Email Marketing" && campaign.campaignStatus === "Expired" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
                             </div>
                           </div>
                         </div>
@@ -181,7 +281,27 @@ export default function ViewAllCampaignsClick() {
                           <div className="row ms-3" id="div_ongoing_tele_marketing">
                             <div className="col-md-12">
                               <h3>Tele Marketing Campaigns</h3>
-                              <p>Here you can view ongoing Tele Marketing campaigns. Add details and data related to your Tele Marketing campaigns here.</p>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Tele Marketing" && campaign.campaignStatus === "Upcomming" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
                             </div>
                           </div>
                         </div>
@@ -189,7 +309,27 @@ export default function ViewAllCampaignsClick() {
                           <div className="row  ms-3" id="div_ongoing_email_marketing">
                             <div className="col-md-12">
                               <h3>Email Marketing Campaigns</h3>
-                              <p>Here you can view ongoing Email Marketing campaigns. Add details and data related to your Email Marketing campaigns here.</p>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Email Marketing" && campaign.campaignStatus === "Upcomming" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
                             </div>
                           </div>
                         </div>
@@ -224,7 +364,27 @@ export default function ViewAllCampaignsClick() {
                           <div className="row ms-3" id="div_ongoing_tele_marketing">
                             <div className="col-md-12">
                               <h3>Tele Marketing Campaigns</h3>
-                              <p>Here you can view ongoing Tele Marketing campaigns. Add details and data related to your Tele Marketing campaigns here.</p>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Tele Marketing" && campaign.campaignStatus === "Paused" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
                             </div>
                           </div>
                         </div>
@@ -232,7 +392,27 @@ export default function ViewAllCampaignsClick() {
                           <div className="row  ms-3" id="div_ongoing_email_marketing">
                             <div className="col-md-12">
                               <h3>Email Marketing Campaigns</h3>
-                              <p>Here you can view ongoing Email Marketing campaigns. Add details and data related to your Email Marketing campaigns here.</p>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Email Marketing" && campaign.campaignStatus === "Paused" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
                             </div>
                           </div>
                         </div>
@@ -249,3 +429,5 @@ export default function ViewAllCampaignsClick() {
 
   );
 }
+
+export default ViewAllCampaignsClick;

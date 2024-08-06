@@ -30,7 +30,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '@emotion/react';
 import { Collapse } from '@mui/material';
 import LogoImage from "../assets/koinetlogo.png"
@@ -145,6 +145,31 @@ function ResponsiveDrawer(props) {
 
       </div>
       {/* <Divider /> */}
+      <List>
+        <ListItem disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            component={Link}
+            to="/campaigns/inhousecampaigns/createCampaign"
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? 'initial' : 'center',
+              px: 2.5,
+            }}
+            onClick={handleListItemClick}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              {/* Add any icon here if needed */}
+            </ListItemIcon>
+            <ListItemText sx={{ opacity: open ? 1 : 0 }} className='btn btn-danger'>New Campaign +</ListItemText>
+          </ListItemButton>
+        </ListItem>
+      </List>
       {/* Dashboard Section */}
       <List>
         <ListItem disablePadding sx={{ display: 'block' }} onClick={handleListItemClick}>
