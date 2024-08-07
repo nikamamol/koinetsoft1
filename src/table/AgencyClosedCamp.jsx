@@ -1,39 +1,33 @@
-import { useMemo } from 'react';
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from 'material-react-table';
+import React, { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData';
+import { useNavigate } from 'react-router-dom';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
-// updated data structure with the 'name' field
-const data = [
-  {
-    name: 'Campaign One',
-    code: 'C001',
-    enterpriseAgency: 'Enterprise A',
-    startDate: '2023-01-01',
-    endDate: '2023-12-31',
-    campaignStatus: 'Ongoing',
-  },
-  {
-    name: 'Campaign Two',
-    code: 'C002',
-    enterpriseAgency: 'Agency B',
-    startDate: '2023-02-01',
-    endDate: '2023-11-30',
-    campaignStatus: 'Paused',
-  },
-  {
-    name: 'Campaign Three',
-    code: 'C003',
-    enterpriseAgency: 'Enterprise C',
-    startDate: '2023-03-01',
-    endDate: '2023-10-31',
-    campaignStatus: 'Completed',
-  },
-  // Add other data entries as needed...
-];
 
 const AgencyClosedCamp = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const { campaigns, status, error } = useSelector((state) => state.campaigns);
+
+  useEffect(() => {
+    dispatch(fetchCampaigns());
+  }, [dispatch]);
+
+  // Function to format the date
+  const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-GB', options);
+  };
+
+  // Filter campaigns to show only active ones
+  const activeCampaigns = campaigns.filter((campaign) => campaign.campaignStatus === 'Closed');
+  // const handleViewCampaign = (campaignId) => {
+  //   navigate(`/campaigns/inhousecampaigns/campaigndetail/${campaignId}`);
+
+  // }
+
   // Memoize the columns definition
   const columns = useMemo(
     () => [
@@ -44,17 +38,17 @@ const AgencyClosedCamp = () => {
         Cell: ({ row }) => row.index + 1,
       },
       {
-        accessorKey: 'name',
-        header: 'Name',
+        accessorKey: 'campaignName',
+        header: 'Campaign Name',
         size: 150,
       },
       {
-        accessorKey: 'code',
+        accessorKey: 'campaignCode',
         header: 'Code',
         size: 100,
       },
       {
-        accessorKey: 'enterpriseAgency',
+        accessorKey: 'clientSelect',
         header: 'Enterprise/Agency',
         size: 200,
       },
@@ -62,11 +56,13 @@ const AgencyClosedCamp = () => {
         accessorKey: 'startDate',
         header: 'Start Date',
         size: 150,
+        Cell: ({ cell }) => formatDate(cell.getValue()),
       },
       {
         accessorKey: 'endDate',
         header: 'End Date',
         size: 150,
+        Cell: ({ cell }) => formatDate(cell.getValue()),
       },
       {
         accessorKey: 'campaignStatus',
@@ -78,9 +74,27 @@ const AgencyClosedCamp = () => {
         header: 'Actions',
         Cell: ({ row }) => (
           <div>
-            <button className='btn btn-info btn-sm me-1' onClick={() => alert(`Viewing ${row.original.code}`)}>View</button>
-            <button className='btn btn-primary btn-sm me-1' onClick={() => alert(`Editing ${row.original.code}`)}>Edit</button>
-            <button className="btn btn-danger btn-sm me-1" onClick={() => alert(`Deleting ${row.original.code}`)}>Delete</button>
+            {/* <button
+              className='btn btn-info btn-sm me-1'
+              onClick={() => alert(`Viewing ${row.original._id}`)}
+            >
+              View
+            </button> */}
+            <RemoveRedEyeIcon onClick={() => navigate(`/campaigns/inhousecampaigns/campaigndetail/${row.original._id}`)}
+              style={{ cursor: 'pointer', color: 'Dark', marginRight: '15px' }}
+            />
+            {/* <button
+              className='btn btn-primary btn-sm me-1'
+              onClick={() => alert(`Editing ${row.original._id}`)}
+            >
+              Edit
+            </button>
+            <button
+              className="btn btn-danger btn-sm me-1"
+              onClick={() => alert(`Deleting ${row.original._id}`)}
+            >
+              Delete
+            </button> */}
           </div>
         ),
         size: 200,
@@ -92,8 +106,17 @@ const AgencyClosedCamp = () => {
   // Initialize the table using the hook
   const table = useMaterialReactTable({
     columns,
-    data,
+    data: activeCampaigns,
   });
+
+  // Render loading, error, or the table
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
 
   return <MaterialReactTable table={table} />;
 };

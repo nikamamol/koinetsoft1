@@ -49,7 +49,7 @@ const InHouseActiveCamp = () => {
       },
       {
         accessorKey: 'clientSelect',
-        header: 'Client Name',
+        header: 'Enterprise/Agency',
         size: 200,
       },
       {

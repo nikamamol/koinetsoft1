@@ -697,7 +697,7 @@ function ResponsiveDrawer(props) {
         </ListItem>
         <Collapse in={isCollapseSupport} timeout="auto" unmountOnExit>
           {[
-            { text: 'Online Chat', path: '/support/onlinechat' },
+            // { text: 'Online Chat', path: '/support/onlinechat' },
             { text: 'Email', path: '/support/email' },
 
           ].map((item) => (
