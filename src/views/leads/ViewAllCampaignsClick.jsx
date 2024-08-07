@@ -73,7 +73,7 @@ const ViewAllCampaignsClick = () => {
 
   const handleViewCampaign = (campaignId) => {
     navigate(`/campaigns/inhousecampaigns/campaigndetail/${campaignId}`);
-  
+
   }
   return (
 
@@ -408,6 +408,7 @@ const ViewAllCampaignsClick = () => {
                                           </Card.Text>
                                         </Card.Body>
                                         <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+
                                       </Card>
                                     }
                                   </Col>
