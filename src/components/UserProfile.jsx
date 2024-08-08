@@ -8,7 +8,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
-import { Settings } from '@mui/icons-material';
+// import { Settings } from '@mui/icons-material';
 
 export default function UserProfile() {
   const [anchorEl, setAnchorEl] = React.useState(null);

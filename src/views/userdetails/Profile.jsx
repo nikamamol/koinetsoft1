@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import UserProfile from "../../assets/userProfile.jpeg";
 import axios from 'axios';

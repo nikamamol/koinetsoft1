@@ -61,6 +61,7 @@ import UserDetailsByID from './views/userdetails/UserDetailsByID';
 import ViewAgencyDetailsById from './views/agency/ViewAgencyDetailsById';
 import ViewClientDetailsId from './views/billing/ViewClientDetailsId';
 import ViewCampaignDetails from './views/leads/inhousecampaign/ViewCampaignDetails';
+import ViewLandingPageDesciption from "./views/landingpages/ViewLandingPageDesciption"
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -87,6 +88,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route path="/dashboard" element={<MainDashboard />} />
             <Route path="/viewallcampaignsclick" element={<ViewAllCampaignsClick />} />
+            <Route path="/viewpage/:id" element={<ViewLandingPageDesciption />} />
             {/* landing pages */}
             <Route path="/landingpages/createlandingpage" element={<NewLandingPage />} />
             <Route path="/landingpages/viewalllandingpages" element={<ViewLandingPages />} />

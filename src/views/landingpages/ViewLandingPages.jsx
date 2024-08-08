@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Col, Container, Row } from 'react-bootstrap';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { fetchTemplates } from '../../redux/reducer/createteplate/GetTemplate';
+
 
 function ViewLandingPages() {
+  const dispatch = useDispatch();
+  const templates = useSelector((state) => state.templates?.templates || []);
+  const templateStatus = useSelector((state) => state.templates?.status || 'idle');
+  const error = useSelector((state) => state.templates?.error || null);
+
+  useEffect(() => {
+    console.log('Component Mounted'); // Add this line to check if useEffect is being triggered
+    if (templateStatus === 'idle') {
+        dispatch(fetchTemplates());
+    }
+}, [templateStatus, dispatch]);
+  console.log(templates)
+
   return (
     <div>
       <Container fluid className="my-5">
@@ -14,52 +31,40 @@ function ViewLandingPages() {
               <h4 className="fw-bold py-3 ms-3 text_color">View All Landing Pages</h4>
             </div>
             <div className="container-xxl flex-grow-1 container-p-y">
-          
-
-              {/* Hoverable Table rows */}
               <div className="card border-0 rounded-4 shadow">
                 <div className="table-responsive text-nowrap">
-                  <table className="table table-hover" id="myTable">
-                    <thead>
-                      <tr>
-                        <th>Sr No</th>
-                        <th>Title</th>
-                        <th>Date</th>
-                        <th>Edit</th>
-                      </tr>
-                    </thead>
-                    <tbody className="table-border-bottom-0">
-                      <tr key="1">
-                        <td>
-                          <i className="fab fa-angular fa-lg text-danger me-3"></i> <strong>1</strong>
-                        </td>
-                        <td>
-                          <a target="_blank" href="https://reportpub.co/landing/test-jl" rel="noopener noreferrer">Test</a>
-                        </td>
-                        <td>2024-07-23</td>
-                        <td>
-                          <a className="dropdown-item delete" href="/edit-landing-template/33">
-                            <i className="bx bx-edit me-1"></i> Edit
-                          </a>
-                        </td>
-                      </tr>
-
-                      <tr key="2">
-                        <td>
-                          <i className="fab fa-angular fa-lg text-danger me-3"></i> <strong>2</strong>
-                        </td>
-                        <td>
-                          <a target="_blank" href="https://reportpub.co/landing/dsds" rel="noopener noreferrer">dsds</a>
-                        </td>
-                        <td>2024-07-23</td>
-                        <td>
-                          <a className="dropdown-item delete" href="/edit-landing-template/32">
-                            <i className="bx bx-edit me-1"></i> Edit
-                          </a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  {templateStatus === 'loading' && <p>Loading...</p>}
+                  {templateStatus === 'failed' && <p>Error: {error}</p>}
+                  {templateStatus === 'succeeded' && (
+                    <table className="table table-hover" id="myTable">
+                      <thead>
+                        <tr className='p-4'>
+                          <th>Sr No</th>
+                          <th>Title</th>
+                          <th>Date</th>
+                          <th>View</th>
+                        </tr>
+                      </thead>
+                      <tbody className="table-border-bottom-0">
+                        {templates.map((template, index) => (
+                          <tr key={template._id}>
+                            <td>
+                              <i className="fab fa-angular fa-lg text-danger me-3"></i> <strong>{index + 1}</strong>
+                            </td>
+                            <td>
+                              <p>{template.template_title}</p>
+                            </td>
+                            <td>{new Date().toISOString().split('T')[0]}</td>
+                            <td>
+                              <a className="dropdown-item delete" href={`/viewpage/${template._id}`}>
+                                <RemoveRedEyeIcon />
+                              </a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
                 </div>
               </div>
             </div>

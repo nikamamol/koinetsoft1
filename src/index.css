@@ -1,50 +1,69 @@
-
- .avatar{
+.avatar {
     background-color: #f50f1ec7;
     border-radius: 10px;
     padding: 10px;
     color: white;
- }
- .avatar:hover{
-   
-    box-shadow: 0 0 10px rgba(0,0,0,0.5),
- }
- .cardShadow{
-   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    
-}
-.bgColor{
-   background-color: #F5F7F8;
-}
-.text_color{
-   color:#2f3645e5;
-}
-.sidebar_bg{
-   background-color: #F8F4E1;
-  
 }
 
+.avatar:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5),
+}
 
- 
- .active-tab {
-   background-color: lightblue !important;
- }
- .bgGradinet{
-   background: #A770EF;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #FDB99B, #CF8BF3, #A770EF);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #FDB99B, #CF8BF3, #A770EF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+.cardShadow {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
 
- }
- .MyInput {
-   font-family: sans-serif;
-   text-align: center;
-   background-color: #f3f3f3;
-   padding: 20px;
-   
- }
- .bg_Color_campaign{
-   background-color: #F5EDED;
- }
- 
+.bgColor {
+    background-color: #F5F7F8;
+}
 
+.text_color {
+    color: #2f3645e5;
+}
 
+.sidebar_bg {
+    background-color: #F8F4E1;
+}
+
+.active-tab {
+    background-color: lightblue !important;
+}
+
+.bgGradinet {
+    background: #A770EF;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FDB99B, #CF8BF3, #A770EF);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FDB99B, #CF8BF3, #A770EF);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.MyInput {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #f3f3f3;
+    padding: 20px;
+}
+
+.bg_Color_campaign {
+    background-color: #F5EDED;
+}
+
+.btn_dw {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.Down_pdf_Temp {
+    background-color: rgb(255, 17, 0);
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.Down_pdf_Temp:hover {
+    background-color: #f50f1ec7;
+}

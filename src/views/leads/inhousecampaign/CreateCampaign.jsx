@@ -1,6 +1,5 @@
-import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Stack,
   OutlinedInput,
@@ -14,17 +13,20 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Cancel";
-import EmailText from '../../../texteditor/EmailText';
-import InitialEmail from '../../../texteditor/InitialEmail';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { createCampaign } from '../../../redux/reducer/createcampaign/CreateNewCampaign';
 import { toast } from 'react-toastify';
+import { fetchClients } from '../../../redux/reducer/billing/ClientSlice';
 
 function CreateCampaign() {
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.campaign || {});
-  const [selectedNames, setSelectedNames] = useState([]);
-  const [selectEmploySize, setSelectEmploySize] = useState([]);
+  const clients = useSelector((state) => state.clients.data);
+  useEffect(() => {
+    // Fetch clients when component mounts
+    dispatch(fetchClients());
+  }, [dispatch]);
+
   const [companyRevenue, setCompanyRevenue] = useState([]);
   const names = [
     "Administrator",
@@ -249,19 +251,22 @@ function CreateCampaign() {
                     <div className="card-body">
                       <div className="row">
                         <div className="mb-3 col-md-6 client_select">
-                          <label for="client_select" className="form-label">Campaign For Client  <span className="text-danger">*</span></label>
+                          <label htmlFor="client_select" className="form-label">Campaign For Client  <span className="text-danger">*</span></label>
                           <select
                             id="client_select"
                             required
-                            name="clientSelect" // This should match the state key
+                            name="clientSelect"
                             value={formData.clientSelect}
                             onChange={handleChange}
                             className="form-select"
                           >
                             <option value="">--Select Client Name--</option>
-                            <option value="-1">Add New Client</option>
-                            <option value="Alltake Pvt">Alltake Pvt</option>
-                            <option value="Mobicloude">Mobicloude</option>
+                            {/* <option value="-1">Add New Client</option> */}
+                            {clients.map(client => (
+                              <option key={client._id} value={client.companyName}>
+                                {client.companyName}
+                              </option>
+                            ))}
                           </select>
                         </div>
                         <div className="mb-3 col-md-6">
