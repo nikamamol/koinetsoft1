@@ -1,3 +1,5 @@
+// src/components/RfpReceivedAll.js
+
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
@@ -6,13 +8,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchFileData, downloadFile } from '../redux/reducer/rpf/getcsvfiledata';
 
-const RfpReceived = () => {
+const RfpReceivedAll = () => {
   const dispatch = useDispatch();
-  const { files, error, status } = useSelector((state) => ({
-    files: state.fileData.files,
-    error: state.fileData.error,
-    status: state.fileData.status,
-  }));
+  const { files, status, error } = useSelector((state) => state.fileData);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -28,20 +26,13 @@ const RfpReceived = () => {
       });
   };
 
-  // Filter files to include only those with status entries where userType is "Employee" and checked is true
-  const filteredFiles = useMemo(() => {
-    return files.filter(file => 
-      file.status.some(statusItem => statusItem.userType === 'Employee' && statusItem.checked)
-    );
-  }, [files]);
-
-  // Define columns for the table
   const columns = useMemo(
     () => [
       {
         accessorKey: 'serialNumber',
         header: 'S.No',
         size: 50,
+        Cell: ({ row }) => row.index + 1,
       },
       {
         accessorKey: 'filename',
@@ -64,26 +55,10 @@ const RfpReceived = () => {
         size: 150,
       },
       {
-        accessorKey: 'status',
-        header: 'Status',
-        size: 300,
-        Cell: ({ row }) => (
-          <ul>
-            {row.original.status
-              .filter(statusItem => statusItem.userType === 'Employee' && statusItem.checked)
-              .map((statusItem) => (
-                <li key={statusItem._id}>
-                  {statusItem.userType}: Checked
-                </li>
-              ))}
-          </ul>
-        ),
-      },
-      {
         accessorKey: 'actions',
         header: 'Actions',
         Cell: ({ row }) => (
-          <div className="d-flex gap-3">
+          <div className='d-flex gap-3'>
             <CloudDownloadIcon
               style={{ cursor: 'pointer', color: 'dark', width: '30px', height: '30px' }}
               onClick={() => handleDownload(row.original.fileId, row.original.filename)}
@@ -104,10 +79,9 @@ const RfpReceived = () => {
     []
   );
 
-  // Create the table instance with filtered data
   const table = useMaterialReactTable({
     columns,
-    data: filteredFiles,
+    data: files,
   });
 
   if (status === 'loading') return <div>Loading...</div>;
@@ -116,4 +90,4 @@ const RfpReceived = () => {
   return <MaterialReactTable table={table} />;
 };
 
-export default RfpReceived;
+export default RfpReceivedAll;

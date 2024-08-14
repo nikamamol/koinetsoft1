@@ -329,7 +329,9 @@ function ResponsiveDrawer(props) {
         </ListItem>
         <Collapse in={isCollapseRFP} timeout="auto" unmountOnExit>
           {[
-            { text: 'Received', path: '/rfp/received' },
+            { text: 'Received Today', path: '/rfp/received' },
+            { text: 'Received All', path: '/rfp/receivedall' },
+            { text: 'Quality Check', path: '/rfp/qualitycheck' },
             { text: 'Active', path: '/rfp/active' },
             { text: 'Expired', path: '/rfp/expired' },
           ].map((item) => (

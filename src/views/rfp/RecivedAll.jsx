@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Row, Button, Modal, Form } from 'react-bootstrap';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
 import RfpReceived from '../../table/RfpReceived';
-import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
+import RfpReceivedAll from '../../table/RpfRecivedAll';
 
-function Received() {
+function RecivedAll() {
   const [show, setShow] = useState(false);
   const [file, setFile] = useState(null);
-  const [selectedCampaign, setSelectedCampaign] = useState('');
-  const [selectedCampaignCode, setSelectedCampaignCode] = useState('');
-
-  const dispatch = useDispatch();
-  const campaigns = useSelector((state) => state.campaigns.campaigns);
-
-  useEffect(() => {
-    dispatch(fetchCampaigns());
-  }, [dispatch]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -27,28 +17,18 @@ function Received() {
     setFile(e.target.files[0]);
   };
 
-  const handleCampaignChange = (e) => {
-    const selectedCampaignId = e.target.value;
-    const campaign = campaigns.find((campaign) => campaign._id === selectedCampaignId);
-    if (campaign) {
-      setSelectedCampaign(campaign.campaignName);
-      setSelectedCampaignCode(campaign.campaignCode);
-    }
-  };
-
   const handleFileUpload = async () => {
-    if (!file || !selectedCampaign || !selectedCampaignCode) {
-      alert('Please select a file and a campaign!');
+    if (!file) {
+      alert("Please select a file first!");
       return;
     }
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('campaignName', selectedCampaign);
-    formData.append('campaignCode', selectedCampaignCode);
 
     try {
-      const response = await axios.post('http://localhost:4000/user/uploadcsv', formData);
+      const response = await axios.post('http://localhost:4000/user/uplaodcsv', formData, {
+      });
 
       if (response.data.message) {
         alert(response.data.message);
@@ -60,7 +40,6 @@ function Received() {
     }
   };
 
-
   return (
     <div>
       <Container fluid className='my-5'>
@@ -70,7 +49,7 @@ function Received() {
             <div className='bgColor rounded-3 shadow'>
               <h4 className='fw-bold py-3 ms-3 text_color'>RFP List</h4>
             </div>
-            <div className='my-3 d-flex justify-content-end'>
+            {/* <div className='my-3 d-flex justify-content-end'>
               <Button variant="primary" className='p-2' onClick={handleShow}>
                 <CloudUploadIcon /> Upload RPF File
               </Button>
@@ -81,18 +60,6 @@ function Received() {
                 <Modal.Body>
                   <Form>
                     <Form.Group controlId="formFile">
-                      <Form.Label>Select Campaign</Form.Label>
-                      <Form.Control as="select" onChange={handleCampaignChange}>
-                        <option value="">Select Campaign</option>
-                        {campaigns.map((campaign) => (
-                          <option key={campaign._id} value={campaign._id}>
-                            {campaign.campaignName}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    </Form.Group>
-                    <Form.Group controlId="formFile" className="mt-3">
-                      <Form.Label>Upload CSV</Form.Label>
                       <Form.Control type="file" onChange={handleFileChange} />
                     </Form.Group>
                     <div className='mt-3'>
@@ -103,8 +70,8 @@ function Received() {
                   </Form>
                 </Modal.Body>
               </Modal>
-            </div>
-            <RfpReceived />
+            </div> */}
+            <RfpReceivedAll />
           </Col>
         </Row>
       </Container>
@@ -112,4 +79,4 @@ function Received() {
   );
 }
 
-export default Received;
+export default RecivedAll;

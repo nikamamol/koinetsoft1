@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchFileData, downloadFile } from '../redux/reducer/rpf/getcsvfiledata';
 
-const RfpReceived = () => {
+const RfpQualityCheck = () => {
   const dispatch = useDispatch();
   const { files, error, status } = useSelector((state) => ({
     files: state.fileData.files,
@@ -28,10 +28,10 @@ const RfpReceived = () => {
       });
   };
 
-  // Filter files to include only those with status entries where userType is "Employee" and checked is true
+  // Filter files to include only those with status entries where userType is "Quality Data" and checked is true
   const filteredFiles = useMemo(() => {
-    return files.filter(file => 
-      file.status.some(statusItem => statusItem.userType === 'Employee' && statusItem.checked)
+    return files.filter(file =>
+      file.status.some(statusItem => statusItem.userType === 'Quality' && statusItem.checked)
     );
   }, [files]);
 
@@ -66,17 +66,17 @@ const RfpReceived = () => {
       {
         accessorKey: 'status',
         header: 'Status',
-        size: 300,
+        size: 200,
         Cell: ({ row }) => (
-          <ul>
+          <div>
             {row.original.status
-              .filter(statusItem => statusItem.userType === 'Employee' && statusItem.checked)
+              .filter(statusItem => statusItem.userType === 'Quality' && statusItem.checked)
               .map((statusItem) => (
-                <li key={statusItem._id}>
+                <p key={statusItem._id}>
                   {statusItem.userType}: Checked
-                </li>
+                </p>
               ))}
-          </ul>
+          </div>
         ),
       },
       {
@@ -116,4 +116,4 @@ const RfpReceived = () => {
   return <MaterialReactTable table={table} />;
 };
 
-export default RfpReceived;
+export default RfpQualityCheck;

@@ -4,7 +4,6 @@ import { Col, Container, Row } from 'react-bootstrap';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { fetchTemplates } from '../../redux/reducer/createteplate/GetTemplate';
 
-
 function ViewLandingPages() {
   const dispatch = useDispatch();
   const templates = useSelector((state) => state.templates?.templates || []);
@@ -12,12 +11,16 @@ function ViewLandingPages() {
   const error = useSelector((state) => state.templates?.error || null);
 
   useEffect(() => {
-    console.log('Component Mounted'); // Add this line to check if useEffect is being triggered
     if (templateStatus === 'idle') {
-        dispatch(fetchTemplates());
+      dispatch(fetchTemplates());
     }
-}, [templateStatus, dispatch]);
-  console.log(templates)
+  }, [templateStatus, dispatch]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    return date.toLocaleDateString('en-GB', options); // Formats date as "24 Jun 2024"
+  };
 
   return (
     <div>
@@ -54,7 +57,7 @@ function ViewLandingPages() {
                             <td>
                               <p>{template.template_title}</p>
                             </td>
-                            <td>{new Date().toISOString().split('T')[0]}</td>
+                            <td>{formatDate(template.createdAt)}</td>
                             <td>
                               <a className="dropdown-item delete" href={`/viewpage/${template._id}`}>
                                 <RemoveRedEyeIcon />

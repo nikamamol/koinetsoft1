@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Col, Container, Row, Button, Card } from 'react-bootstrap';
 import EmailEditor from 'react-email-editor';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createTemplate } from '../redux/reducer/createteplate/CreateNewTemplate';
 import { toast } from 'react-toastify';
 
 
 
 const TemplateOne = () => {
+    const navigate = useNavigate()
     const emailEditorRef = useRef(null);
     const dispatch = useDispatch();
-    const { loading, error} = useSelector((state) => state.template);
+    const { loading, error } = useSelector((state) => state.template);
 
     const [savedHtml, setSavedHtml] = useState(null);
     const [formType, setFormType] = useState('0');
@@ -75,20 +76,61 @@ const TemplateOne = () => {
         });
     };
 
+
+
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
         try {
-            if (!isHtmlSaved) {
-                await saveTemplate();
-            }
-            await dispatch(createTemplate(formData));
+            // Save the template before submission
+            const html = await saveTemplate();
+
+            // Ensure that the HTML content is set in formData
+            setFormData((prevData) => ({
+                ...prevData,
+                html_content: html
+            }));
+
+            // Dispatch the action to create the template
+            await dispatch(createTemplate({
+                ...formData,
+                html_content: html // Ensure latest HTML content is used
+            }));
+
+            // Show success toast
             toast.success('Template successfully created');
+            navigate('/landingpages/viewalllandingpages');
+
+
+            // Clear all input fields after submission
+            clearForm();
         } catch (error) {
             console.error('Error submitting template:', error.message);
             toast.error('Error creating template');
         }
     };
+
+    const clearForm = () => {
+        setFormData({
+            template_title: '',
+            logo: '',
+            banner: '',
+            form_type: '0',
+            form_link: '',
+            receive_comminication: '',
+            document: '',
+            html_content: ''
+        });
+        setLogoPreview('');
+        setBannerPreview('');
+        setDocumentPreview('');
+        setFormLink('');
+        setSavedHtml(null);
+        setIsHtmlSaved(false);
+        setFormErrors({});
+    };
+
+
 
     const onLoad = () => {
         // Use emailEditorRef.current.editor.loadDesign(savedDesign) if you have a design to load
@@ -118,7 +160,7 @@ const TemplateOne = () => {
                             </Link>
                         </div>
                         <div className='bgColor rounded-3 shadow'>
-                            <h4 className='fw-bold py-3 ms-3 text_color'>Create Email Template</h4>
+                            <h4 className='fw-bold py-3 ms-3 text_color'>Create Landing Page Template</h4>
                         </div>
                         <div className="row">
                             <div className="col-xxl">

@@ -62,6 +62,8 @@ import ViewAgencyDetailsById from './views/agency/ViewAgencyDetailsById';
 import ViewClientDetailsId from './views/billing/ViewClientDetailsId';
 import ViewCampaignDetails from './views/leads/inhousecampaign/ViewCampaignDetails';
 import ViewLandingPageDesciption from "./views/landingpages/ViewLandingPageDesciption"
+import RecivedAll from './views/rfp/RecivedAll';
+import QualityCheck from './views/rfp/QualityCheck';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -106,6 +108,8 @@ function App() {
             <Route path="/rfp/active" element={<Active />} />
             <Route path="/rfp/expired" element={<Expired />} />
             <Route path="/rfp/received" element={<Received />} />
+            <Route path="/rfp/receivedall" element={<RecivedAll />} />
+            <Route path="/rfp/qualitycheck" element={<QualityCheck />} />
             {/* Agency */}
             <Route path="/agency/myengencies" element={<MyEngencies />} />
             <Route path="/agency/inviteagency" element={<InviteAgencies />} />

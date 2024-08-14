@@ -9,6 +9,8 @@ import campaignsSlice from "../reducer/createcampaign/GetCampaignData";
 import templateSlice from "../reducer/createteplate/CreateNewTemplate";
 import viewTemplateSlice from "../reducer/createteplate/GetTemplate";
 import templateSliceById from "../reducer/createteplate/ViewTemplateById"
+import fileUploadReducer from "../reducer/rpf/uploadcsvbyemploy"
+import fileDataReducer from "../reducer/rpf/getcsvfiledata"
 
 
 const store = configureStore({
@@ -23,6 +25,8 @@ const store = configureStore({
         template: templateSlice,
         templates: viewTemplateSlice,
         templateId: templateSliceById,
+        fileUpload: fileUploadReducer,
+        fileData: fileDataReducer,
     },
 });
 
