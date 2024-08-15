@@ -17,10 +17,10 @@ function QualityCheck() {
                 <Row>
                     <Col lg={3}></Col>
                     <Col lg={8}>
-                        <div className='bgColor rounded-3 shadow'>
+                        <div className='bgColor rounded-3 shadow  mb-3'>
                             <h4 className='fw-bold py-3 ms-3 text_color'>Quality Check</h4>
                         </div>
-                        <div className='my-3 d-flex justify-content-end'>
+                        {/* <div className='my-3 d-flex justify-content-end'>
                             <Button variant="primary" className='p-2' onClick={handleShow}>
                                 <CloudUploadIcon /> Upload Checked RPF File
                             </Button>
@@ -41,7 +41,7 @@ function QualityCheck() {
                                     </Form>
                                 </Modal.Body>
                             </Modal>
-                        </div>
+                        </div> */}
                         <RfpQualityCheck />
                     </Col>
                 </Row>

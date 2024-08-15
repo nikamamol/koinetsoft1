@@ -1,15 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Thunk for fetching file and status data
+// Thunk for fetching file data
 export const fetchFileData = createAsyncThunk(
     "fileData/fetchFileData",
     async() => {
         const response = await axios.get("http://localhost:4000/user/csvFileData");
-        return {
-            files: response.data.files,
-            status: response.data.status, // Adjust according to your API response structure
-        };
+        return response.data; // Return the whole data to filter later in the slice
     }
 );
 
@@ -33,9 +30,69 @@ export const downloadFile = createAsyncThunk(
             link.click();
             document.body.removeChild(link);
 
-            return { fileId, filename }; // Optional: return data if needed
+            return { fileId, filename };
         } catch (error) {
             return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const updateFileStatus = createAsyncThunk(
+    "fileData/updateFileStatusQuality",
+    async({ fileId, checked }, { getState, rejectWithValue }) => {
+        try {
+            // Access the current state
+            const { files } = getState().fileData;
+
+            // Find the file to update
+            const fileToUpdate = files.find(file => file.fileId === fileId);
+
+            if (!fileToUpdate) {
+                throw new Error('File not found');
+            }
+
+            // Update only the Quality status
+            const updatedStatus = fileToUpdate.status.map(status =>
+                status.userType === 'Quality' ? {...status, checked } :
+                status
+            );
+
+            // Send the updated status to the server
+            const response = await axios.put(`http://localhost:4000/user/updateStatus/${fileId}`, {
+                status: updatedStatus
+            });
+
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response);
+        }
+    }
+);
+
+export const updateFileStatusEmail = createAsyncThunk(
+    "fileData/updateFileStatusEmail",
+    async({ fileId, statusId, checked }, { getState, rejectWithValue }) => {
+        try {
+            const { files } = getState().fileData;
+            const fileToUpdate = files.find(file => file.fileId === fileId);
+
+            if (!fileToUpdate) {
+                throw new Error('File not found');
+            }
+
+            const updatedStatus = fileToUpdate.status.map(status =>
+                status.userType === 'Email Marketing' ? {...status, checked } :
+                status
+            );
+
+
+            const response = await axios.put(`http://localhost:4000/user/updateStatus/${fileId}`, {
+                status: updatedStatus
+            });
+
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response ? error.response.data : error.message);
         }
     }
 );
@@ -46,7 +103,7 @@ const fileDataSlice = createSlice({
         files: [],
         status: "idle",
         error: null,
-        statusData: [], // Add statusData to the initial state
+        statusData: [],
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -58,7 +115,7 @@ const fileDataSlice = createSlice({
                 state.status = "succeeded";
                 const today = new Date().toISOString().split("T")[0];
                 state.files = action.payload.files
-                    .filter((file) => file.createdAt.startsWith(today))
+                    .filter((file) => file.createdAt.startsWith(today)) // Filter for today's files
                     .map((file, index) => ({
                         serialNumber: index + 1,
                         filename: file.originalname,
@@ -70,7 +127,7 @@ const fileDataSlice = createSlice({
                             year: "numeric",
                         }),
                         fileId: file._id,
-                        status: file.status, // Include the status array in each file object
+                        status: file.status,
                     }));
 
                 state.statusData = action.payload.status; // Update statusData with fetched status
@@ -80,6 +137,32 @@ const fileDataSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(downloadFile.rejected, (state, action) => {
+                state.error = action.payload;
+            })
+            .addCase(updateFileStatus.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateFileStatus.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.files = state.files.map(file =>
+                    file.fileId === action.payload.fileId ? {...file, status: action.payload.status } : file
+                );
+            })
+            .addCase(updateFileStatus.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+            .addCase(updateFileStatusEmail.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateFileStatusEmail.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.files = state.files.map(file =>
+                    file.fileId === action.payload.fileId ? {...file, status: action.payload.status } : file
+                );
+            })
+            .addCase(updateFileStatusEmail.rejected, (state, action) => {
+                state.status = 'failed';
                 state.error = action.payload;
             });
     },

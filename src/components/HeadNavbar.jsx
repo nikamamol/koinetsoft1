@@ -332,6 +332,7 @@ function ResponsiveDrawer(props) {
             { text: 'Received Today', path: '/rfp/received' },
             { text: 'Received All', path: '/rfp/receivedall' },
             { text: 'Quality Check', path: '/rfp/qualitycheck' },
+            { text: 'Email Check', path: '/rfp/emailcheck' },
             { text: 'Active', path: '/rfp/active' },
             { text: 'Expired', path: '/rfp/expired' },
           ].map((item) => (

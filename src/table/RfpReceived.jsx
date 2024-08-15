@@ -1,10 +1,22 @@
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { MaterialReactTable } from 'material-react-table';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchFileData, downloadFile } from '../redux/reducer/rpf/getcsvfiledata';
+import { Checkbox } from '@mui/material';
+
+// Utility function to check if a date is today
+const isToday = (dateString) => {
+  const today = new Date();
+  const date = new Date(dateString);
+  return (
+    date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear()
+  );
+};
 
 const RfpReceived = () => {
   const dispatch = useDispatch();
@@ -28,10 +40,10 @@ const RfpReceived = () => {
       });
   };
 
-  // Filter files to include only those with status entries where userType is "Employee" and checked is true
+  // Filter files to include only those uploaded today
   const filteredFiles = useMemo(() => {
-    return files.filter(file => 
-      file.status.some(statusItem => statusItem.userType === 'Employee' && statusItem.checked)
+    return files.filter(file =>
+      isToday(file.createdAt) && file.status.some(statusItem => statusItem.userType === 'Employee')
     );
   }, [files]);
 
@@ -56,7 +68,7 @@ const RfpReceived = () => {
       {
         accessorKey: 'campaignCode',
         header: 'Campaign Code',
-        size: 200,
+        size: 150,
       },
       {
         accessorKey: 'createdAt',
@@ -66,17 +78,28 @@ const RfpReceived = () => {
       {
         accessorKey: 'status',
         header: 'Status',
-        size: 300,
+        size: 200,
         Cell: ({ row }) => (
-          <ul>
+          <div>
             {row.original.status
               .filter(statusItem => statusItem.userType === 'Employee' && statusItem.checked)
               .map((statusItem) => (
-                <li key={statusItem._id}>
-                  {statusItem.userType}: Checked
-                </li>
+                <p key={statusItem._id}>
+                  <Checkbox
+                    defaultChecked
+                    color="secondary"
+                    disabled
+                    sx={{
+                      color: 'secondary.main',
+                      '&.Mui-checked': {
+                        color: 'secondary.main',
+                      },
+                    }}
+                  />
+                  {statusItem.userType}
+                </p>
               ))}
-          </ul>
+          </div>
         ),
       },
       {
@@ -104,16 +127,10 @@ const RfpReceived = () => {
     []
   );
 
-  // Create the table instance with filtered data
-  const table = useMaterialReactTable({
-    columns,
-    data: filteredFiles,
-  });
-
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Error: {error}</div>;
 
-  return <MaterialReactTable table={table} />;
+  return <MaterialReactTable columns={columns} data={filteredFiles} />;
 };
 
 export default RfpReceived;

@@ -1,10 +1,12 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { MaterialReactTable } from 'material-react-table';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { fetchFileData, downloadFile } from '../redux/reducer/rpf/getcsvfiledata';
+import { fetchFileData, downloadFile, updateFileStatus } from '../redux/reducer/rpf/getcsvfiledata';
+import { Checkbox } from '@mui/material';
+import { toast } from 'react-toastify';
 
 const RfpQualityCheck = () => {
   const dispatch = useDispatch();
@@ -14,11 +16,27 @@ const RfpQualityCheck = () => {
     status: state.fileData.status,
   }));
 
+  // Local state to manage checkbox status
+  const [checkboxes, setCheckboxes] = useState({});
+
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchFileData());
     }
   }, [status, dispatch]);
+
+  useEffect(() => {
+    // Update local state when files data changes
+    const updatedCheckboxes = {};
+    files.forEach(file => {
+      file.status.forEach(statusItem => {
+        if (statusItem.userType === 'Quality') {
+          updatedCheckboxes[statusItem._id] = statusItem.checked;
+        }
+      });
+    });
+    setCheckboxes(updatedCheckboxes);
+  }, [files]);
 
   const handleDownload = (fileId, filename) => {
     dispatch(downloadFile({ fileId, filename }))
@@ -28,10 +46,24 @@ const RfpQualityCheck = () => {
       });
   };
 
-  // Filter files to include only those with status entries where userType is "Quality Data" and checked is true
+  const handleCheckboxChange = (fileId, statusId, checked) => {
+    dispatch(updateFileStatus({ fileId, statusId, checked }))
+      .unwrap()
+      .then(() => {
+        // Update local checkbox state
+        setCheckboxes(prev => ({ ...prev, [statusId]: checked }));
+        toast.success('Status updated successfully!');
+      })
+      .catch((error) => {
+        toast.error('Error updating status. Please try again.');
+        console.error('Error updating status:', error);
+      });
+  };
+
+  // Filter files to include only those with status entries where userType is "Quality"
   const filteredFiles = useMemo(() => {
     return files.filter(file =>
-      file.status.some(statusItem => statusItem.userType === 'Quality' && statusItem.checked)
+      file.status.some(statusItem => statusItem.userType === 'Quality')
     );
   }, [files]);
 
@@ -66,15 +98,20 @@ const RfpQualityCheck = () => {
       {
         accessorKey: 'status',
         header: 'Status',
-        size: 200,
+        size: 100,
         Cell: ({ row }) => (
           <div>
             {row.original.status
-              .filter(statusItem => statusItem.userType === 'Quality' && statusItem.checked)
+              .filter(statusItem => statusItem.userType === 'Quality')
               .map((statusItem) => (
-                <p key={statusItem._id}>
-                  {statusItem.userType}: Checked
-                </p>
+                <div key={statusItem._id} style={{ display: 'flex', alignItems: 'center' }}>
+                  <Checkbox
+                    color="success"
+                    checked={checkboxes[statusItem._id] || false}
+                    onChange={(e) => handleCheckboxChange(row.original.fileId, statusItem._id, e.target.checked)}
+                  />
+                  {statusItem.userType}
+                </div>
               ))}
           </div>
         ),
@@ -101,19 +138,13 @@ const RfpQualityCheck = () => {
         size: 200,
       },
     ],
-    []
+    [handleDownload, handleCheckboxChange, checkboxes]
   );
-
-  // Create the table instance with filtered data
-  const table = useMaterialReactTable({
-    columns,
-    data: filteredFiles,
-  });
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Error: {error}</div>;
 
-  return <MaterialReactTable table={table} />;
+  return <MaterialReactTable columns={columns} data={filteredFiles} />;
 };
 
 export default RfpQualityCheck;

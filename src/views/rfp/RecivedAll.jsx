@@ -47,7 +47,7 @@ function RecivedAll() {
           <Col lg={3}></Col>
           <Col lg={8}>
             <div className='bgColor rounded-3 shadow'>
-              <h4 className='fw-bold py-3 ms-3 text_color'>RFP List</h4>
+              <h4 className='fw-bold py-3 ms-3 text_color'>RFP All List</h4>
             </div>
             {/* <div className='my-3 d-flex justify-content-end'>
               <Button variant="primary" className='p-2' onClick={handleShow}>

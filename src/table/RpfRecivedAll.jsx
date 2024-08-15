@@ -1,12 +1,12 @@
-// src/components/RfpReceivedAll.js
-
 import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { MaterialReactTable } from 'material-react-table';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { fetchFileData, downloadFile } from '../redux/reducer/rpf/getcsvfiledata';
+import Checkbox from '@mui/material/Checkbox';
+import { downloadFile, fetchFileData } from '../redux/reducer/rpf/getcsvfiledata';
+import { pink } from '@mui/material/colors';
 
 const RfpReceivedAll = () => {
   const dispatch = useDispatch();
@@ -55,10 +55,41 @@ const RfpReceivedAll = () => {
         size: 150,
       },
       {
+        accessorKey: 'status',
+        header: 'Status',
+        size: 300,
+        Cell: ({ row }) => (
+          <div className='d-flex gap-2 '>
+            {row.original.status.length > 0 ? (
+              row.original.status.map((statusItem) => (
+                <p key={statusItem._id}>
+                  <Checkbox
+                    defaultChecked={statusItem.checked} 
+                    checked={statusItem.checked} 
+                    disabled
+                    sx={{
+                      color: pink[800],
+                      '&.Mui-checked': {
+                        color: pink[600], 
+                      },
+                    }}
+                  />
+                  <br />
+                  {statusItem.userType}
+                </p>
+              ))
+            ) : (
+              <p>No status available</p>
+            )}
+          </div>
+        ),
+      },
+      {
         accessorKey: 'actions',
         header: 'Actions',
+        size: 200,
         Cell: ({ row }) => (
-          <div className='d-flex gap-3'>
+          <div className="d-flex gap-3">
             <CloudDownloadIcon
               style={{ cursor: 'pointer', color: 'dark', width: '30px', height: '30px' }}
               onClick={() => handleDownload(row.original.fileId, row.original.filename)}
@@ -73,21 +104,15 @@ const RfpReceivedAll = () => {
             />
           </div>
         ),
-        size: 200,
       },
     ],
-    []
+    [handleDownload]
   );
-
-  const table = useMaterialReactTable({
-    columns,
-    data: files,
-  });
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Error: {error}</div>;
 
-  return <MaterialReactTable table={table} />;
+  return <MaterialReactTable columns={columns} data={files} />;
 };
 
 export default RfpReceivedAll;

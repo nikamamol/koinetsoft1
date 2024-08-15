@@ -64,6 +64,7 @@ import ViewCampaignDetails from './views/leads/inhousecampaign/ViewCampaignDetai
 import ViewLandingPageDesciption from "./views/landingpages/ViewLandingPageDesciption"
 import RecivedAll from './views/rfp/RecivedAll';
 import QualityCheck from './views/rfp/QualityCheck';
+import EmailCheck from './views/rfp/EmailCheck';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -110,6 +111,7 @@ function App() {
             <Route path="/rfp/received" element={<Received />} />
             <Route path="/rfp/receivedall" element={<RecivedAll />} />
             <Route path="/rfp/qualitycheck" element={<QualityCheck />} />
+            <Route path="/rfp/emailcheck" element={<EmailCheck />} />
             {/* Agency */}
             <Route path="/agency/myengencies" element={<MyEngencies />} />
             <Route path="/agency/inviteagency" element={<InviteAgencies />} />
