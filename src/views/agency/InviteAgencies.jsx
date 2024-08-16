@@ -474,7 +474,7 @@ function InviteAgencies() {
                             className="form-control"
                             id="primary_phone_no"
                             name="primary_phone_no"
-                            placeholder="9876543210"
+                            placeholder="0000000000"
                             value={formData.primary_phone_no}
                             onChange={handleChange}
                             required
@@ -565,7 +565,7 @@ function InviteAgencies() {
                             className="form-control"
                             id="secondary_phone_no"
                             name="secondary_phone_no"
-                            placeholder="9876543210"
+                            placeholder="0000000000"
                             value={formData.secondary_phone_no}
                             onChange={handleChange}
                           />

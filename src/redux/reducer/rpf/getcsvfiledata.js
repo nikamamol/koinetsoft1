@@ -97,6 +97,18 @@ export const updateFileStatusEmail = createAsyncThunk(
     }
 );
 
+export const deleteFile = createAsyncThunk(
+    'fileData/deleteFile',
+    async(fileId, { rejectWithValue }) => {
+        try {
+            const response = await axios.delete(`http://localhost:4000/user/csvFileData/${fileId}`);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
 const fileDataSlice = createSlice({
     name: "fileData",
     initialState: {
@@ -113,22 +125,19 @@ const fileDataSlice = createSlice({
             })
             .addCase(fetchFileData.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                const today = new Date().toISOString().split("T")[0];
-                state.files = action.payload.files
-                    .filter((file) => file.createdAt.startsWith(today)) // Filter for today's files
-                    .map((file, index) => ({
-                        serialNumber: index + 1,
-                        filename: file.originalname,
-                        campaignName: file.campaignName,
-                        campaignCode: file.campaignCode,
-                        createdAt: new Date(file.createdAt).toLocaleDateString("en-GB", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                        }),
-                        fileId: file._id,
-                        status: file.status,
-                    }));
+                state.files = action.payload.files.map((file, index) => ({
+                    serialNumber: index + 1,
+                    filename: file.originalname,
+                    campaignName: file.campaignName,
+                    campaignCode: file.campaignCode,
+                    createdAt: new Date(file.createdAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                    }),
+                    fileId: file._id,
+                    status: file.status,
+                }));
 
                 state.statusData = action.payload.status; // Update statusData with fetched status
             })
@@ -164,6 +173,17 @@ const fileDataSlice = createSlice({
             .addCase(updateFileStatusEmail.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+            .addCase(deleteFile.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(deleteFile.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.files = state.files.filter(file => file._id !== action.meta.arg);
+            })
+            .addCase(deleteFile.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload || action.error.message;
             });
     },
 });

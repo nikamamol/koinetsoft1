@@ -5,7 +5,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchFileData, downloadFile, updateFileStatus } from '../redux/reducer/rpf/getcsvfiledata';
-import { Checkbox } from '@mui/material';
+import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import { toast } from 'react-toastify';
 
 const RfpQualityCheck = () => {
@@ -121,18 +121,22 @@ const RfpQualityCheck = () => {
         header: 'Actions',
         Cell: ({ row }) => (
           <div className="d-flex gap-3">
-            <CloudDownloadIcon
-              style={{ cursor: 'pointer', color: 'dark', width: '30px', height: '30px' }}
-              onClick={() => handleDownload(row.original.fileId, row.original.filename)}
-            />
-            <EditIcon
+            <Tooltip title="Download File">
+              <IconButton>
+                <CloudDownloadIcon
+                  style={{ cursor: 'pointer', color: 'black', width: '30px', height: '30px' }}
+                  onClick={() => handleDownload(row.original.fileId, row.original.filename)}
+                />
+              </IconButton>
+            </Tooltip>
+            {/* <EditIcon
               style={{ cursor: 'pointer', color: 'blue', width: '30px', height: '30px' }}
               onClick={() => alert(`Editing ${row.original.filename}`)}
             />
             <DeleteIcon
               style={{ cursor: 'pointer', color: 'red', width: '30px', height: '30px' }}
               onClick={() => alert(`Deleting ${row.original.filename}`)}
-            />
+            /> */}
           </div>
         ),
         size: 200,
