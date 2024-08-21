@@ -2,12 +2,24 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../constant/ConstantApi";
 
+// Utility to get the token from local storage
+const getToken = () => localStorage.getItem('authToken');
+
 // Thunk for fetching file data
 export const fetchFileData = createAsyncThunk(
     "fileData/fetchFileData",
-    async() => {
-        const response = await axios.get(`${baseUrl}user/csvFileData`);
-        return response.data; // Return the whole data to filter later in the slice
+    async(_, { rejectWithValue }) => {
+        try {
+            const token = getToken();
+            const response = await axios.get(`${baseUrl}user/csvFileData`, {
+                headers: {
+                    Authorization: ` ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
 );
 
@@ -16,10 +28,14 @@ export const downloadFile = createAsyncThunk(
     "fileData/downloadFile",
     async({ fileId, filename }, { rejectWithValue }) => {
         try {
+            const token = getToken();
             const response = await axios({
                 url: `${baseUrl}user/csvFileData/${fileId}`,
                 method: "GET",
                 responseType: "blob",
+                headers: {
+                    Authorization: ` ${token}`,
+                },
             });
 
             // Create a download link and trigger download
@@ -38,38 +54,39 @@ export const downloadFile = createAsyncThunk(
     }
 );
 
+// Thunk for updating file status (Quality)
 export const updateFileStatus = createAsyncThunk(
     "fileData/updateFileStatusQuality",
     async({ fileId, checked }, { getState, rejectWithValue }) => {
         try {
-            // Access the current state
             const { files } = getState().fileData;
-
-            // Find the file to update
             const fileToUpdate = files.find(file => file.fileId === fileId);
 
             if (!fileToUpdate) {
                 throw new Error('File not found');
             }
 
-            // Update only the Quality status
             const updatedStatus = fileToUpdate.status.map(status =>
-                status.userType === 'Quality' ? {...status, checked } :
-                status
+                status.userType === 'Quality' ? {...status, checked } : status
             );
 
-            // Send the updated status to the server
+            const token = getToken();
             const response = await axios.put(`${baseUrl}user/updateStatus/${fileId}`, {
                 status: updatedStatus
+            }, {
+                headers: {
+                    Authorization: ` ${token}`,
+                },
             });
 
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response);
+            return rejectWithValue(error.response ? error.response.data : error.message);
         }
     }
 );
 
+// Thunk for updating file status (Email)
 export const updateFileStatusEmail = createAsyncThunk(
     "fileData/updateFileStatusEmail",
     async({ fileId, statusId, checked }, { getState, rejectWithValue }) => {
@@ -82,13 +99,16 @@ export const updateFileStatusEmail = createAsyncThunk(
             }
 
             const updatedStatus = fileToUpdate.status.map(status =>
-                status.userType === 'Email Marketing' ? {...status, checked } :
-                status
+                status.userType === 'Email Marketing' ? {...status, checked } : status
             );
 
-
+            const token = getToken();
             const response = await axios.put(`${baseUrl}user/updateStatus/${fileId}`, {
                 status: updatedStatus
+            }, {
+                headers: {
+                    Authorization: ` ${token}`,
+                },
             });
 
             return response.data;
@@ -98,11 +118,17 @@ export const updateFileStatusEmail = createAsyncThunk(
     }
 );
 
+// Thunk for deleting a file
 export const deleteFile = createAsyncThunk(
     'fileData/deleteFile',
     async(fileId, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`${baseUrl}user/csvFileData/${fileId}`);
+            const token = getToken();
+            const response = await axios.delete(`${baseUrl}user/csvFileData/${fileId}`, {
+                headers: {
+                    Authorization: ` ${token}`,
+                },
+            });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
