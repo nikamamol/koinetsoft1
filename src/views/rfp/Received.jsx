@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Col, Container, Row, Button, Modal, Form } from 'react-bootstrap';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SendIcon from '@mui/icons-material/Send';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import RfpReceived from '../../table/RfpReceived';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
+import { uploadFile } from '../../redux/reducer/rpf/uploadcsvbyemploy';
 
 function Received() {
   const [show, setShow] = useState(false);
@@ -15,6 +15,8 @@ function Received() {
 
   const dispatch = useDispatch();
   const campaigns = useSelector((state) => state.campaigns.campaigns);
+  const uploadStatus = useSelector((state) => state.fileUpload.status);
+  const uploadMessage = useSelector((state) => state.fileUpload.message);
 
   useEffect(() => {
     dispatch(fetchCampaigns());
@@ -48,18 +50,15 @@ function Received() {
     formData.append('campaignCode', selectedCampaignCode);
 
     try {
-      const response = await axios.post('http://localhost:4000/user/uploadcsv', formData);
-
-      if (response.data.message) {
-        alert(response.data.message);
-      }
+      // Dispatch the uploadFile thunk
+      await dispatch(uploadFile(formData)).unwrap();
+      alert(uploadMessage || 'File uploaded successfully!');
       setShow(false);
     } catch (error) {
       console.error('There was an error uploading the file!', error);
       alert('Failed to upload the file.');
     }
   };
-
 
   return (
     <div>
@@ -96,7 +95,7 @@ function Received() {
                       <Form.Control type="file" onChange={handleFileChange} />
                     </Form.Group>
                     <div className='mt-3'>
-                      <Button variant="success" onClick={handleFileUpload}>
+                      <Button variant="success" onClick={handleFileUpload} disabled={uploadStatus === 'loading'}>
                         <SendIcon /> Send
                       </Button>
                     </div>

@@ -12,7 +12,7 @@ export const uploadFile = createAsyncThunk(
             // Set up the headers with the token
             const config = {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                     'Content-Type': 'multipart/form-data', // Ensure proper content type
                 },
             };
