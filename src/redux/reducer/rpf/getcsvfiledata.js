@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import baseUrl from "../../../constant/ConstantApi";
 
 // Thunk for fetching file data
 export const fetchFileData = createAsyncThunk(
     "fileData/fetchFileData",
     async() => {
-        const response = await axios.get("http://localhost:4000/user/csvFileData");
+        const response = await axios.get(`${baseUrl}user/csvFileData`);
         return response.data; // Return the whole data to filter later in the slice
     }
 );
@@ -16,7 +17,7 @@ export const downloadFile = createAsyncThunk(
     async({ fileId, filename }, { rejectWithValue }) => {
         try {
             const response = await axios({
-                url: `http://localhost:4000/user/csvFileData/${fileId}`,
+                url: `${baseUrl}user/csvFileData/${fileId}`,
                 method: "GET",
                 responseType: "blob",
             });
@@ -58,7 +59,7 @@ export const updateFileStatus = createAsyncThunk(
             );
 
             // Send the updated status to the server
-            const response = await axios.put(`http://localhost:4000/user/updateStatus/${fileId}`, {
+            const response = await axios.put(`${baseUrl}user/updateStatus/${fileId}`, {
                 status: updatedStatus
             });
 
@@ -86,7 +87,7 @@ export const updateFileStatusEmail = createAsyncThunk(
             );
 
 
-            const response = await axios.put(`http://localhost:4000/user/updateStatus/${fileId}`, {
+            const response = await axios.put(`${baseUrl}user/updateStatus/${fileId}`, {
                 status: updatedStatus
             });
 
@@ -101,7 +102,7 @@ export const deleteFile = createAsyncThunk(
     'fileData/deleteFile',
     async(fileId, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`http://localhost:4000/user/csvFileData/${fileId}`);
+            const response = await axios.delete(`${baseUrl}user/csvFileData/${fileId}`);
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data);
