@@ -139,7 +139,7 @@ const RfpReceived = () => {
             </Tooltip>
           </div>
         ),
-        size: 200,
+        size:150,
       },
     ],
     [handleDownload, handleDelete]

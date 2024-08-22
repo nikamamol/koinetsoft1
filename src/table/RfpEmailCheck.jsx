@@ -4,7 +4,7 @@ import { MaterialReactTable } from 'material-react-table';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { fetchFileData, downloadFile, updateFileStatusEmail } from '../redux/reducer/rpf/getcsvfiledata';
+import { fetchFileData, downloadFile, updateFileStatusEmail, fetchFileDataAll } from '../redux/reducer/rpf/getcsvfiledata';
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import { toast } from 'react-toastify';
 
@@ -21,7 +21,7 @@ const RfpEmailCheck = () => {
 
     useEffect(() => {
         if (status === 'idle') {
-            dispatch(fetchFileData());
+            dispatch(fetchFileDataAll());
         }
     }, [status, dispatch]);
 

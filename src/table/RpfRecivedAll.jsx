@@ -5,7 +5,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Checkbox from '@mui/material/Checkbox';
-import { downloadFile, fetchFileData } from '../redux/reducer/rpf/getcsvfiledata';
+import { downloadFile, fetchFileData, fetchFileDataAll } from '../redux/reducer/rpf/getcsvfiledata';
 import { pink } from '@mui/material/colors';
 import { IconButton, Tooltip } from '@mui/material';
 
@@ -15,7 +15,7 @@ const RfpReceivedAll = () => {
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchFileData());
+      dispatch(fetchFileDataAll());
     }
   }, [status, dispatch]);
 
@@ -88,7 +88,7 @@ const RfpReceivedAll = () => {
       {
         accessorKey: 'actions',
         header: 'Actions',
-        size: 200,
+        size: 50,
         Cell: ({ row }) => (
           <div className="d-flex gap-3">
 

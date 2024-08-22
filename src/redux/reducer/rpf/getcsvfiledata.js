@@ -23,18 +23,36 @@ export const fetchFileData = createAsyncThunk(
     }
 );
 
+export const fetchFileDataAll = createAsyncThunk(
+    "fileData/fetchFileDataAll",
+    async(_, { rejectWithValue }) => {
+        try {
+            const token = getToken();
+            const response = await axios.get(`http://localhost:4000/user/csvFileAllData`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
 // Thunk for downloading a file
 export const downloadFile = createAsyncThunk(
     "fileData/downloadFile",
     async({ fileId, filename }, { rejectWithValue }) => {
         try {
             const token = getToken();
+            console.log('Downloading file with token:', token); // Debugging line
             const response = await axios({
-                url: `${baseUrl}user/csvFileData/${fileId}`,
+                url: `http://localhost:4000/user/csvFileData/${fileId}`,
                 method: "GET",
                 responseType: "blob",
                 headers: {
-                    Authorization: ` ${token}`,
+                    Authorization: `Bearer ${token}`, // Ensure 'Bearer' is included
                 },
             });
 
@@ -49,10 +67,12 @@ export const downloadFile = createAsyncThunk(
 
             return { fileId, filename };
         } catch (error) {
+            console.error('Download file error:', error.response ? error.response.data : error.message); // Debugging line
             return rejectWithValue(error.message);
         }
     }
 );
+
 
 // Thunk for updating file status (Quality)
 export const updateFileStatus = createAsyncThunk(
@@ -119,22 +139,24 @@ export const updateFileStatusEmail = createAsyncThunk(
 );
 
 // Thunk for deleting a file
+// Thunk for deleting a file
 export const deleteFile = createAsyncThunk(
     'fileData/deleteFile',
     async(fileId, { rejectWithValue }) => {
         try {
             const token = getToken();
-            const response = await axios.delete(`${baseUrl}user/csvFileData/${fileId}`, {
+            const response = await axios.delete(`http://localhost:4000/user/csvFileData/${fileId}`, {
                 headers: {
-                    Authorization: ` ${token}`,
+                    Authorization: `Bearer ${token}`, // Correctly formatted Authorization header
                 },
             });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            return rejectWithValue(error.response ? error.response.data : error.message);
         }
     }
 );
+
 
 const fileDataSlice = createSlice({
     name: "fileData",
@@ -211,7 +233,32 @@ const fileDataSlice = createSlice({
             .addCase(deleteFile.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload || action.error.message;
-            });
+            })
+            .addCase(fetchFileDataAll.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(fetchFileDataAll.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.files = action.payload.files.map((file, index) => ({
+                    serialNumber: index + 1,
+                    filename: file.originalname,
+                    campaignName: file.campaignName,
+                    campaignCode: file.campaignCode,
+                    createdAt: new Date(file.createdAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                    }),
+                    fileId: file._id,
+                    status: file.status,
+                }));
+                state.statusData = action.payload.status;
+            })
+            .addCase(fetchFileDataAll.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+
     },
 });
 

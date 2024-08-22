@@ -1,18 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import baseUrl from '../../../constant/ConstantApi';
 
 export const uploadFile = createAsyncThunk(
     'fileUpload/uploadFile',
     async(formData, thunkAPI) => {
         try {
-            // Get the token from local storage or state
             const token = localStorage.getItem('authToken');
-
-            // Set up the headers with the token
             const config = {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             };
 
@@ -30,7 +27,6 @@ const fileUploadSlice = createSlice({
         status: 'idle',
         message: '',
     },
-    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(uploadFile.pending, (state) => {
