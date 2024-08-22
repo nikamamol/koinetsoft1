@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from "../redux/reducer/registeruser/Login";
@@ -13,6 +13,14 @@ function Login() {
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        // Check if the token is present in local storage or Redux state
+        const token = localStorage.getItem('authToken'); // or replace with appropriate token retrieval logic
+        if (token) {
+            navigate('/dashboard');
+        }
+    }, [navigate]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();

@@ -12,12 +12,11 @@ export const uploadFile = createAsyncThunk(
             // Set up the headers with the token
             const config = {
                 headers: {
-                    Authorization: `${token}`,
-                    'Content-Type': 'multipart/form-data', // Ensure proper content type
+                    Authorization: `Bearer ${token}`,
                 },
             };
 
-            const response = await axios.post(`${baseUrl}user/uploadcsv`, formData, config);
+            const response = await axios.post(`http://localhost:4000/user/uploadcsv`, formData, config);
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);

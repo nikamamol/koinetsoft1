@@ -6,12 +6,19 @@ export const verifyOtp = createAsyncThunk(
     'otp/verifyOtp',
     async(otp, { rejectWithValue }) => {
         try {
-            const response = await axios.post("https://koinetsoft-backend.onrender.com/user/verify-otp", { otp });
-            const { token } = response.data;
+            const response = await axios.post("http://localhost:4000/user/verify-otp", { otp });
+            const { token, username } = response.data;
+
+            // Store both token and username in local storage
             localStorage.setItem('authToken', token);
-            return token;
+            localStorage.setItem('username', username);
+
+            console.log(token); // This should print the token to the console
+            console.log(username); // This should print the username to the console
+
+            return { token, username }; // Return both token and username if needed
         } catch (error) {
-            // return rejectWithValue(error.response ? .data ? .message || "Error verifying OTP");
+            return rejectWithValue(error.response || "Error verifying OTP");
         }
     }
 );

@@ -11,9 +11,9 @@ export const fetchFileData = createAsyncThunk(
     async(_, { rejectWithValue }) => {
         try {
             const token = getToken();
-            const response = await axios.get(`${baseUrl}user/csvFileData`, {
+            const response = await axios.get(`http://localhost:4000/user/csvFileData`, {
                 headers: {
-                    Authorization: ` ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
             return response.data;

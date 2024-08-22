@@ -15,7 +15,7 @@ export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async({ email, password }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`https://koinetsoft-backend.onrender.com/user/login`, { email, password });
+            const response = await axios.post(`http://localhost:4000/user/login`, { email, password });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response ? error.response.data.message : 'An error occurred. Please try again.');
