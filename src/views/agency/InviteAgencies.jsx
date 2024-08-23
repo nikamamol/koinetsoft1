@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Col, Container, Row, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import baseUrl from '../../constant/ConstantApi';
 
 function InviteAgencies() {
   // State variables for form data
@@ -249,7 +250,7 @@ function InviteAgencies() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:4000/user/invitagency', formData);
+      const response = await axios.post(`${baseUrl}user/invitagency`, formData);
       if (response.data.message) {
         setSuccessMessage(response.data.message);
         toast.success(response.data.message)

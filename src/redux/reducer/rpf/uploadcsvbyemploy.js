@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import baseUrl from '../../../constant/ConstantApi';
 
 export const uploadFile = createAsyncThunk(
     'fileUpload/uploadFile',
@@ -13,7 +14,7 @@ export const uploadFile = createAsyncThunk(
                 },
             };
 
-            const response = await axios.post(`http://localhost:4000/user/uploadcsv`, formData, config);
+            const response = await axios.post(`${baseUrl}user/uploadcsv`, formData, config);
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);

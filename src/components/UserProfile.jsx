@@ -29,6 +29,7 @@ export default function UserProfile() {
     // Clear local storage
     localStorage.removeItem('authToken');
     localStorage.removeItem('username');
+    localStorage.removeItem('role');
     // Navigate to login page
     navigate('/');
   };

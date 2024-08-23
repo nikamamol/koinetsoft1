@@ -2,13 +2,14 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import baseUrl from '../../../constant/ConstantApi';
 
 // Async thunk to handle the API call
 export const createTemplate = createAsyncThunk(
     'template/createTemplate',
     async(formData, thunkAPI) => {
         try {
-            const response = await axios.post('http://localhost:4000/user/createTemplate', formData);
+            const response = await axios.post(`${baseUrl}user/createTemplate`, formData);
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);

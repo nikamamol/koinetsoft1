@@ -28,7 +28,7 @@ export const fetchFileDataAll = createAsyncThunk(
     async(_, { rejectWithValue }) => {
         try {
             const token = getToken();
-            const response = await axios.get(`http://localhost:4000/user/csvFileAllData`, {
+            const response = await axios.get(`${baseUrl}user/csvFileAllData`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -48,7 +48,7 @@ export const downloadFile = createAsyncThunk(
             const token = getToken();
             console.log('Downloading file with token:', token); // Debugging line
             const response = await axios({
-                url: `http://localhost:4000/user/csvFileData/${fileId}`,
+                url: `${baseUrl}user/csvFileData/${fileId}`,
                 method: "GET",
                 responseType: "blob",
                 headers: {
@@ -95,7 +95,7 @@ export const updateFileStatus = createAsyncThunk(
                 status: updatedStatus
             }, {
                 headers: {
-                    Authorization: ` ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -127,7 +127,7 @@ export const updateFileStatusEmail = createAsyncThunk(
                 status: updatedStatus
             }, {
                 headers: {
-                    Authorization: ` ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -145,7 +145,7 @@ export const deleteFile = createAsyncThunk(
     async(fileId, { rejectWithValue }) => {
         try {
             const token = getToken();
-            const response = await axios.delete(`http://localhost:4000/user/csvFileData/${fileId}`, {
+            const response = await axios.delete(`${baseUrl}user/csvFileData/${fileId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`, // Correctly formatted Authorization header
                 },

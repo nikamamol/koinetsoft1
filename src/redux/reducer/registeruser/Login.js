@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import baseUrl from '../../../constant/ConstantApi';
 
 // Define an initial state
 const initialState = {
@@ -15,7 +16,7 @@ export const loginUser = createAsyncThunk(
     'auth/loginUser',
     async({ email, password }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`http://localhost:4000/user/login`, { email, password });
+            const response = await axios.post(`${baseUrl}user/login`, { email, password });
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response ? error.response.data.message : 'An error occurred. Please try again.');

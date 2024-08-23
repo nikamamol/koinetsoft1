@@ -3,9 +3,9 @@ import axios from 'axios';
 import baseUrl from '../../../constant/ConstantApi';
 
 // Async thunk for fetching client details
-export const fetchClientDetails = createAsyncThunk(    
+export const fetchClientDetails = createAsyncThunk(
     'client/fetchClientDetails',
-    async (id) => {
+    async(id) => {
         const response = await axios.get(`${baseUrl}user/clientDetails/${id}`);
         return response.data;
     }
@@ -14,13 +14,13 @@ export const fetchClientDetails = createAsyncThunk(
 // Async thunk for updating client details
 export const updateClientDetails = createAsyncThunk(
     'client/viewClient',
-    async ({ id, details }) => {
+    async({ id, details }) => {
         await axios.put(`${baseUrl}user/updateClient/${id}`, details);
         return details;
     }
-  );
+);
 
-  const clientDetailsSlice = createSlice({
+const clientDetailsSlice = createSlice({
     name: 'clientDetails',
     initialState: {
         details: {

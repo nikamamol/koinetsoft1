@@ -2,9 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { fetchFileData, downloadFile, updateFileStatusEmail, fetchFileDataAll } from '../redux/reducer/rpf/getcsvfiledata';
+import { fetchFileDataAll, downloadFile, updateFileStatusEmail } from '../redux/reducer/rpf/getcsvfiledata';
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import { toast } from 'react-toastify';
 
@@ -16,7 +14,6 @@ const RfpEmailCheck = () => {
         status: state.fileData.status,
     }));
 
-    // Local state to manage selected checkboxes
     const [checkboxes, setCheckboxes] = useState({});
 
     useEffect(() => {
@@ -26,7 +23,6 @@ const RfpEmailCheck = () => {
     }, [status, dispatch]);
 
     useEffect(() => {
-        // Update local state when files data changes
         const updatedCheckboxes = {};
         files.forEach(file => {
             file.status.forEach(statusItem => {
@@ -50,7 +46,6 @@ const RfpEmailCheck = () => {
         dispatch(updateFileStatusEmail({ fileId, statusId, checked }))
             .unwrap()
             .then(() => {
-                // Update local checkbox state
                 setCheckboxes(prev => ({ ...prev, [statusId]: checked }));
                 toast.success('Status updated successfully!');
             })
@@ -60,14 +55,15 @@ const RfpEmailCheck = () => {
             });
     };
 
-    // Filter files to include only those with status entries where userType is "Email Marketing"
+    const role = localStorage.getItem('role');
+
     const filteredFiles = useMemo(() => {
+        if (role !== 'email_marketing' && role !== 'admin') return [];
         return files.filter(file =>
             file.status.some(statusItem => statusItem.userType === 'Email Marketing')
         );
-    }, [files]);
+    }, [files, role]);
 
-    // Define columns for the table
     const columns = useMemo(
         () => [
             {
@@ -129,14 +125,6 @@ const RfpEmailCheck = () => {
                                 />
                             </IconButton>
                         </Tooltip>
-                        {/* <EditIcon
-                            style={{ cursor: 'pointer', color: 'blue', width: '30px', height: '30px' }}
-                            onClick={() => alert(`Editing ${row.original.filename}`)}
-                        />
-                        <DeleteIcon
-                            style={{ cursor: 'pointer', color: 'red', width: '30px', height: '30px' }}
-                            onClick={() => alert(`Deleting ${row.original.filename}`)}
-                        /> */}
                     </div>
                 ),
                 size: 200,
@@ -147,6 +135,12 @@ const RfpEmailCheck = () => {
 
     if (status === 'loading') return <div>Loading...</div>;
     if (status === 'failed') return <div>Error: {error}</div>;
+
+    if (role !== 'email_marketing' && role !== 'admin') {
+        return <div className='text-center'>
+        <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page.</h1>
+      </div>;
+    }
 
     return <MaterialReactTable columns={columns} data={filteredFiles} />;
 };

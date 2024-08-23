@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import baseUrl from "../../../constant/ConstantApi";
 
 // Async thunk for fetching a template by ID
 export const fetchTemplateById = createAsyncThunk(
     "template/fetchTemplateById",
     async(id) => {
         const response = await axios.get(
-            `http://localhost:4000/user/templates/${id}`
+            `${baseUrl}user/templates/${id}`
         );
         return response.data;
     }

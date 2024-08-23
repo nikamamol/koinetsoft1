@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Col, Container, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
+import baseUrl from '../../constant/ConstantApi';
 
 function ViewAgencyDetailsById({ userData }) {
     const { id } = useParams();
@@ -215,7 +216,7 @@ function ViewAgencyDetailsById({ userData }) {
         if (id) {
             console.log("Fetching data for ID:", id);  // Debugging line
             setLoading(true);
-            axios.get(`http://localhost:4000/user/viewAgencyDetails/${id}`)
+            axios.get(`${baseUrl}user/viewAgencyDetails/${id}`)
                 .then(response => {
                     console.log("Data fetched:", response.data);  // Debugging line
                     setFormData(response.data.updatedVendor);  // Access updatedVendor from response
@@ -232,7 +233,7 @@ function ViewAgencyDetailsById({ userData }) {
         e.preventDefault();
         setLoading(true);
 
-        axios.put(`http://localhost:4000/user/updateAgency/${id}`, formData)
+        axios.put(`${baseUrl}user/updateAgency/${id}`, formData)
             .then(response => {
                 console.log("Update response:", response.data);  // Debugging line
                 toast.success(response.data.message);

@@ -26,6 +26,8 @@ const RfpReceived = () => {
 
   const [files, setFiles] = useState(initialFiles);
 
+  const userRole = localStorage.getItem('role'); // Assuming role is stored in localStorage
+
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchFileData());
@@ -57,10 +59,13 @@ const RfpReceived = () => {
   };
 
   const filteredFiles = useMemo(() => {
+    if (userRole !== 'user') {
+      return [];
+    }
     return files.filter(file =>
       isToday(file.createdAt) && file.status.some(statusItem => statusItem.userType === 'Employee')
     );
-  }, [files]);
+  }, [files, userRole]);
 
   const columns = useMemo(
     () => [
@@ -139,11 +144,17 @@ const RfpReceived = () => {
             </Tooltip>
           </div>
         ),
-        size:150,
+        size: 150,
       },
     ],
     [handleDownload, handleDelete]
   );
+
+  if (userRole !== 'user') {
+    return <div className='text-center'>
+      <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page.</h1>
+    </div>;
+  }
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Error: {error}</div>;

@@ -120,6 +120,7 @@ const Register = () => {
                                         <option value="agent">Agent</option>
                                         <option value="client">Client</option>
                                         <option value="quality">Quality</option>
+                                        <option value="email_marketing">Email Marketing</option>
                                         <option value="delivery">Delivery</option>
                                     </Form.Control>
                                 </Form.Group>

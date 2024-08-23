@@ -37,6 +37,7 @@ function Received() {
       setSelectedCampaignCode(campaign.campaignCode);
     }
   };
+  const userRole = localStorage.getItem('role')
 
   const handleFileUpload = async () => {
     if (!file || !selectedCampaign || !selectedCampaignCode) {
@@ -67,9 +68,9 @@ function Received() {
           <Col lg={3}></Col>
           <Col lg={8}>
             <div className='bgColor rounded-3 shadow'>
-              <h4 className='fw-bold py-3 ms-3 text_color'>RFP List</h4>
+              <h4 className='fw-bold py-3 ms-3 text_color'>Your RFP File List</h4>
             </div>
-            <div className='my-3 d-flex justify-content-end'>
+            {userRole === "user" ? <div className='my-3 d-flex justify-content-end'>
               <Button variant="primary" className='p-2' onClick={handleShow}>
                 <CloudUploadIcon /> Upload RPF File
               </Button>
@@ -102,7 +103,7 @@ function Received() {
                   </Form>
                 </Modal.Body>
               </Modal>
-            </div>
+            </div> : ""}
             <RfpReceived />
           </Col>
         </Row>
