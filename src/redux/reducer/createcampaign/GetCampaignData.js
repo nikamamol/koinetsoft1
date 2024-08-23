@@ -24,7 +24,7 @@ export const fetchCampaigns = createAsyncThunk(
 export const fetchCampaignById = createAsyncThunk(
     'campaigns/fetchCampaignById',
     async(id) => {
-        const response = await axios.get(`${baseUrl}/getCampaignsDataById/${id}`);
+        const response = await axios.get(`${baseUrl}user/getCampaignsDataById/${id}`);
         return response.data;
     }
 );
