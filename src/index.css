@@ -1,3 +1,28 @@
+/* CSS Reset */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Global Base Styles */
+
+html {
+    font-size: 16px;
+    /* Set the base font size */
+    line-height: 1.5;
+    /* Improve readability */
+    font-family: 'Arial', sans-serif;
+    /* Set a consistent font */
+}
+
+body {
+    color: #2f3645e5;
+    background-color: #F5F7F8;
+}
+
 .avatar {
     background-color: #f50f1ec7;
     border-radius: 10px;
