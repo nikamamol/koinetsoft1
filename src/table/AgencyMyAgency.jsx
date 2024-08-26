@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { toast } from 'react-toastify';
+import baseUrl from '../constant/ConstantApi';
 
 const AgencyMyAgency = () => {
   const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ const AgencyMyAgency = () => {
 
   useEffect(() => {
     // Fetch data from the API
-    axios.get('http://localhost:4000/user/myagencies')
+    axios.get(`${baseUrl}user/myagencies`)
       .then(response => {
         // Map the response data to the desired structure
         const fetchedData = response.data.map((item, index) => ({
@@ -34,7 +35,7 @@ const AgencyMyAgency = () => {
   }, []);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:4000/user/deletevendor/${id}`)
+    axios.delete(`${baseUrl}user/deletevendor/${id}`)
       .then(() => {
         // Filter out the deleted item from the data
         setData((prevData) => prevData.filter(item => item.id !== id));

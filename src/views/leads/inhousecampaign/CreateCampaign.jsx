@@ -18,13 +18,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createCampaign } from '../../../redux/reducer/createcampaign/CreateNewCampaign';
 import { toast } from 'react-toastify';
 import { fetchClients } from '../../../redux/reducer/billing/ClientSlice';
+import { fetchTemplates } from '../../../redux/reducer/createteplate/GetTemplate';
 
 function CreateCampaign() {
   const dispatch = useDispatch();
   const clients = useSelector((state) => state.clients.data);
+  const templates = useSelector((state) => state.templates.templates);
+  const templateStatus = useSelector((state) => state.templates.status);
+
   useEffect(() => {
-    // Fetch clients when component mounts
     dispatch(fetchClients());
+    dispatch(fetchTemplates());
   }, [dispatch]);
 
   const [companyRevenue, setCompanyRevenue] = useState([]);
@@ -292,7 +296,7 @@ function CreateCampaign() {
                           <label for="campaign_type" className="form-label">Type Of Campaign  <span className="text-danger">*</span></label>
                           <select id="campaign_type" value={formData.campaignType} onChange={handleChange} required="" name="campaignType" className="form-select">
                             <option value="">--Select Campaign Type--</option>
-                            <option value="Telemarketing">Telemarketing</option>
+                            <option value="Tele Marketing">Tele Marketing</option>
                             <option value="Email Marketing">Email Marketing</option>
                           </select>
                         </div>
@@ -367,22 +371,24 @@ function CreateCampaign() {
                           <input className="form-control" value={formData.cpl} onChange={handleChange} type="number" placeholder="100" name="cpl" required="" id="cpl" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label for="template" className="form-label">Landing Page</label>
-                          <select id="template" value={formData.template} name='template' onChange={handleChange} required="" className="form-select">
+                          <label htmlFor="template" className="form-label">Landing Page</label>
+                          <select
+                            id="template"
+                            value={formData.template}
+                            name="template"
+                            onChange={handleChange}
+                            required
+                            className="form-select"
+                          >
                             <option value="">--Landing Template--</option>
-                            <option value="1">
-                              Template - 1
-                            </option>
-                            <option value="2">
-                              Template - 2
-                            </option>
-                            <option value="3">
-                              Template - 3
-                            </option>
-
+                            {templates && templates.map((template) => (
+                              <option key={template._id} value={template._id}>
+                                {template.template_title}
+                              </option>
+                            ))}
                           </select>
-                          <a href="#" style={{ display: 'none' }} target="_blank" id="view_sample"> View Sample</a>
-                          <a href="#" style={{ display: 'none' }} target="_blank" id="view_landing"> View Landing Page</a>
+                          {/* <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_sample">View Sample</a>
+                          <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_landing">View Landing Page</a> */}
                         </div>
                         {/* sceocond part */}
                         <div className="">

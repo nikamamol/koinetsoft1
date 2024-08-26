@@ -70,40 +70,43 @@ function Received() {
             <div className='bgColor rounded-3 shadow'>
               <h4 className='fw-bold py-3 ms-3 text_color'>Your RFP File List</h4>
             </div>
-            {userRole === "user" ? <div className='my-3 d-flex justify-content-end'>
-              <Button variant="primary" className='p-2' onClick={handleShow}>
-                <CloudUploadIcon /> Upload RPF File
-              </Button>
-              <Modal show={show} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                  <Modal.Title>Upload Your RPF File (.csv format)</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form>
-                    <Form.Group controlId="formFile">
-                      <Form.Label>Select Campaign</Form.Label>
-                      <Form.Control as="select" onChange={handleCampaignChange}>
-                        <option value="">Select Campaign</option>
-                        {campaigns.map((campaign) => (
-                          <option key={campaign._id} value={campaign._id}>
-                            {campaign.campaignName}
-                          </option>
-                        ))}
-                      </Form.Control>
-                    </Form.Group>
-                    <Form.Group controlId="formFile" className="mt-3">
-                      <Form.Label>Upload CSV</Form.Label>
-                      <Form.Control type="file" onChange={handleFileChange} />
-                    </Form.Group>
-                    <div className='mt-3'>
-                      <Button variant="success" onClick={handleFileUpload} disabled={uploadStatus === 'loading'}>
-                        <SendIcon /> Send
-                      </Button>
-                    </div>
-                  </Form>
-                </Modal.Body>
-              </Modal>
-            </div> : ""}
+            {(userRole === "user" || userRole === "admin") && (
+              <div className='my-3 d-flex justify-content-end'>
+                <Button variant="primary" className='p-2' onClick={handleShow}>
+                  <CloudUploadIcon /> Upload RPF File
+                </Button>
+                <Modal show={show} onHide={handleClose} centered>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Upload Your RPF File (.csv format)</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Form>
+                      <Form.Group controlId="formFile">
+                        <Form.Label>Select Campaign</Form.Label>
+                        <Form.Control as="select" onChange={handleCampaignChange}>
+                          <option value="">Select Campaign</option>
+                          {campaigns.map((campaign) => (
+                            <option key={campaign._id} value={campaign._id}>
+                              {campaign.campaignName}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      </Form.Group>
+                      <Form.Group controlId="formFile" className="mt-3">
+                        <Form.Label>Upload CSV</Form.Label>
+                        <Form.Control type="file" onChange={handleFileChange} />
+                      </Form.Group>
+                      <div className='mt-3'>
+                        <Button variant="success" onClick={handleFileUpload} disabled={uploadStatus === 'loading'}>
+                          <SendIcon /> Send
+                        </Button>
+                      </div>
+                    </Form>
+                  </Modal.Body>
+                </Modal>
+              </div>
+            )}
+
             <RfpReceived />
           </Col>
         </Row>
