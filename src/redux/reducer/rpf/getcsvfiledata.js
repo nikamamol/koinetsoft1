@@ -47,14 +47,13 @@ export const downloadFile = createAsyncThunk(
         try {
             const token = getToken();
             console.log('Downloading file with token:', token); // Debugging line
-            const response = await axios({
-                url: `${baseUrl}user/csvFileData/${fileId}`,
-                method: "GET",
+            const response = await axios.get(`${baseUrl}user/csvFileData/${fileId}`, {
                 responseType: "blob",
                 headers: {
                     Authorization: `Bearer ${token}`, // Ensure 'Bearer' is included
                 },
             });
+
 
             // Create a download link and trigger download
             const url = window.URL.createObjectURL(new Blob([response.data]));

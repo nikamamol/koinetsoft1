@@ -59,12 +59,12 @@ const RfpReceived = () => {
   };
 
   const filteredFiles = useMemo(() => {
-    if (userRole === 'user') {
-      return files.filter(file =>
-        isToday(file.createdAt) && file.status.some(statusItem => statusItem.userType === 'Employee')
-      );
+    if (userRole !== 'user') {
+      return [];
     }
-    return files; // Admin can view all files
+    return files.filter(file =>
+      isToday(file.createdAt) && file.status.some(statusItem => statusItem.userType === 'Employee')
+    );
   }, [files, userRole]);
 
   const columns = useMemo(
@@ -150,7 +150,7 @@ const RfpReceived = () => {
     [handleDownload, handleDelete]
   );
 
-  if (userRole !== 'user' && userRole !== 'admin') {
+  if (userRole !== 'user') {
     return <div className='text-center'>
       <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page.</h1>
     </div>;
