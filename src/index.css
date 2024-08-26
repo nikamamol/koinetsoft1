@@ -1,21 +1,29 @@
-/* CSS Reset */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-/* Global Base Styles */
-
 html {
     font-size: 14px;
     /* Set the base font size */
-    line-height: 0.5;
-    /* Improve readability */
+    line-height: 1;
+    /* Set a tighter line height */
     font-family: 'Arial', sans-serif;
     /* Set a consistent font */
+}
+
+body {
+    color: #2f3645e5;
+    background-color: #F5F7F8;
+    line-height: 1;
+    /* Apply the tighter line height to the body */
+}
+
+
+/* Global Margin and Padding Adjustments */
+
+* {
+    margin: 0;
+    /* Remove default margin */
+    padding: 0;
+    /* Remove default padding */
+    box-sizing: border-box;
+    /* Ensure padding and borders are included in element's width and height */
 }
 
 
