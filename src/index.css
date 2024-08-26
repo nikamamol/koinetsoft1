@@ -5,11 +5,6 @@
     color: white;
 }
 
-body {
-    font-weight: 300;
-    /* Use 300 for a lighter font weight */
-}
-
 .avatar:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5),
 }
