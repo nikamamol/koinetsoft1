@@ -368,7 +368,7 @@ function CreateCampaign() {
                         </div>
                         <div className="mb-3 col-md-6 client_select">
                           <label for="lead_per_day" className="form-label">CPL</label> <span className="text-danger"> *</span>
-                          <input className="form-control" value={formData.cpl} onChange={handleChange} type="number" placeholder="100" name="cpl" required="" id="cpl" />
+                          <input className="form-control" value={formData.cpl} onChange={handleChange} type="number" placeholder="$" name="cpl" required="" id="cpl" />
                         </div>
                         <div className="mb-3 col-md-6">
                           <label htmlFor="template" className="form-label">Landing Page</label>

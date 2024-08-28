@@ -29,6 +29,7 @@ export const fetchCampaignById = createAsyncThunk(
     }
 );
 
+
 // Create a slice
 const campaignsSlice = createSlice({
     name: 'campaigns',

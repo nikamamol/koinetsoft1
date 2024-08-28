@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { fetchFileData, downloadFile, updateFileStatus, fetchFileDataAll } from '../redux/reducer/rpf/getcsvfiledata';
-import { Checkbox, IconButton, Tooltip } from '@mui/material';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { fetchFileData, readFile, updateFileStatus, fetchFileDataAll } from '../redux/reducer/rpf/getcsvfiledata';
+import { Checkbox, IconButton, Tooltip, Button, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
+import * as XLSX from 'xlsx';
 
 const RfpQualityCheck = () => {
   const dispatch = useDispatch();
@@ -15,6 +17,7 @@ const RfpQualityCheck = () => {
   }));
 
   const [checkboxes, setCheckboxes] = useState({});
+  const [excelData, setExcelData] = useState([]);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -34,11 +37,18 @@ const RfpQualityCheck = () => {
     setCheckboxes(updatedCheckboxes);
   }, [files]);
 
-  const handleDownload = (fileId, filename) => {
-    dispatch(downloadFile({ fileId, filename }))
+  const handleRead = (fileId) => {
+    dispatch(readFile({ fileId }))
       .unwrap()
+      .then(({ arrayBuffer }) => {
+        const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
+        const sheetName = workbook.SheetNames[0]; // Assumes the first sheet
+        const sheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(sheet);
+        setExcelData(data);
+      })
       .catch((error) => {
-        console.error('Error downloading file:', error);
+        console.error('Error reading file:', error);
       });
   };
 
@@ -53,6 +63,25 @@ const RfpQualityCheck = () => {
         toast.error('Error updating status. Please try again.');
         console.error('Error updating status:', error);
       });
+  };
+
+  const handleDownloadExcel = () => {
+    if (excelData.length === 0) {
+      toast.error('No data to download.');
+      return;
+    }
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'data.xlsx');
+  };
+
+  const handleCellEdit = (rowIndex, columnId, value) => {
+    setExcelData((prev) =>
+      prev.map((row, index) =>
+        index === rowIndex ? { ...row, [columnId]: value } : row
+      )
+    );
   };
 
   const role = localStorage.getItem('role');
@@ -117,11 +146,11 @@ const RfpQualityCheck = () => {
         header: 'Actions',
         Cell: ({ row }) => (
           <div className="d-flex gap-3">
-            <Tooltip title="Download File">
+            <Tooltip title="Read File">
               <IconButton>
-                <CloudDownloadIcon
+                <RemoveRedEyeIcon
                   style={{ cursor: 'pointer', color: 'black', width: '30px', height: '30px' }}
-                  onClick={() => handleDownload(row.original.fileId, row.original.filename)}
+                  onClick={() => handleRead(row.original.fileId)}
                 />
               </IconButton>
             </Tooltip>
@@ -130,7 +159,24 @@ const RfpQualityCheck = () => {
         size: 200,
       },
     ],
-    [handleDownload, handleCheckboxChange, checkboxes]
+    [handleRead, handleCheckboxChange, checkboxes]
+  );
+
+  const excelColumns = useMemo(
+    () => (excelData.length > 0 ? Object.keys(excelData[0]).map(key => ({
+      accessorKey: key,
+      header: key,
+      Cell: ({ row, column }) => (
+        <TextField
+          value={row.original[column.id]}
+          onChange={(e) => handleCellEdit(row.index, column.id, e.target.value)}
+          size="small"
+          variant="outlined"
+          fullWidth
+        />
+      ),
+    })) : []),
+    [excelData]
   );
 
   if (role !== 'quality' && role !== 'admin') {
@@ -142,7 +188,31 @@ const RfpQualityCheck = () => {
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Error: {error}</div>;
 
-  return <MaterialReactTable columns={columns} data={filteredFiles} />;
+  return (
+    <>
+      <MaterialReactTable columns={columns} data={filteredFiles} />
+      <div>
+
+        {excelData.length > 0 && (
+          <>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDownloadExcel}
+              startIcon={<CloudDownloadIcon />}
+              className="my-3"
+            >
+              Download Excel
+            </Button>
+            <MaterialReactTable
+              columns={excelColumns}
+              data={excelData}
+            />
+          </>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default RfpQualityCheck;

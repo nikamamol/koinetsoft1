@@ -11,7 +11,7 @@ export const fetchFileData = createAsyncThunk(
     async(_, { rejectWithValue }) => {
         try {
             const token = getToken();
-            const response = await axios.get(`http://localhost:4000/user/csvFileData`, {
+            const response = await axios.get(`${baseUrl}user/csvFileData`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -72,6 +72,23 @@ export const downloadFile = createAsyncThunk(
     }
 );
 
+export const readFile = createAsyncThunk(
+    'fileData/readFile',
+    async({ fileId }, { rejectWithValue }) => {
+        try {
+            const token = getToken();
+            const response = await axios.get(`${baseUrl}user/csvFileData/${fileId}`, {
+                responseType: 'arraybuffer', // Change to 'arraybuffer' for reading the file
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return { arrayBuffer: response.data }; // Return the arrayBuffer
+        } catch (error) {
+            return rejectWithValue(error.response ? error.response.data : error.message);
+        }
+    }
+);
 
 // Thunk for updating file status (Quality)
 export const updateFileStatus = createAsyncThunk(
@@ -257,6 +274,17 @@ const fileDataSlice = createSlice({
                 state.status = "failed";
                 state.error = action.error.message;
             })
+            .addCase(readFile.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(readFile.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // Handle file data here if needed
+            })
+            .addCase(readFile.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            });
 
     },
 });
