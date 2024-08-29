@@ -1,13 +1,54 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
-import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { fetchFileDataAll, readFile, updateFileStatus } from '../redux/reducer/rpf/getcsvfiledata';
+import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { fetchFileData, readFile, updateFileStatus, fetchFileDataAll } from '../redux/reducer/rpf/getcsvfiledata';
-import { Checkbox, IconButton, Tooltip, Button, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
+import { SpreadsheetComponent, SheetDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangeDirective, RangesDirective } from '@syncfusion/ej2-react-spreadsheet';
+import '@syncfusion/ej2-base/styles/material.css';
+import '@syncfusion/ej2-inputs/styles/material.css';
+import '@syncfusion/ej2-buttons/styles/material.css';
+import '@syncfusion/ej2-splitbuttons/styles/material.css';
+import '@syncfusion/ej2-navigations/styles/material.css';
+import '@syncfusion/ej2-calendars/styles/material.css';
+import '@syncfusion/ej2-popups/styles/material.css';
+import '@syncfusion/ej2-lists/styles/material.css';
+import '@syncfusion/ej2-react-spreadsheet/styles/material.css';
 
+// SpreadsheetViewer Component
+const SpreadsheetViewer = ({ data }) => {
+  let spreadsheetRef;
+
+  return (
+    <div style={{ width: '100%' }}>
+      {data.length > 0 && (
+        <SpreadsheetComponent 
+          ref={(s) => (spreadsheetRef = s)} 
+          allowOpen={true} 
+          allowSave={true} 
+          showRibbon={true}
+        >
+          <SheetsDirective>
+            <SheetDirective>
+              <RangesDirective>
+                <RangeDirective dataSource={data} />
+              </RangesDirective>
+              <ColumnsDirective>
+                {data[0].map((_, idx) => (
+                  <ColumnDirective key={idx} width={120} />
+                ))}
+              </ColumnsDirective>
+            </SheetDirective>
+          </SheetsDirective>
+        </SpreadsheetComponent>
+      )}
+    </div>
+  );
+};
+
+// Main Component
 const RfpQualityCheck = () => {
   const dispatch = useDispatch();
   const { files, error, status } = useSelector((state) => ({
@@ -44,7 +85,7 @@ const RfpQualityCheck = () => {
         const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
         const sheetName = workbook.SheetNames[0]; // Assumes the first sheet
         const sheet = workbook.Sheets[sheetName];
-        const data = XLSX.utils.sheet_to_json(sheet);
+        const data = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // Including headers
         setExcelData(data);
       })
       .catch((error) => {
@@ -63,25 +104,6 @@ const RfpQualityCheck = () => {
         toast.error('Error updating status. Please try again.');
         console.error('Error updating status:', error);
       });
-  };
-
-  const handleDownloadExcel = () => {
-    if (excelData.length === 0) {
-      toast.error('No data to download.');
-      return;
-    }
-    const ws = XLSX.utils.json_to_sheet(excelData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'data.xlsx');
-  };
-
-  const handleCellEdit = (rowIndex, columnId, value) => {
-    setExcelData((prev) =>
-      prev.map((row, index) =>
-        index === rowIndex ? { ...row, [columnId]: value } : row
-      )
-    );
   };
 
   const role = localStorage.getItem('role');
@@ -162,23 +184,6 @@ const RfpQualityCheck = () => {
     [handleRead, handleCheckboxChange, checkboxes]
   );
 
-  const excelColumns = useMemo(
-    () => (excelData.length > 0 ? Object.keys(excelData[0]).map(key => ({
-      accessorKey: key,
-      header: key,
-      Cell: ({ row, column }) => (
-        <TextField
-          value={row.original[column.id]}
-          onChange={(e) => handleCellEdit(row.index, column.id, e.target.value)}
-          size="small"
-          variant="outlined"
-          fullWidth
-        />
-      ),
-    })) : []),
-    [excelData]
-  );
-
   if (role !== 'quality' && role !== 'admin') {
     return <div className='text-center'>
       <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page.</h1>
@@ -191,26 +196,7 @@ const RfpQualityCheck = () => {
   return (
     <>
       <MaterialReactTable columns={columns} data={filteredFiles} />
-      <div>
-
-        {excelData.length > 0 && (
-          <>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleDownloadExcel}
-              startIcon={<CloudDownloadIcon />}
-              className="my-3"
-            >
-              Download Excel
-            </Button>
-            <MaterialReactTable
-              columns={excelColumns}
-              data={excelData}
-            />
-          </>
-        )}
-      </div>
+      <SpreadsheetViewer data={excelData} />
     </>
   );
 };

@@ -89,3 +89,14 @@ body {
 .Down_pdf_Temp:hover {
     background-color: #f50f1ec7;
 }
+
+.full-width-container {
+    width: 100%;
+    overflow-x: auto;
+    /* Allows horizontal scrolling if needed */
+}
+
+.full-width-container .MuiPaper-root {
+    width: 100% !important;
+    /* Ensures the MaterialReactTable takes full width */
+}
