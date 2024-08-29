@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { fetchFileDataAll, downloadFile, updateFileStatusEmail, readFile } from '../redux/reducer/rpf/getcsvfiledata';
-import { Checkbox, IconButton, Tooltip } from '@mui/material';
+import { fetchFileDataAll, updateFileStatusEmail, readFile, updateCsvFileById } from '../redux/reducer/rpf/getcsvfiledata';
+import { Checkbox, IconButton, Tooltip, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import { SpreadsheetComponent, SheetDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangeDirective, RangesDirective } from '@syncfusion/ej2-react-spreadsheet';
@@ -56,7 +56,9 @@ const RfpEmailCheck = () => {
     }));
 
     const [checkboxes, setCheckboxes] = useState({});
-    const [excelData, setExcelData] = useState([]); // Initialize excelData state
+    const [excelData, setExcelData] = useState([]);
+    const [currentFileName, setCurrentFileName] = useState('');
+    const [selectedFile, setSelectedFile] = useState(null);
 
     useEffect(() => {
         if (status === 'idle') {
@@ -77,14 +79,19 @@ const RfpEmailCheck = () => {
     }, [files]);
 
     const handleRead = (fileId) => {
+        const file = files.find(file => file.fileId === fileId);
+        if (file) {
+            setCurrentFileName(file.filename);
+            setSelectedFile(file); // Set selected file for update
+        }
         dispatch(readFile({ fileId }))
             .unwrap()
             .then(({ arrayBuffer }) => {
                 const workbook = XLSX.read(new Uint8Array(arrayBuffer), { type: 'array' });
-                const sheetName = workbook.SheetNames[0]; // Assumes the first sheet
+                const sheetName = workbook.SheetNames[0];
                 const sheet = workbook.Sheets[sheetName];
-                const data = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // Including headers
-                setExcelData(data); // Update excelData state
+                const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                setExcelData(data);
             })
             .catch((error) => {
                 console.error('Error reading file:', error);
@@ -102,6 +109,24 @@ const RfpEmailCheck = () => {
                 toast.error('Error updating status. Please try again.');
                 console.error('Error updating status:', error);
             });
+    };
+
+    const handleUpdateFile = () => {
+        if (selectedFile) {
+            const fileData = {
+                file: selectedFile.file, // Update this according to your actual data structure
+                path: selectedFile.path || ''
+            };
+            dispatch(updateCsvFileById({ fileId: selectedFile.fileId, fileData }))
+                .unwrap()
+                .then(() => {
+                    toast.success('File updated successfully!');
+                })
+                .catch((error) => {
+                    toast.error('Error updating file. Please try again.');
+                    console.error('Error updating file:', error);
+                });
+        }
     };
 
     const role = localStorage.getItem('role');
@@ -192,11 +217,28 @@ const RfpEmailCheck = () => {
 
     return (
         <>
-            <MaterialReactTable columns={columns} data={filteredFiles} />
-            <div className='p-4 bg-success my-3'>
-                {/* Additional content if needed */}
-            </div>
-            <SpreadsheetViewer data={excelData} /> {/* Pass the excelData to SpreadsheetViewer */}
+            {excelData.length === 0 ? (
+                <MaterialReactTable columns={columns} data={filteredFiles} />
+            ) : (
+                <>
+                    {currentFileName && (
+                        <div className='p-4 bg_color_Email my-3 fw-bold text-center'>
+                            File name: {currentFileName}
+                        </div>
+                    )}
+                    <SpreadsheetViewer data={excelData} />
+                    
+                        <Button
+                            onClick={handleUpdateFile}
+                            variant="contained"
+                            color="primary"
+                            style={{ marginTop: '20px' }}
+                        >
+                            Update File
+                        </Button>
+              
+                </>
+            )}
         </>
     );
 };

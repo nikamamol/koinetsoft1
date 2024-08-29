@@ -72,6 +72,31 @@ export const downloadFile = createAsyncThunk(
     }
 );
 
+// Thunk for updating a file
+export const updateCsvFileById = createAsyncThunk(
+    "fileData/updateCsvFileById",
+    async({ fileId, fileData }, { rejectWithValue }) => {
+        try {
+            const token = getToken();
+            const formData = new FormData();
+            formData.append('file', fileData.file); // File data
+            formData.append('path', fileData.path || ''); // Optional path data
+
+            const response = await axios.put(`${baseUrl}user/updateCsvFileById/${fileId}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response ? error.response.data : error.message);
+        }
+    }
+);
+
+
 export const readFile = createAsyncThunk(
     'fileData/readFile',
     async({ fileId }, { rejectWithValue }) => {
@@ -282,6 +307,19 @@ const fileDataSlice = createSlice({
                 // Handle file data here if needed
             })
             .addCase(readFile.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+            .addCase(updateCsvFileById.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateCsvFileById.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.files = state.files.map(file =>
+                    file.fileId === action.payload.fileId ? {...file, ...action.payload.file } : file
+                );
+            })
+            .addCase(updateCsvFileById.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
             });

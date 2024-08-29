@@ -24,10 +24,10 @@ const SpreadsheetViewer = ({ data }) => {
   return (
     <div style={{ width: '100%' }}>
       {data.length > 0 && (
-        <SpreadsheetComponent 
-          ref={(s) => (spreadsheetRef = s)} 
-          allowOpen={true} 
-          allowSave={true} 
+        <SpreadsheetComponent
+          ref={(s) => (spreadsheetRef = s)}
+          allowOpen={true}
+          allowSave={true}
           showRibbon={true}
         >
           <SheetsDirective>
@@ -59,6 +59,7 @@ const RfpQualityCheck = () => {
 
   const [checkboxes, setCheckboxes] = useState({});
   const [excelData, setExcelData] = useState([]);
+  const [currentFileName, setCurrentFileName] = useState('')
 
   useEffect(() => {
     if (status === 'idle') {
@@ -79,6 +80,10 @@ const RfpQualityCheck = () => {
   }, [files]);
 
   const handleRead = (fileId) => {
+    const file = files.find(file => file.fileId === fileId);
+    if (file) {
+      setCurrentFileName(file.filename); // Update current file name
+    }
     dispatch(readFile({ fileId }))
       .unwrap()
       .then(({ arrayBuffer }) => {
@@ -86,13 +91,12 @@ const RfpQualityCheck = () => {
         const sheetName = workbook.SheetNames[0]; // Assumes the first sheet
         const sheet = workbook.Sheets[sheetName];
         const data = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // Including headers
-        setExcelData(data);
+        setExcelData(data); // Update excelData state
       })
       .catch((error) => {
         console.error('Error reading file:', error);
       });
   };
-
   const handleCheckboxChange = (fileId, statusId, checked) => {
     dispatch(updateFileStatus({ fileId, statusId, checked }))
       .unwrap()
@@ -195,11 +199,20 @@ const RfpQualityCheck = () => {
 
   return (
     <>
-      <MaterialReactTable columns={columns} data={filteredFiles} />
-      <div className='p-4 bg-success my-3'>
+      {excelData.length === 0 ? (
+        <MaterialReactTable columns={columns} data={filteredFiles} />
+      ) : (
+        <>
+          {currentFileName && (
+            <div className='p-4 bg_color_Email my-3 fw-bold text-center'>
+              File name: {currentFileName}
+            </div>
+          )}
+          <SpreadsheetViewer data={excelData} />
+        </>
 
-      </div>
-      <SpreadsheetViewer data={excelData} />
+      )}
+
     </>
   );
 };

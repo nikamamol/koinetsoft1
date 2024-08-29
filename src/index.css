@@ -90,13 +90,7 @@ body {
     background-color: #f50f1ec7;
 }
 
-.full-width-container {
-    width: 100%;
-    overflow-x: auto;
-    /* Allows horizontal scrolling if needed */
-}
-
-.full-width-container .MuiPaper-root {
-    width: 100% !important;
-    /* Ensures the MaterialReactTable takes full width */
+.bg_color_Email {
+    background-color: #E85C0D;
+    color: black;
 }
