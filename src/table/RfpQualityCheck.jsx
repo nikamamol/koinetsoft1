@@ -196,6 +196,9 @@ const RfpQualityCheck = () => {
   return (
     <>
       <MaterialReactTable columns={columns} data={filteredFiles} />
+      <div className='p-4 bg-success my-3'>
+
+      </div>
       <SpreadsheetViewer data={excelData} />
     </>
   );
