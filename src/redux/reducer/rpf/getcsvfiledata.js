@@ -45,26 +45,26 @@ export const downloadFile = createAsyncThunk(
     "fileData/downloadFile",
     async({ fileId, filename }, { rejectWithValue }) => {
         try {
-            const token = getToken();
+            const token = getToken(); // Ensure your token is correctly retrieved
             console.log(`Starting file download: ${filename} with fileId: ${fileId}`);
 
             const response = await axios.get(`${baseUrl}user/csvFileData/${fileId}`, {
-                responseType: "blob",
+                responseType: "blob", // Ensure you're receiving the file as a Blob
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, // Ensure the token is sent correctly
                 },
             });
 
             console.log('File download response received:', response);
 
-            // Create a link element and trigger download
+            // Create a link element and trigger the download
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', filename);
+            link.setAttribute('download', filename); // Set the filename for download
             document.body.appendChild(link);
-            link.click();
-            link.remove();
+            link.click(); // Trigger the download
+            link.remove(); // Clean up the DOM
 
             return { fileId, filename };
         } catch (error) {
@@ -73,7 +73,6 @@ export const downloadFile = createAsyncThunk(
         }
     }
 );
-
 
 
 // Thunk for updating a file
