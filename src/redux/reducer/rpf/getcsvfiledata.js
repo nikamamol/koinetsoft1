@@ -57,8 +57,14 @@ export const downloadFile = createAsyncThunk(
 
             console.log('File download response received:', response);
 
-            // Handle the file download logic
-            // ...
+            // Create a link element and trigger download
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
 
             return { fileId, filename };
         } catch (error) {
@@ -67,6 +73,7 @@ export const downloadFile = createAsyncThunk(
         }
     }
 );
+
 
 
 // Thunk for updating a file
