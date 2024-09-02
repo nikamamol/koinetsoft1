@@ -19,11 +19,11 @@ const RfpReceivedAll = () => {
 
   const handleDownload = (fileId, filename) => {
     dispatch(downloadFile({ fileId, filename }))
-      .unwrap()
-      .catch((error) => {
-        console.error('Error downloading file:', error);
-      });
-  };
+        .unwrap()
+        .catch((error) => {
+            console.error('Error downloading file:', error);
+        });
+}
 
   const columns = useMemo(
     () => [
