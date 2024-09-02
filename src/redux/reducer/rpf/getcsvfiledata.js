@@ -42,22 +42,23 @@ export const fetchFileDataAll = createAsyncThunk(
 
 // Thunk for downloading a file
 export const downloadFile = createAsyncThunk(
-    "fileData/downloadFile",
+    'fileData/downloadFile',
     async({ fileId, filename }, { rejectWithValue }) => {
         try {
             const token = getToken(); // Ensure your token is correctly retrieved
             console.log(`Starting file download: ${filename} with fileId: ${fileId}`);
 
             const response = await axios.get(`${baseUrl}user/csvFileData/${fileId}`, {
-                responseType: "arraybuffer", // This allows for downloading the file as an array buffer
+                responseType: 'blob', // Ensure you're receiving the file as a Blob
                 headers: {
                     Authorization: `Bearer ${token}`, // Ensure the token is sent correctly
                 },
             });
 
-            // Create a Blob from the response data
-            const blob = new Blob([response.data], { type: response.headers['content-type'] });
-            const url = window.URL.createObjectURL(blob);
+            console.log('File download response received:', response);
+
+            // Create a link element and trigger the download
+            const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', filename); // Set the filename for download

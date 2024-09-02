@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
@@ -19,11 +19,11 @@ const RfpReceivedAll = () => {
 
   const handleDownload = (fileId, filename) => {
     dispatch(downloadFile({ fileId, filename }))
-        .unwrap()
-        .catch((error) => {
-            console.error('Error downloading file:', error);
-        });
-}
+      .unwrap()
+      .catch((error) => {
+        console.error('Error downloading file:', error);
+      });
+  };
 
   const columns = useMemo(
     () => [
