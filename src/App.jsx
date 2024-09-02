@@ -65,6 +65,8 @@ import ViewLandingPageDesciption from "./views/landingpages/ViewLandingPageDesci
 import RecivedAll from './views/rfp/RecivedAll';
 import QualityCheck from './views/rfp/QualityCheck';
 import EmailCheck from './views/rfp/EmailCheck';
+import { registerLicense } from '@syncfusion/ej2-base';
+
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -77,6 +79,9 @@ const Layout = ({ children }) => {
     </>
   );
 };
+
+// Register the Syncfusion license key
+registerLicense('Ngo9BigBOggjHTQxAR8/V1NCaF1cWWhAYVF/WmFZfVpgd19HZlZTQWYuP1ZhSXxXdk1gWX9dcXJXQGZeU0w=');
 
 function App() {
   return (

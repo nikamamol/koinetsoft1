@@ -112,11 +112,30 @@ const RfpEmailCheck = () => {
     };
 
     const handleUpdateFile = () => {
-        if (selectedFile) {
+        if (selectedFile && excelData.length > 0) {
+            // Convert the updated excelData back to a worksheet
+            const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    
+            // Generate binary string from workbook
+            const binaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
+    
+            // Convert binary string to Blob
+            const buffer = new ArrayBuffer(binaryString.length);
+            const view = new Uint8Array(buffer);
+            for (let i = 0; i < binaryString.length; i++) {
+                view[i] = binaryString.charCodeAt(i) & 0xFF;
+            }
+    
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    
+            // Prepare the file data for updating
             const fileData = {
-                file: selectedFile.file, // Update this according to your actual data structure
+                file: new File([blob], selectedFile.filename, { type: blob.type }),
                 path: selectedFile.path || ''
             };
+    
             dispatch(updateCsvFileById({ fileId: selectedFile.fileId, fileData }))
                 .unwrap()
                 .then(() => {
@@ -128,7 +147,6 @@ const RfpEmailCheck = () => {
                 });
         }
     };
-
     const role = localStorage.getItem('role');
 
     const filteredFiles = useMemo(() => {
