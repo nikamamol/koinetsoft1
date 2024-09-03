@@ -7,7 +7,7 @@ import AddUser from "../src/views/userdetails/AddUser";
 import VieweUser from "../src/views/userdetails/VieweUser";
 import Attendance from "../src/views/userdetails/Attendance";
 import Expired from "../src/views/rfp/Expired";
-import Active from "../src/views/rfp/Active";
+import OperationCheck from "../src/views/rfp/OperationCheck";
 import Received from "../src/views/rfp/Received";
 import MyEnterprise from "../src/views/enterprise/MyEnterprise";
 import InviteEnterprise from "../src/views/enterprise/InviteEnterprise";
@@ -111,7 +111,7 @@ function App() {
             <Route path="/user/profile" element={<Profile />} />
             <Route path="/user/:id" element={<UserDetailsByID />} />
             {/* RFP */}
-            <Route path="/rfp/active" element={<Active />} />
+            <Route path="/rfp/operatinfinalcheck" element={<OperationCheck />} />
             <Route path="/rfp/expired" element={<Expired />} />
             <Route path="/rfp/received" element={<Received />} />
             <Route path="/rfp/receivedall" element={<RecivedAll />} />

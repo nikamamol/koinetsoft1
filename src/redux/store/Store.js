@@ -11,6 +11,7 @@ import viewTemplateSlice from "../reducer/createteplate/GetTemplate";
 import templateSliceById from "../reducer/createteplate/ViewTemplateById"
 import fileUploadReducer from "../reducer/rpf/uploadcsvbyemploy"
 import fileDataReducer from "../reducer/rpf/getcsvfiledata"
+import fileUploadSliceCsvByOperation from "../reducer/rpf/operationcsvupload"
 
 
 const store = configureStore({
@@ -27,6 +28,8 @@ const store = configureStore({
         templateId: templateSliceById,
         fileUpload: fileUploadReducer,
         fileData: fileDataReducer,
+        operationFileUpload: fileUploadSliceCsvByOperation,
+        files: fileUploadSliceCsvByOperation,
     },
 });
 

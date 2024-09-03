@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
@@ -7,24 +7,13 @@ import { Checkbox, IconButton, Tooltip, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import { SpreadsheetComponent, SheetDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangeDirective, RangesDirective } from '@syncfusion/ej2-react-spreadsheet';
-import '@syncfusion/ej2-base/styles/material.css';
-import '@syncfusion/ej2-inputs/styles/material.css';
-import '@syncfusion/ej2-buttons/styles/material.css';
-import '@syncfusion/ej2-splitbuttons/styles/material.css';
-import '@syncfusion/ej2-navigations/styles/material.css';
-import '@syncfusion/ej2-calendars/styles/material.css';
-import '@syncfusion/ej2-popups/styles/material.css';
-import '@syncfusion/ej2-lists/styles/material.css';
 import '@syncfusion/ej2-react-spreadsheet/styles/material.css';
 
 const SpreadsheetViewer = ({ data }) => {
-    let spreadsheetRef;
-
     return (
         <div style={{ width: '100%' }}>
             {data.length > 0 && (
                 <SpreadsheetComponent 
-                    ref={(s) => (spreadsheetRef = s)} 
                     allowOpen={true} 
                     allowSave={true} 
                     showRibbon={true}
@@ -82,7 +71,7 @@ const RfpEmailCheck = () => {
         const file = files.find(file => file.fileId === fileId);
         if (file) {
             setCurrentFileName(file.filename);
-            setSelectedFile(file); // Set selected file for update
+            setSelectedFile(file);
         }
         dispatch(readFile({ fileId }))
             .unwrap()
@@ -113,15 +102,12 @@ const RfpEmailCheck = () => {
 
     const handleUpdateFile = () => {
         if (selectedFile && excelData.length > 0) {
-            // Convert the updated excelData back to a worksheet
             const worksheet = XLSX.utils.aoa_to_sheet(excelData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     
-            // Generate binary string from workbook
             const binaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
     
-            // Convert binary string to Blob
             const buffer = new ArrayBuffer(binaryString.length);
             const view = new Uint8Array(buffer);
             for (let i = 0; i < binaryString.length; i++) {
@@ -130,7 +116,6 @@ const RfpEmailCheck = () => {
     
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     
-            // Prepare the file data for updating
             const fileData = {
                 file: new File([blob], selectedFile.filename, { type: blob.type }),
                 path: selectedFile.path || ''
@@ -147,6 +132,7 @@ const RfpEmailCheck = () => {
                 });
         }
     };
+
     const role = localStorage.getItem('role');
 
     const filteredFiles = useMemo(() => {
@@ -245,16 +231,9 @@ const RfpEmailCheck = () => {
                         </div>
                     )}
                     <SpreadsheetViewer data={excelData} />
-                    
-                        <Button
-                            onClick={handleUpdateFile}
-                            variant="contained"
-                            color="primary"
-                            style={{ marginTop: '20px' }}
-                        >
-                            Update File
-                        </Button>
-              
+                    <Button variant="contained" color="primary" onClick={handleUpdateFile}>
+                        Update File
+                    </Button>
                 </>
             )}
         </>

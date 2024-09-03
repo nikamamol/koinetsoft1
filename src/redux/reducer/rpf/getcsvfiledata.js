@@ -75,28 +75,36 @@ export const downloadFile = createAsyncThunk(
 );
 
 // Thunk for updating a file
+
 export const updateCsvFileById = createAsyncThunk(
     "fileData/updateCsvFileById",
     async({ fileId, fileData }, { rejectWithValue }) => {
         try {
             const token = getToken();
             const formData = new FormData();
-            formData.append('file', fileData.file); // File data
-            formData.append('path', fileData.path || ''); // Optional path data
+            formData.append('file', fileData.file);
+            if (fileData.path) {
+                formData.append('path', fileData.path);
+            }
 
-            const response = await axios.put(`${baseUrl}user/updateCsvFileById/${fileId}`, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
-                },
-            });
+            const response = await axios.put(
+                `${baseUrl}user/updateCsvFileById/${fileId}`,
+                formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
 
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response ? error.response.data : error.message);
+            const errorMessage = error.response ? error.response.data : error.message;
+            return rejectWithValue(errorMessage);
         }
     }
 );
+
 
 
 export const readFile = createAsyncThunk(
@@ -181,7 +189,6 @@ export const updateFileStatusEmail = createAsyncThunk(
     }
 );
 
-// Thunk for deleting a file
 // Thunk for deleting a file
 export const deleteFile = createAsyncThunk(
     'fileData/deleteFile',
