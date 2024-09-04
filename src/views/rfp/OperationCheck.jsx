@@ -38,8 +38,10 @@ function OperationCheck() {
     }
 
     const formData = new FormData();
-    formData.append('campaignName', campaigns.find(c => c._id === selectedCampaign)?.campaignName || '');
-    formData.append('campaignCode', selectedCampaign);
+    const selectedCampaignData = campaigns.find(c => c._id === selectedCampaign);
+    
+    formData.append('campaignName', selectedCampaignData?.campaignName || '');
+    formData.append('campaignCode', selectedCampaignData?.campaignCode || '');
     formData.append('file', selectedFile);
 
     dispatch(uploadOperationFile(formData))
