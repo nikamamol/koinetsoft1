@@ -1,4 +1,3 @@
-// components/OperationCheck.js
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, Container, Row, Button, Modal, Form } from 'react-bootstrap';
@@ -15,12 +14,22 @@ function OperationCheck() {
   const dispatch = useDispatch();
   const uploadStatus = useSelector((state) => state.operationfileUpload);
   const { campaigns, status, error } = useSelector((state) => state.campaigns);
+  
+  // Fetch the user role from localStorage
+  const userRole = localStorage.getItem('role'); // assuming 'userRole' is stored in localStorage
 
   useEffect(() => {
     dispatch(fetchCampaigns());
   }, [dispatch]);
 
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    if (userRole !== 'oxmanager' && userRole !== 'admin') {
+      alert('You do not have permission to upload files.');
+      return;
+    }
+    setShow(true);
+  };
+
   const handleClose = () => setShow(false);
 
   const handleCampaignChange = (e) => {

@@ -3,17 +3,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import { IconButton, Tooltip, Checkbox } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom'; // If using React Router for navigation
 import { fetchFiles } from '../redux/reducer/rpf/operationcsvupload'; // Adjust import path as needed
 
 const RfpActive = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // For redirection
   const { files, status, error } = useSelector((state) => state.files);
-
+  
   const [checkboxes, setCheckboxes] = useState({});
 
   useEffect(() => {
-    dispatch(fetchFiles());
-  }, [dispatch]);
+    // Check userType from localStorage
+    const userType = localStorage.getItem('role');
+    
+    if (userType !== 'oxmanager' && userType !== 'admin') {
+      // If user is not an oxmanager, redirect or show an error
+      alert('Access Denied: You do not have permission to view this page.');
+      navigate('/dashboard'); // Replace with appropriate route for unauthorized access
+    } else {
+      // Fetch files if the user is authorized
+      dispatch(fetchFiles());
+    }
+  }, [dispatch, navigate]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -91,9 +103,7 @@ const RfpActive = () => {
         Cell: ({ row }) => (
           <div className="d-flex gap-3">
             <Tooltip title="Delete File">
-              <IconButton
-                onClick={() => handleDelete(row.original._id)}
-              >
+              <IconButton onClick={() => handleDelete(row.original._id)}>
                 <DeleteIcon
                   style={{ cursor: 'pointer', color: 'red', width: '30px', height: '30px' }}
                 />
@@ -115,8 +125,10 @@ const RfpActive = () => {
           data={files}
           // other props if needed
         />
+      ) : status === 'succeeded' && files.length === 0 ? (
+        <p>No files available</p>
       ) : (
-        <p>{error ? error : ''}</p>
+        <p>{error ? error : 'An error occurred while fetching files.'}</p>
       )}
     </div>
   );
