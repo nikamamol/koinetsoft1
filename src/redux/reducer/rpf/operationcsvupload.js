@@ -35,6 +35,21 @@ export const fetchFiles = createAsyncThunk('operationfileUpload/fetchFiles', asy
         return rejectWithValue(error.response || 'An error occurred');
     }
 });
+export const fetchFilesAll = createAsyncThunk(
+    'operationfileUpload/fetchFilesAll',
+    async(_, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('authToken');
+            const response = await axios.get(`${baseUrl}user/getCsvDatabyOperationAll`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return response.data.files; // Ensure 'files' matches backend response
+        } catch (error) {
+            console.error('Error fetching files:', error);
+            return rejectWithValue(error.response ? error.response.data : 'An error occurred');
+        }
+    }
+);
 
 // Initial state for the slice
 const initialState = {
@@ -72,6 +87,17 @@ const fileUploadSliceCsvByOperation = createSlice({
             .addCase(fetchFiles.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+            .addCase(fetchFilesAll.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchFilesAll.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.files = action.payload; // Payload contains the fetched files
+            })
+            .addCase(fetchFilesAll.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload || 'An error occurred';
             });
     },
 });

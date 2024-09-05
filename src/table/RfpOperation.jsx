@@ -118,6 +118,7 @@ const RfpActive = () => {
 
   return (
     <div>
+      
       {status === 'loading' && <p>Loading files...</p>}
       {status === 'succeeded' && files.length > 0 ? (
         <MaterialReactTable
@@ -128,7 +129,7 @@ const RfpActive = () => {
       ) : status === 'succeeded' && files.length === 0 ? (
         <p>No files available</p>
       ) : (
-        <p>{error ? error : 'An error occurred while fetching files.'}</p>
+        <p></p>
       )}
     </div>
   );

@@ -66,6 +66,7 @@ import RecivedAll from './views/rfp/RecivedAll';
 import QualityCheck from './views/rfp/QualityCheck';
 import EmailCheck from './views/rfp/EmailCheck';
 import { registerLicense } from '@syncfusion/ej2-base';
+import OperationChecked from './views/rfp/OperationChecked';
 
 
 const Layout = ({ children }) => {
@@ -117,6 +118,7 @@ function App() {
             <Route path="/rfp/receivedall" element={<RecivedAll />} />
             <Route path="/rfp/qualitycheck" element={<QualityCheck />} />
             <Route path="/rfp/emailcheck" element={<EmailCheck />} />
+            <Route path="/rfp/operationallcheckedfiles" element={<OperationChecked />} />
             {/* Agency */}
             <Route path="/agency/myengencies" element={<MyEngencies />} />
             <Route path="/agency/inviteagency" element={<InviteAgencies />} />
