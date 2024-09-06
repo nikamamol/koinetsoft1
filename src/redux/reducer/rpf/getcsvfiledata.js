@@ -42,34 +42,44 @@ export const fetchFileDataAll = createAsyncThunk(
 
 // Thunk for downloading a file
 export const downloadFile = createAsyncThunk(
-    'fileData/downloadFile',
+    'fileData/downloadExcelFile',
     async({ fileId, filename }, { rejectWithValue }) => {
         try {
-            const token = getToken(); // Ensure your token is correctly retrieved
-            console.log(`Starting file download: ${filename} with fileId: ${fileId}`);
+            const token = getToken(); // Retrieve the JWT token
+            console.log(`Starting Excel file download: ${filename} with fileId: ${fileId}`);
 
-            const response = await axios.get(`${baseUrl}user/csvFileData/${fileId}`, {
-                responseType: 'blob', // Ensure you're receiving the file as a Blob
+            const response = await axios.get(`${baseUrl}user/downloadCsvFileById/${fileId}`, {
+                responseType: 'blob', // Receive the file as a Blob
                 headers: {
-                    Authorization: `Bearer ${token}`, // Ensure the token is sent correctly
+                    Authorization: `Bearer ${token}`, // Send the token in the header
                 },
             });
 
-            console.log('File download response received:', response);
+            console.log('Excel file download response received:', response);
 
-            // Create a link element and trigger the download
-            const url = window.URL.createObjectURL(new Blob([response.data]));
+            // Create a Blob from the response data
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a temporary link element
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', filename); // Set the filename for download
+
+            // Append the link to the document body and trigger the download
             document.body.appendChild(link);
-            link.click(); // Trigger the download
-            link.remove(); // Clean up the DOM
+            link.click();
+
+            // Clean up by removing the link and revoking the Object URL
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
 
             return { fileId, filename };
         } catch (error) {
-            console.error('Error during file download:', error);
-            return rejectWithValue(error.message);
+            console.error('Error during Excel file download:', error);
+            return rejectWithValue(error.response || error.message);
         }
     }
 );
