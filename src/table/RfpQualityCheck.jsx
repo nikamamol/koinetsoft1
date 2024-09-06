@@ -99,7 +99,6 @@ const RfpQualityCheck = () => {
                 console.error('Error reading file:', error);
             });
     };
-
     const handleCheckboxChange = (fileId, statusId, checked) => {
         dispatch(updateFileStatus({ fileId, statusId, checked }))
             .unwrap()
@@ -113,31 +112,34 @@ const RfpQualityCheck = () => {
             });
     };
 
+ 
+
     const handleUpdateFile = () => {
         if (selectedFile && excelData.length > 0) {
             // Convert the updated excelData back to a worksheet
             const worksheet = XLSX.utils.aoa_to_sheet(excelData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-
+    
             // Generate binary string from workbook
             const binaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
-
-            // Convert binary string to Blob
+    
+            // Convert binary string to ArrayBuffer
             const buffer = new ArrayBuffer(binaryString.length);
             const view = new Uint8Array(buffer);
             for (let i = 0; i < binaryString.length; i++) {
                 view[i] = binaryString.charCodeAt(i) & 0xFF;
             }
-
+    
+            // Create a Blob from the ArrayBuffer
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
+    
             // Prepare the file data for updating
             const fileData = {
                 file: new File([blob], selectedFile.filename, { type: blob.type }),
                 path: selectedFile.path || ''
             };
-
+    
             dispatch(updateCsvFileById({ fileId: selectedFile.fileId, fileData }))
                 .unwrap()
                 .then(() => {
@@ -147,8 +149,11 @@ const RfpQualityCheck = () => {
                     toast.error('Error updating file. Please try again.');
                     console.error('Error updating file:', error);
                 });
+        } else {
+            toast.error('No file selected or data is empty.');
         }
     };
+    
 
     const role = localStorage.getItem('role');
 
