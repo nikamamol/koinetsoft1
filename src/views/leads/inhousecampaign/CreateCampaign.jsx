@@ -367,9 +367,25 @@ function CreateCampaign() {
                           </select>
                         </div>
                         <div className="mb-3 col-md-6 client_select">
-                          <label for="lead_per_day" className="form-label">CPL</label> <span className="text-danger"> *</span>
-                          <input className="form-control" value={formData.cpl} onChange={handleChange} type="number" placeholder="$" name="cpl" required="" id="cpl" />
+                          <label htmlFor="cpl" className="form-label">
+                            CPL
+                          </label>
+                          <span className="text-danger"> *</span>
+
+                          <div className="input-group">
+                            <span className="input-group-text">$</span>
+                            <input
+                              className="form-control"
+                              value={formData.cpl}
+                              onChange={handleChange}
+                              type="number"
+                              name="cpl"
+                              required
+                              id="cpl"
+                            />
+                          </div>
                         </div>
+
                         <div className="mb-3 col-md-6">
                           <label htmlFor="template" className="form-label">Landing Page</label>
                           <select
@@ -387,9 +403,8 @@ function CreateCampaign() {
                               </option>
                             ))}
                           </select>
-                          {/* <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_sample">View Sample</a>
-                          <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_landing">View Landing Page</a> */}
                         </div>
+
                         {/* sceocond part */}
                         <div className="">
                           <div className="text-center py-2 bg-light">Supervisor</div>

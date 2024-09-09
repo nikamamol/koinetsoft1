@@ -107,7 +107,7 @@ function ViewCampaignDetails() {
                                         </p>
                                         <p className="card-text d-flex justify-content-between">
                                             <span className="fw-bold">CPL:</span>
-                                            <span>{currentCampaign.cpl}</span>
+                                            <span>{currentCampaign.cpl} $</span>
                                         </p>
                                         <p className="card-text d-flex justify-content-between">
                                             <span className="fw-bold">Start Date:</span>
