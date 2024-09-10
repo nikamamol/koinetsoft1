@@ -157,83 +157,85 @@ function CreateCampaign() {
 
     // Append form data
     Object.keys(formData).forEach(key => {
-      if (Array.isArray(formData[key])) {
-        formData[key].forEach(item => payload.append(key, item));
-      } else {
-        payload.append(key, formData[key]);
-      }
+        if (Array.isArray(formData[key])) {
+            formData[key].forEach(item => payload.append(key, item));
+        } else {
+            payload.append(key, formData[key]);
+        }
     });
 
     // Append files
     Object.keys(files).forEach(key => {
-      Array.from(files[key]).forEach(file => {
-        payload.append(key, file);
-      });
+        Array.from(files[key]).forEach(file => {
+            payload.append(key, file); // This will send file data
+        });
     });
 
     try {
-      // Dispatch the action and wait for it to complete
-      await dispatch(createCampaign(payload));
+        // Dispatch the action and wait for it to complete
+        await dispatch(createCampaign(payload));
 
-      // Show success toast
-      toast.success('Campaign created successfully');
+        // Show success toast
+        toast.success('Campaign created successfully');
 
-      // Reset form data and files state
-      setFormData({
-        clientSelect: '',
-        campaignName: '',
-        campaignCode: '',
-        startDate: '',
-        endDate: '',
-        campaignType: '',
-        campaignNature: '',
-        target: 0,
-        leadPerDay: 0,
-        voiceLogRequired: '',
-        billingDay: 0,
-        cpl: 0,
-        supervisor: '',
-        supervisorTarget: 0,
-        template: '',
-        revenue: [],
-        companySize: [],
-        jobTitle: '',
-        geo: '',
-        industry: '',
-        note: '',
-        suppressionList: [],  // Reset suppressionList
-        abmList: [],          // Reset abmList
-        contactsPerCampaign: false,
-        abmCpc: 'Company',
-        nonAbmCpc: 'Company',
-        noOfContacts: 0,
-        industryFilter: [],
-        functionFilter: [],
-        seniorityLevel: [],
-        employeeSize: [],
-        companyFilter: [],
-        jobTitleFilter: [],
-        revenueFilter: [],
-        countryFilter: [],
-        cityFilter: [],
-        zipCodeFilter: []
-      });
+        // Reset form data and files state
+        setFormData({
+            clientSelect: '',
+            campaignName: '',
+            campaignCode: '',
+            startDate: '',
+            endDate: '',
+            campaignType: '',
+            campaignNature: '',
+            target: 0,
+            leadPerDay: 0,
+            voiceLogRequired: '',
+            billingDay: 0,
+            cpl: 0,
+            supervisor: '',
+            supervisorTarget: 0,
+            template: '',
+            revenue: [],
+            companySize: [],
+            jobTitle: '',
+            geo: '',
+            industry: '',
+            note: '',
+            suppressionList: [],  // Reset suppressionList
+            abmList: [],          // Reset abmList
+            contactsPerCampaign: false,
+            abmCpc: 'Company',
+            nonAbmCpc: 'Company',
+            noOfContacts: 0,
+            industryFilter: [],
+            functionFilter: [],
+            seniorityLevel: [],
+            employeeSize: [],
+            companyFilter: [],
+            jobTitleFilter: [],
+            revenueFilter: [],
+            countryFilter: [],
+            cityFilter: [],
+            zipCodeFilter: []
+        });
 
-      setFiles({
-        assets: [],
-        script: [],
-        suppression: [],
-        tal: [],
-        suppressionList: [], // Reset suppressionList
-        abmList: []          // Reset abmList
-      });
+        setFiles({
+            assets: [],
+            script: [],
+            suppression: [],
+            tal: [],
+            suppressionList: [], // Reset suppressionList
+            abmList: []          // Reset abmList
+        });
 
     } catch (error) {
-      // Show error toast
-      toast.error('Failed to create campaign. Please try again.');
-      console.error('Error submitting form:', error);
+        // Show error toast
+        toast.error('Failed to create campaign. Please try again.');
+        console.error('Error submitting form:', error);
     }
-  };
+};
+
+
 
   return (
     <div>
@@ -569,7 +571,7 @@ function CreateCampaign() {
                         </div>
                         {/* five part */}
 
-                        {/* <div className="text-center py-2 bg-light">Data Filter</div> */}
+                        <div className="text-center py-2 bg-light">Data Filter</div>
                         <div id="div_data_filter" >
                           <div className="row">
                             {/* <div className="mb-3 col-md-6">
@@ -622,6 +624,7 @@ function CreateCampaign() {
                                 )}
                               />
                             </div>
+
 
                           
                             <div className="mb-3 col-md-6">

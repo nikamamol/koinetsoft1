@@ -3,9 +3,10 @@ import { Col, Container, Nav, Row, Tab, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCampaignById } from '../../../redux/reducer/createcampaign/GetCampaignData';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
-import baseUrl from '../../../constant/ConstantApi';
+import { Document, Packer, Paragraph, TextRun } from 'docx';
 
 function ViewCampaignDetails() {
     const { id } = useParams();
@@ -48,29 +49,81 @@ function ViewCampaignDetails() {
         }
         return '';
     };
-
-    const downloadFile = async (fileId, fileName) => {
-        const getToken = () => localStorage.getItem('authToken');
-        const token = getToken();
-        try {
-            const response = await axios.get(`${baseUrl}user/downloadCampaignFile/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`, // If using token-based auth
-                },
-                responseType: 'blob',
-            });
+    const downloadFile = (fileData, fileName, fileType) => {
+        // Convert fileData to a Uint8Array
+        const arrayBuffer = new Uint8Array(fileData).buffer;
     
-            const fileBlob = new Blob([response.data]);
-            saveAs(fileBlob, fileName);
-        } catch (error) {
-            console.error('Error downloading the file', error);
+        switch (fileType) {
+            case 'csv':
+                // Handle CSV files
+                const csvText = new TextDecoder().decode(new Uint8Array(arrayBuffer));
+                saveAs(new Blob([csvText], { type: 'text/csv' }), fileName);
+                break;
+    
+            case 'excel':
+                // Handle Excel files
+                try {
+                    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+                    saveAs(new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), fileName);
+                } catch (error) {
+                    console.error('Error processing Excel file:', error);
+                }
+                break;
+    
+            case 'pdf':
+                // Handle PDF files
+                const pdf = new jsPDF();
+                pdf.text(new TextDecoder().decode(new Uint8Array(arrayBuffer)), 10, 10);
+                pdf.save(fileName);
+                break;
+    
+            case 'doc':
+                // Handle DOC files
+                const docText = new TextDecoder().decode(new Uint8Array(arrayBuffer));
+                const doc = new Document({
+                    sections: [
+                        {
+                            properties: {},
+                            children: [
+                                new Paragraph({
+                                    children: [new TextRun(docText)],
+                                }),
+                            ],
+                        },
+                    ],
+                });
+                Packer.toBlob(doc).then(blob => {
+                    saveAs(blob, fileName);
+                });
+                break;
+    
+            default:
+                console.error('Unsupported file type');
+                break;
         }
     };
-    const asset = currentCampaign.assets && currentCampaign.assets[0];
-    const script = currentCampaign.script && currentCampaign.script[0];
-    const suppressionList = currentCampaign.suppression && currentCampaign.suppression[0];
-    const tal = currentCampaign.tal && currentCampaign.tal[0];
+    
+    
+    const asset = currentCampaign.assets[0]?.content?.data;
+    const fileName = currentCampaign.assets[0]?.originalname || 'file.xlsx'; // Default filename
+    const fileType = 'excel'; // Adjust based on file type
 
+    const script2 = currentCampaign.script[0]?.content?.data;
+    const fileName2 = currentCampaign.script[0]?.originalname || 'file.xlsx'; // Default filename
+    const fileType2 = 'excel'; // Adjust based on file type
+
+
+    const suppressionList3 = currentCampaign.suppressionList[0]?.content?.data;
+    const fileName3 = currentCampaign.suppressionList[0]?.originalname || 'file.xlsx'; // Default filename
+    const fileType3 = 'excel'; // Adjust based on file type
+
+    const tal4 = currentCampaign.tal[0]?.content?.data;
+    const fileName4 = currentCampaign.tal[0]?.originalname || 'file.xlsx'; // Default filename
+    const fileType4 = 'excel'; // Adjust based on file type
+
+    // const tal = currentCampaign.tal && currentCampaign.tal[0].content.data;
+    // console.log(script)
     return (
         <div>
             <Container fluid className='my-5 '>
@@ -180,7 +233,7 @@ function ViewCampaignDetails() {
                                             <span className="fw-bold">GEO:</span>
                                             <span>{currentCampaign.geo}</span>
                                         </p>
-                                    
+
                                         <p className="card-text d-flex justify-content-between">
                                             <span className="fw-bold">ABM CPC:</span>
                                             <span>{currentCampaign.abmCpc}</span>
@@ -198,56 +251,63 @@ function ViewCampaignDetails() {
                             </div>
                         </div>
                         <div className="row mt-3 bg_Color_campaign p-4">
-    <div className="col-lg-12">
-        <Tab.Container id="left-tabs-example" activeKey={key} onSelect={(k) => setKey(k)}>
-            <Nav variant="tabs">
-                <Nav.Item>
-                    <Nav.Link eventKey="active">Asset / Whitepaper</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="script">Script</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="suppression">Suppression</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="tal">TAL</Nav.Link>
-                </Nav.Item>
-            </Nav>
-            <Tab.Content>
-                <Tab.Pane eventKey="active">
-                    {asset && (
-                        <Button className='mt-3' onClick={() => downloadFile(asset.fileId, asset.originalName)}>
-                            Download Asset {asset.originalName}
-                        </Button>
-                    )}
-                </Tab.Pane>
-                <Tab.Pane eventKey="script">
-                    {script && (
-                        <Button className='mt-3' onClick={() => downloadFile(script.fileId, script.originalName)}>
-                            Download Script ({script.originalName})
-                        </Button>
-                    )}
-                </Tab.Pane>
-                <Tab.Pane eventKey="suppression">
-                    {suppressionList && (
-                        <Button className='mt-3' onClick={() => downloadFile(suppressionList.fileId, suppressionList.originalName)}>
-                            Download Suppression ({suppressionList.originalName})
-                        </Button>
-                    )}
-                </Tab.Pane>
-                <Tab.Pane eventKey="tal">
-                    {tal && (
-                        <Button className='mt-3' onClick={() => downloadFile(tal.fileId, tal.originalName)}>
-                            Download TAL ({tal.originalName})
-                        </Button>
-                    )}
-                </Tab.Pane>
-            </Tab.Content>
-        </Tab.Container>
-    </div>
-</div>
-
+                            <div className="col-lg-12">
+                                <Tab.Container id="left-tabs-example" activeKey={key} onSelect={(k) => setKey(k)}>
+                                    <Nav variant="tabs">
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="active">Asset / Whitepaper</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="script">Script</Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="suppression" >
+                                                Suppression
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link eventKey="tal" >
+                                                TAL
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
+                                    <Tab.Content>
+                                        <Tab.Pane eventKey="active" >
+                                        {asset && (
+                                                <Button className='mt-3' onClick={() => downloadFile(asset, fileName, fileType)}>
+                                                    Download {fileName}
+                                                </Button>
+                                            )}
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="script">
+                                            {script2 && (
+                                                <Button className='mt-3' onClick={() => downloadFile(script2, fileName2, fileType)}>
+                                                    Download :  ({fileName2})
+                                                </Button>
+                                            )}
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="suppression">
+                                            {suppressionList3 && (
+                                                <Button className='mt-3' onClick={() => downloadFile(
+                                                    suppressionList3,
+                                                    fileName3, fileType3)}>
+                                                    Download : ({fileName3})
+                                                </Button>
+                                            )}
+                                        </Tab.Pane>
+                                        <Tab.Pane eventKey="tal">
+                                            {tal4 && (
+                                                <Button className='mt-3' onClick={() => downloadFile(
+                                                    tal4,
+                                                    fileName4, fileType4)}>
+                                                    Download : ({fileName4})
+                                                </Button>
+                                            )}
+                                        </Tab.Pane>
+                                    </Tab.Content>
+                                </Tab.Container>
+                            </div>
+                        </div>
                     </Col>
                 </Row>
             </Container>
