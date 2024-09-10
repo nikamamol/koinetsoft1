@@ -136,9 +136,9 @@ function ViewCampaignDetails() {
                         </div>
                         <div className="row mt-3">
                             <div>
-                                <h5 className="card-title text-center mb-3 bg-danger text-white rounded-4 p-2">
+                                <h5 className="card-title text-center mb-3  rounded-4 p-2">
                                     <h4 className="fw-bold">Campaign Name</h4>
-                                    <h5>{currentCampaign.campaignName}</h5>
+                                    <p className='mt-4'><span className='bg-primary px-5 py-2 rounded-4 w-50 text-white'>{currentCampaign.campaignName}</span></p>
                                 </h5>
                             </div>
                             <div className="col-lg-6 mb-sm-3">
