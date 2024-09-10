@@ -569,10 +569,10 @@ function CreateCampaign() {
                         </div>
                         {/* five part */}
 
-                        <div className="text-center py-2 bg-light">Data Filter</div>
+                        {/* <div className="text-center py-2 bg-light">Data Filter</div> */}
                         <div id="div_data_filter" >
                           <div className="row">
-                            <div className="mb-3 col-md-6">
+                            {/* <div className="mb-3 col-md-6">
                               <label for="industry_filter" className="form-label">Industry</label>
                               <div className="autocomplete-container">
 
@@ -590,7 +590,7 @@ function CreateCampaign() {
                                 <div className="selected-items" id="function-items"></div>
                               </div>
                             </div>
-                            {/* Senority Level */}
+                          
                             <div className="mb-3 col-md-6">
                               <Autocomplete
                                 multiple
@@ -623,8 +623,7 @@ function CreateCampaign() {
                               />
                             </div>
 
-
-                            {/* employ size */}
+                          
                             <div className="mb-3 col-md-6">
                               <FormControl sx={{ width: '100%' }}>
                                 <InputLabel>Employee Size</InputLabel>
@@ -688,9 +687,8 @@ function CreateCampaign() {
                                 <div className="selected-items" id="jobtitle-items"></div>
                               </div>
                             </div>
-                            {/* revenue */}
+                        
                             <div className="mb-3 col-md-6">
-                              {/* <label for="country_filter" className="form-label">Revenue</label> */}
                               <FormControl sx={{ width: '100%' }}>
                                 <InputLabel>Revenue</InputLabel>
                                 <Select
@@ -762,7 +760,7 @@ function CreateCampaign() {
                                 <ul className="autocomplete-list" id="zipCode-list"></ul>
                                 <div className="selected-items" id="zipCode-items"></div>
                               </div>
-                            </div>
+                            </div> */}
 
                             {/* seven part */}
                             <div id="div_additional_questions" >

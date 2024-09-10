@@ -3,6 +3,9 @@ import { Col, Container, Nav, Row, Tab, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCampaignById } from '../../../redux/reducer/createcampaign/GetCampaignData';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { saveAs } from 'file-saver';
+import baseUrl from '../../../constant/ConstantApi';
 
 function ViewCampaignDetails() {
     const { id } = useParams();
@@ -46,15 +49,23 @@ function ViewCampaignDetails() {
         return '';
     };
 
-    const downloadFile = (filePath, fileName) => {
-        const link = document.createElement('a');
-        link.href = filePath;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const downloadFile = async (fileId, fileName) => {
+        const getToken = () => localStorage.getItem('authToken');
+        const token = getToken();
+        try {
+            const response = await axios.get(`${baseUrl}user/downloadCampaignFile/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // If using token-based auth
+                },
+                responseType: 'blob',
+            });
+    
+            const fileBlob = new Blob([response.data]);
+            saveAs(fileBlob, fileName);
+        } catch (error) {
+            console.error('Error downloading the file', error);
+        }
     };
-
     const asset = currentCampaign.assets && currentCampaign.assets[0];
     const script = currentCampaign.script && currentCampaign.script[0];
     const suppressionList = currentCampaign.suppression && currentCampaign.suppression[0];
@@ -187,63 +198,56 @@ function ViewCampaignDetails() {
                             </div>
                         </div>
                         <div className="row mt-3 bg_Color_campaign p-4">
-                            <div className="col-lg-12">
-                                <Tab.Container id="left-tabs-example" activeKey={key} onSelect={(k) => setKey(k)}>
-                                    <Nav variant="tabs">
-                                        <Nav.Item>
-                                            <Nav.Link eventKey="active">Asset / Whitepaper</Nav.Link>
-                                        </Nav.Item>
-                                        <Nav.Item>
-                                            <Nav.Link eventKey="script">Script</Nav.Link>
-                                        </Nav.Item>
-                                        <Nav.Item>
-                                            <Nav.Link eventKey="suppression" >
-                                                Suppression
-                                            </Nav.Link>
-                                        </Nav.Item>
-                                        <Nav.Item>
-                                            <Nav.Link eventKey="tal" >
-                                                TAL
-                                            </Nav.Link>
-                                        </Nav.Item>
-                                    </Nav>
-                                    <Tab.Content>
-                                        <Tab.Pane eventKey="active" >
-                                            {asset && (
-                                                <Button className='mt-3' onClick={() => downloadFile(asset.path, asset.originalName)}>
-                                                    Download Asset {asset.originalName}
-                                                </Button>
-                                            )}
-                                        </Tab.Pane>
-                                        <Tab.Pane eventKey="script">
-                                            {script && (
-                                                <Button className='mt-3' onClick={() => downloadFile(script.path, script.originalName)}>
-                                                    Download Script ({script.originalName})
-                                                </Button>
-                                            )}
-                                        </Tab.Pane>
-                                        <Tab.Pane eventKey="suppression">
-                                            {suppressionList && (
-                                                <Button className='mt-3' onClick={() => downloadFile(
-                                                    suppressionList.path,
-                                                    suppressionList.originalName)}>
-                                                    Download Script ({suppressionList.originalName})
-                                                </Button>
-                                            )}
-                                        </Tab.Pane>
-                                        <Tab.Pane eventKey="tal">
-                                            {tal && (
-                                                <Button className='mt-3' onClick={() => downloadFile(
-                                                    tal.path,
-                                                    tal.originalName)}>
-                                                    Download Script ({tal.originalName})
-                                                </Button>
-                                            )}
-                                        </Tab.Pane>
-                                    </Tab.Content>
-                                </Tab.Container>
-                            </div>
-                        </div>
+    <div className="col-lg-12">
+        <Tab.Container id="left-tabs-example" activeKey={key} onSelect={(k) => setKey(k)}>
+            <Nav variant="tabs">
+                <Nav.Item>
+                    <Nav.Link eventKey="active">Asset / Whitepaper</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="script">Script</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="suppression">Suppression</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey="tal">TAL</Nav.Link>
+                </Nav.Item>
+            </Nav>
+            <Tab.Content>
+                <Tab.Pane eventKey="active">
+                    {asset && (
+                        <Button className='mt-3' onClick={() => downloadFile(asset.fileId, asset.originalName)}>
+                            Download Asset {asset.originalName}
+                        </Button>
+                    )}
+                </Tab.Pane>
+                <Tab.Pane eventKey="script">
+                    {script && (
+                        <Button className='mt-3' onClick={() => downloadFile(script.fileId, script.originalName)}>
+                            Download Script ({script.originalName})
+                        </Button>
+                    )}
+                </Tab.Pane>
+                <Tab.Pane eventKey="suppression">
+                    {suppressionList && (
+                        <Button className='mt-3' onClick={() => downloadFile(suppressionList.fileId, suppressionList.originalName)}>
+                            Download Suppression ({suppressionList.originalName})
+                        </Button>
+                    )}
+                </Tab.Pane>
+                <Tab.Pane eventKey="tal">
+                    {tal && (
+                        <Button className='mt-3' onClick={() => downloadFile(tal.fileId, tal.originalName)}>
+                            Download TAL ({tal.originalName})
+                        </Button>
+                    )}
+                </Tab.Pane>
+            </Tab.Content>
+        </Tab.Container>
+    </div>
+</div>
+
                     </Col>
                 </Row>
             </Container>
