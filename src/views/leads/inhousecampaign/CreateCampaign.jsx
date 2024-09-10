@@ -403,8 +403,9 @@ function CreateCampaign() {
                               </option>
                             ))}
                           </select>
+                          {/* <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_sample">View Sample</a>
+                          <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_landing">View Landing Page</a> */}
                         </div>
-
                         {/* sceocond part */}
                         <div className="">
                           <div className="text-center py-2 bg-light">Supervisor</div>
