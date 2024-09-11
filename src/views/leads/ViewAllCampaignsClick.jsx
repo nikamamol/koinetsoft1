@@ -172,89 +172,7 @@ const ViewAllCampaignsClick = () => {
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')} className="border-0 mb-3">
-                <AccordionSummary aria-controls="panel2d-content" id="panel2d-header" className="rounded-4 border-0" style={{ backgroundColor: "#EECEB9" }}>
-                  <Typography>EXPIRED CAMPAIGN</Typography>
-                </AccordionSummary>
-                <AccordionDetails className='border-0'>
-                  <Typography>
-                    <div className="container-xxl flex-grow-1 container-p-y">
-                      <div className="list-group list-group-horizontal-md text-md-center">
-                        <a
-                          className={`list-group-item list-group-item-action ${activeTab === 'tele_marketing' ? 'active' : ''}`}
-                          onClick={() => handleTabClick('tele_marketing')}
-                        >
-                          Tele Marketing (0)
-                        </a>
-                        <a
-                          className={`list-group-item list-group-item-action ${activeTab === 'email_marketing' ? 'active' : ''}`}
-                          onClick={() => handleTabClick('email_marketing')}
-                        >
-                          Email Marketing (0)
-                        </a>
-                      </div>
-                      <div className="tab-content px-0 mt-3 card rounded-4 border-0 shadow p-4">
-                        <div className={`tab-pane fade ${activeTab === 'tele_marketing' ? 'show active' : ''}`} id="tele_marketing">
-                          <div className="row ms-3" id="div_ongoing_tele_marketing">
-                            <div className="col-md-12">
-                              <h3>Tele Marketing Campaigns</h3>
-                              <Row>
-                                {campaigns.map((campaign) => (
-                                  <Col md={4} key={campaign._id} className="mb-4">
-                                    {campaign.campaignType === "Tele Marketing" && campaign.campaignStatus === "Expired" &&
-                                      <Card className="shadow-sm h-100">
-                                        <Card.Body>
-                                          <Card.Title>{campaign.campaignName}</Card.Title>
-                                          <Card.Text>
-                                            <strong>Code:</strong> {campaign.campaignCode}<br />
-                                            <strong>Type:</strong> {campaign.campaignType}<br />
-                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
-                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
-                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
-                                          </Card.Text>
-                                        </Card.Body>
-                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
-                                      </Card>
-                                    }
-                                  </Col>
-                                ))}
-                              </Row>
-                            </div>
-                          </div>
-                        </div>
-                        <div className={`tab-pane fade ${activeTab === 'email_marketing' ? 'show active' : ''}`} id="email_marketing">
-                          <div className="row  ms-3" id="div_ongoing_email_marketing">
-                            <div className="col-md-12">
-                              <h3>Email Marketing Campaigns</h3>
-                              <Row>
-                                {campaigns.map((campaign) => (
-                                  <Col md={4} key={campaign._id} className="mb-4">
-                                    {campaign.campaignType === "Email Marketing" && campaign.campaignStatus === "Expired" &&
-                                      <Card className="shadow-sm h-100">
-                                        <Card.Body>
-                                          <Card.Title>{campaign.campaignName}</Card.Title>
-                                          <Card.Text>
-                                            <strong>Code:</strong> {campaign.campaignCode}<br />
-                                            <strong>Type:</strong> {campaign.campaignType}<br />
-                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
-                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
-                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
-                                          </Card.Text>
-                                        </Card.Body>
-                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
-                                      </Card>
-                                    }
-                                  </Col>
-                                ))}
-                              </Row>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
+             
               <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')} className="border-0 mb-3">
                 <AccordionSummary aria-controls="panel3d-content" id="panel3d-header" className="rounded-4 border-0" style={{ backgroundColor: "#FFD3B6" }}>
                   <Typography>UPCOMMING CAMPAIGN</Typography>
@@ -367,7 +285,7 @@ const ViewAllCampaignsClick = () => {
                               <Row>
                                 {campaigns.map((campaign) => (
                                   <Col md={4} key={campaign._id} className="mb-4">
-                                    {campaign.campaignType === "Tele Marketing" && campaign.campaignStatus === "Paused" &&
+                                    {campaign.campaignType === "Tele Marketing" && campaign.campaignStatus === "Active" &&
                                       <Card className="shadow-sm h-100">
                                         <Card.Body>
                                           <Card.Title>{campaign.campaignName}</Card.Title>
@@ -395,7 +313,7 @@ const ViewAllCampaignsClick = () => {
                               <Row>
                                 {campaigns.map((campaign) => (
                                   <Col md={4} key={campaign._id} className="mb-4">
-                                    {campaign.campaignType === "Email Marketing" && campaign.campaignStatus === "Paused" &&
+                                    {campaign.campaignType === "Email Marketing" && campaign.campaignStatus === "Active" &&
                                       <Card className="shadow-sm h-100">
                                         <Card.Body>
                                           <Card.Title>{campaign.campaignName}</Card.Title>
@@ -409,6 +327,89 @@ const ViewAllCampaignsClick = () => {
                                         </Card.Body>
                                         <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
 
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')} className="border-0 mb-3">
+                <AccordionSummary aria-controls="panel2d-content" id="panel2d-header" className="rounded-4 border-0" style={{ backgroundColor: "#EECEB9" }}>
+                  <Typography>EXPIRED CAMPAIGN</Typography>
+                </AccordionSummary>
+                <AccordionDetails className='border-0'>
+                  <Typography>
+                    <div className="container-xxl flex-grow-1 container-p-y">
+                      <div className="list-group list-group-horizontal-md text-md-center">
+                        <a
+                          className={`list-group-item list-group-item-action ${activeTab === 'tele_marketing' ? 'active' : ''}`}
+                          onClick={() => handleTabClick('tele_marketing')}
+                        >
+                          Tele Marketing (0)
+                        </a>
+                        <a
+                          className={`list-group-item list-group-item-action ${activeTab === 'email_marketing' ? 'active' : ''}`}
+                          onClick={() => handleTabClick('email_marketing')}
+                        >
+                          Email Marketing (0)
+                        </a>
+                      </div>
+                      <div className="tab-content px-0 mt-3 card rounded-4 border-0 shadow p-4">
+                        <div className={`tab-pane fade ${activeTab === 'tele_marketing' ? 'show active' : ''}`} id="tele_marketing">
+                          <div className="row ms-3" id="div_ongoing_tele_marketing">
+                            <div className="col-md-12">
+                              <h3>Tele Marketing Campaigns</h3>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Tele Marketing" && campaign.campaignStatus === "Expired" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
+                                      </Card>
+                                    }
+                                  </Col>
+                                ))}
+                              </Row>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={`tab-pane fade ${activeTab === 'email_marketing' ? 'show active' : ''}`} id="email_marketing">
+                          <div className="row  ms-3" id="div_ongoing_email_marketing">
+                            <div className="col-md-12">
+                              <h3>Email Marketing Campaigns</h3>
+                              <Row>
+                                {campaigns.map((campaign) => (
+                                  <Col md={4} key={campaign._id} className="mb-4">
+                                    {campaign.campaignType === "Email Marketing" && campaign.campaignStatus === "Expired" &&
+                                      <Card className="shadow-sm h-100">
+                                        <Card.Body>
+                                          <Card.Title>{campaign.campaignName}</Card.Title>
+                                          <Card.Text>
+                                            <strong>Code:</strong> {campaign.campaignCode}<br />
+                                            <strong>Type:</strong> {campaign.campaignType}<br />
+                                            <strong>Status:</strong> {campaign.campaignStatus}<br />
+                                            <strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}<br />
+                                            <strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}<br />
+                                          </Card.Text>
+                                        </Card.Body>
+                                        <button className='btn btn-info' onClick={() => handleViewCampaign(campaign._id)}>View Campaign</button>
                                       </Card>
                                     }
                                   </Col>
