@@ -438,22 +438,22 @@ function CreateCampaign() {
                         </div>
 
                         <div className="mb-3 col-md-6 mt-2">
-                          <label htmlFor="assets" className="form-label">Assets/Whitepaper</label> (.pdf) <span className="text-danger" id="validation_assets"> *</span>
+                          <label htmlFor="assets" className="form-label">Assets/Whitepaper</label> (.csv) <span className="text-danger" id="validation_assets"> *</span>
                           <input className="form-control" type="file" id="assets" name="assets" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
                         </div>
 
                         <div className="mb-3 col-md-6">
-                          <label htmlFor="script" className="form-label">Script</label> (.docx, .doc) <span className="text-danger" id="validation_script"> *</span>
+                          <label htmlFor="script" className="form-label">Script</label> (.csv) <span className="text-danger" id="validation_script"> *</span>
                           <input className="form-control" type="file" id="script" name="script" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
                         </div>
 
                         <div className="mb-3 col-md-6">
-                          <label htmlFor="suppression" className="form-label">Suppression</label> (.xlsx, .xls, .csv) <span className="text-danger" id="validation_suppression"> *</span>
+                          <label htmlFor="suppression" className="form-label">Suppression</label> (.csv) <span className="text-danger" id="validation_suppression"> *</span>
                           <input className="form-control" type="file" id="suppression" name="suppression" accept=".pdf, .xlsx, .xls, .csv" multiple onChange={handleChange} />
                         </div>
 
                         <div className="mb-3 col-md-6">
-                          <label htmlFor="tal" className="form-label">TAL</label> (.xlsx, .xls, .csv) <span className="text-danger" id="validation_tal"> *</span>
+                          <label htmlFor="tal" className="form-label">TAL</label> (.csv) <span className="text-danger" id="validation_tal"> *</span>
                           <input className="form-control" type="file" id="tal" name="tal" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
                         </div>
                         {/* third part */}
@@ -488,7 +488,7 @@ function CreateCampaign() {
                         {/* forth part */}
                         <div className="text-center py-2 bg-light">Supression &amp; ABM List</div>
                         <div className="mb-3 col-md-6 mt-2">
-                          <label htmlFor="supression_list" className="form-label">Supression</label> (.xlsx, .xls, .csv)
+                          <label htmlFor="supression_list" className="form-label">Supression</label> (.csv)
                           <span>
                             <a
                               target="_blank"
@@ -511,7 +511,7 @@ function CreateCampaign() {
                         </div>
 
                         <div className="mb-3 col-md-6 mt-2">
-                          <label htmlFor="abm" className="form-label">ABM</label> (.xlsx, .xls, .csv)
+                          <label htmlFor="abm" className="form-label">ABM</label> (.csv)
                           <span>
                             <a
                               target="_blank"
@@ -571,7 +571,7 @@ function CreateCampaign() {
                         </div>
                         {/* five part */}
 
-                        <div className="text-center py-2 bg-light">Data Filter</div>
+                        {/* <div className="text-center py-2 bg-light">Data Filter</div> */}
                         <div id="div_data_filter" >
                           <div className="row">
                             {/* <div className="mb-3 col-md-6">
