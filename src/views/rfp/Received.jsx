@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Container, Row, Button, Modal, Form } from 'react-bootstrap';
+import { useDropzone } from 'react-dropzone';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SendIcon from '@mui/icons-material/Send';
+import BackupIcon from '@mui/icons-material/Backup';
 import { useDispatch, useSelector } from 'react-redux';
 import RfpReceived from '../../table/RfpReceived';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
@@ -37,7 +39,8 @@ function Received() {
       setSelectedCampaignCode(campaign.campaignCode);
     }
   };
-  const userRole = localStorage.getItem('role')
+
+  const userRole = localStorage.getItem('role');
 
   const handleFileUpload = async () => {
     if (!file || !selectedCampaign || !selectedCampaignCode) {
@@ -51,7 +54,6 @@ function Received() {
     formData.append('campaignCode', selectedCampaignCode);
 
     try {
-      // Dispatch the uploadFile thunk
       await dispatch(uploadFile(formData)).unwrap();
       alert(uploadMessage || 'File uploaded successfully!');
       setShow(false);
@@ -60,6 +62,13 @@ function Received() {
       alert('Failed to upload the file.');
     }
   };
+
+  // Dropzone configuration
+  const onDrop = useCallback((acceptedFiles) => {
+    setFile(acceptedFiles[0]); // Set the first dropped file
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <div>
@@ -70,10 +79,10 @@ function Received() {
             <div className='bgColor rounded-3 shadow'>
               <h4 className='fw-bold py-3 ms-3 text_color'>Your RFP File List</h4>
             </div>
-            {(userRole === "user" || userRole === "admin" ) && (
+            {(userRole === "user" || userRole === "admin") && (
               <div className='my-3 d-flex justify-content-end'>
                 <Button variant="primary" className='p-2' onClick={handleShow}>
-                  <CloudUploadIcon /> Upload RPF File
+                  <CloudUploadIcon /> Upload  or Drag 'n' drop RPF File
                 </Button>
                 <Modal show={show} onHide={handleClose} centered>
                   <Modal.Header closeButton>
@@ -92,10 +101,42 @@ function Received() {
                           ))}
                         </Form.Control>
                       </Form.Group>
+
+                      {/* Drag and Drop Area */}
+                      <div
+                        {...getRootProps()}
+                        className={`dropzone mt-3 p-3 border border-dashed rounded-3 bg-primary text-white ${isDragActive ? 'active' : ''}`}
+                        style={{ textAlign: 'center' }}
+                      >
+                        <input {...getInputProps()} />
+                        {isDragActive ? (
+                          <>
+                            <BackupIcon style={{ fontSize: 50 }} />
+                            <br />
+                            <p>Drag 'n' drop some files here, or click to select files</p>
+                          </>
+                        ) : (
+                          <>
+                            <BackupIcon style={{ fontSize: 50 }} />
+                            <br />
+                            <p>Drag 'n' drop some files here, or click to select files</p>
+                          </>
+                        )}
+                      </div>
+
+                      {/* Show the selected file name */}
+                      {file && (
+                        <div className="mt-3">
+                          <strong>Selected File:</strong> {file.name}
+                        </div>
+                      )}
+
+                      {/* Fallback file input */}
                       <Form.Group controlId="formFile" className="mt-3">
-                        <Form.Label>Upload CSV</Form.Label>
+                        <Form.Label>Or upload a file manually</Form.Label>
                         <Form.Control type="file" onChange={handleFileChange} />
                       </Form.Group>
+
                       <div className='mt-3'>
                         <Button variant="success" onClick={handleFileUpload} disabled={uploadStatus === 'loading'}>
                           <SendIcon /> Send

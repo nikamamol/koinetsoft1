@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, Container, Row, Button, Modal, Form } from 'react-bootstrap';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SendIcon from '@mui/icons-material/Send';
+import BackupIcon from '@mui/icons-material/Backup';
 import RfpOperation from '../../table/RfpOperation';
 import { uploadOperationFile } from '../../redux/reducer/rpf/operationcsvupload';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData'; // Import fetchCampaigns action
+import { useDropzone } from 'react-dropzone'; // Import react-dropzone
 
 function OperationCheck() {
   const [show, setShow] = useState(false);
@@ -39,6 +41,13 @@ function OperationCheck() {
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
+
+  // Handle drag-and-drop functionality
+  const onDrop = useCallback((acceptedFiles) => {
+    setSelectedFile(acceptedFiles[0]); // Set the first dropped file
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleFileUpload = () => {
     if (!selectedCampaign || !selectedFile) {
@@ -75,7 +84,7 @@ function OperationCheck() {
             </div>
             <div className="my-3 d-flex justify-content-end">
               <Button variant="primary" className="p-2" onClick={handleShow}>
-                <CloudUploadIcon /> Upload RFP File
+                <CloudUploadIcon /> Upload & Drag 'n' drop RFP File
               </Button>
               <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
@@ -98,10 +107,42 @@ function OperationCheck() {
                         )}
                       </Form.Control>
                     </Form.Group>
+
+                    {/* Drag and Drop Area */}
+                    <div
+                      {...getRootProps()}
+                      className={`dropzone mt-3 p-3 border border-dashed rounded-3 bg-primary text-white ${isDragActive ? 'active' : ''}`}
+                      style={{ textAlign: 'center' }}
+                    >
+                      <input {...getInputProps()} />
+                      {isDragActive ? (
+                        <>
+                          <BackupIcon style={{ fontSize: 50 }} />
+                          <br />
+                          <p>Drag 'n' drop some files here, or click to select files</p>
+                        </>
+                      ) : (
+                        <>
+                          <BackupIcon style={{ fontSize: 50 }} />
+                          <br />
+                          <p>Drag 'n' drop some files here, or click to select files</p>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Show the selected file name */}
+                    {selectedFile && (
+                      <div className="mt-3">
+                        <strong>Selected File:</strong> {selectedFile.name}
+                      </div>
+                    )}
+
+                    {/* Fallback file input */}
                     <Form.Group controlId="formFile" className="mt-3">
-                      <Form.Label>Upload CSV</Form.Label>
+                      <Form.Label>Or upload a file manually</Form.Label>
                       <Form.Control type="file" onChange={handleFileChange} />
                     </Form.Group>
+
                     <div className="mt-3">
                       <Button
                         variant="success"
