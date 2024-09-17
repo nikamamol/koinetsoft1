@@ -105,7 +105,7 @@ function Received() {
                       {/* Drag and Drop Area */}
                       <div
                         {...getRootProps()}
-                        className={`dropzone mt-3 p-3 border border-dashed rounded-3 bg-primary text-white ${isDragActive ? 'active' : ''}`}
+                        className={`dropzone mt-3 p-3 border border-dashed rounded-3  ${isDragActive ? 'active' : ''}`}
                         style={{ textAlign: 'center' }}
                       >
                         <input {...getInputProps()} />

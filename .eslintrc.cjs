@@ -19,4 +19,5 @@ module.exports = {
         ],
         "no-unused-vars": "on",
     },
+
 };
