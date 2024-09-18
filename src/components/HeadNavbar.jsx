@@ -650,6 +650,7 @@ function ResponsiveDrawer(props) {
             { text: 'View Invoices', path: '/billing/viewInvoice' },
             { text: 'Create Invoice', path: '/billing/createInvoice' },
             { text: 'Process Payment', path: '/billing/processPayment' },
+            { text: 'Create New Invoice', path: '/billing/Createnewinvoice' },
           ].map((item) => (
             <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
               <ListItemButton
