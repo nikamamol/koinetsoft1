@@ -36,7 +36,11 @@ body {
 }
 
 .w_15 {
-    width: 15%;
+    width: 10%;
+}
+
+.w_20 {
+    width: 20%;
 }
 
 .in_background {
@@ -62,6 +66,38 @@ body {
 
 .i_row {
     display: flex;
+}
+
+.i_row_footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.invoice .header {
+    margin-bottom: 30px;
+}
+
+.invoice .header .i_logo {
+    width: 25%;
+}
+
+.invoice .header .i_logo img {
+    width: 100%;
+}
+
+.invoice .header .i_logo p {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.invoice .header .i_info {
+    width: 80%;
+}
+
+.invoice .header .i_info .i_info_row {
+    display: flex;
+    justify-content: space-between;
 }
 
 .text_right {

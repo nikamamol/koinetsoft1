@@ -68,6 +68,7 @@ import EmailCheck from './views/rfp/EmailCheck';
 import { registerLicense } from '@syncfusion/ej2-base';
 import OperationChecked from './views/rfp/OperationChecked';
 import CreateNewInvoice from './views/billing/CreateNewInvoice';
+import ViewInvoiceById from './views/billing/ViewInvoiceById';
 
 
 const Layout = ({ children }) => {
@@ -154,6 +155,7 @@ function App() {
            <Route path="/billing/viewClient/:id" element={<ViewClientDetailsId />} />
             <Route path="/billing/viewInvoice" element={<ViewInvoice />} />
             <Route path="/billing/createnewinvoice" element={<CreateNewInvoice />} />
+            <Route path="/billing/ViewInvoiceById/:id" element={<ViewInvoiceById />} />
             {/* support */}
             <Route path="/support/email" element={<Emails />} />
             <Route path="/support/onlinechat" element={<OnlineChat />} />

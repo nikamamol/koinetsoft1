@@ -1,41 +1,54 @@
-import { useMemo } from 'react';
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from 'material-react-table';
-
-// Updated data structure with new fields
-const data = [
-  {
-    invoiceDate: '2024-07-01',
-    vendorName: 'XYZ Inc',
-    amount: 1000,
-    totalLead: 50,
-  },
-  {
-    invoiceDate: '2024-07-02',
-    vendorName: 'ABC Corp',
-    amount: 2000,
-    totalLead: 60,
-  },
-  {
-    invoiceDate: '2024-07-03',
-    vendorName: 'DEF Ltd',
-    amount: 1500,
-    totalLead: 70,
-  },
-  // Add other data entries as needed...
-];
+import { useMemo, useEffect, useState } from 'react';
+import axios from 'axios'; // For API requests
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const BillingViewInvoice = () => {
-  // Memoize the columns definition
+  const navigate = useNavigate(); // Initialize the navigate function
+  const [invoiceData, setInvoiceData] = useState([]);
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/user/getInvoices');
+        const { data } = response.data;
+
+        const transformedData = data.map((invoice, index) => {
+          const totalLead = invoice.items.reduce((sum, item) => {
+            const leadCount = Number(item.qty) || 0;
+            return sum + leadCount;
+          }, 0);
+
+          return {
+            serialNumber: index + 1,
+            invoiceDate: new Date(invoice.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            }),
+            vendorName: invoice.clientName,
+            amount: invoice.grandTotal,
+            totalLead: totalLead,
+            actions: invoice._id,
+          };
+        });
+
+        setInvoiceData(transformedData);
+      } catch (error) {
+        console.error('Error fetching invoices:', error);
+      }
+    };
+
+    fetchInvoices();
+  }, []);
+
   const columns = useMemo(
     () => [
       {
         accessorKey: 'serialNumber',
         header: 'Sr.no',
         size: 50,
-        Cell: ({ row }) => row.index + 1,
       },
       {
         accessorKey: 'invoiceDate',
@@ -49,7 +62,7 @@ const BillingViewInvoice = () => {
       },
       {
         accessorKey: 'amount',
-        header: 'Amount',
+        header: 'Amount ($)',
         size: 100,
       },
       {
@@ -62,21 +75,21 @@ const BillingViewInvoice = () => {
         header: 'Actions',
         Cell: ({ row }) => (
           <div>
-            <button className='btn btn-info btn-sm me-1' onClick={() => alert(`Viewing ${row.original.vendorName}`)}>View</button>
-            <button className='btn btn-primary btn-sm me-1' onClick={() => alert(`Editing ${row.original.vendorName}`)}>Edit</button>
-            <button className="btn btn-danger btn-sm me-1" onClick={() => alert(`Deleting ${row.original.vendorName}`)}>Delete</button>
+            <RemoveRedEyeIcon
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate(`/billing/ViewInvoiceById/${row.original.actions}`)} // Navigate to invoice details
+            />
           </div>
         ),
         size: 200,
       },
     ],
-    [],
+    [navigate] // Add navigate to dependencies
   );
 
-  // Initialize the table using the hook
   const table = useMaterialReactTable({
     columns,
-    data,
+    data: invoiceData,
   });
 
   return <MaterialReactTable table={table} />;

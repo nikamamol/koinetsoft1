@@ -648,7 +648,7 @@ function ResponsiveDrawer(props) {
             { text: 'Add Client', path: '/billing/addClient' },
             { text: 'View Client', path: '/billing/vieweClient' },
             { text: 'View Invoices', path: '/billing/viewInvoice' },
-            { text: 'Create Invoice', path: '/billing/createInvoice' },
+            // { text: 'Create Invoice', path: '/billing/createInvoice' },
             { text: 'Process Payment', path: '/billing/processPayment' },
             { text: 'Create New Invoice', path: '/billing/Createnewinvoice' },
           ].map((item) => (
