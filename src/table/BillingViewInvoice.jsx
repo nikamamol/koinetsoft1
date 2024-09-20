@@ -1,47 +1,24 @@
-import { useMemo, useEffect, useState } from 'react';
-import axios from 'axios'; // For API requests
+// BillingViewInvoice.js
+import { useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux'; // Import hooks from React-Redux
+import { fetchInvoices } from '../redux/reducer/billing/GetInvoice'; // Import your slice's async thunk
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const BillingViewInvoice = () => {
-  const navigate = useNavigate(); // Initialize the navigate function
-  const [invoiceData, setInvoiceData] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch(); // Initialize dispatch
+
+  const invoiceData = useSelector((state) => state.invoices.invoices); // Get invoices from Redux store
+  const invoiceStatus = useSelector((state) => state.invoices.status);
+  const error = useSelector((state) => state.invoices.error);
 
   useEffect(() => {
-    const fetchInvoices = async () => {
-      try {
-        const response = await axios.get('http://localhost:4000/user/getInvoices');
-        const { data } = response.data;
-
-        const transformedData = data.map((invoice, index) => {
-          const totalLead = invoice.items.reduce((sum, item) => {
-            const leadCount = Number(item.qty) || 0;
-            return sum + leadCount;
-          }, 0);
-
-          return {
-            serialNumber: index + 1,
-            invoiceDate: new Date(invoice.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            }),
-            vendorName: invoice.clientName,
-            amount: invoice.grandTotal,
-            totalLead: totalLead,
-            actions: invoice._id,
-          };
-        });
-
-        setInvoiceData(transformedData);
-      } catch (error) {
-        console.error('Error fetching invoices:', error);
-      }
-    };
-
-    fetchInvoices();
-  }, []);
+    if (invoiceStatus === 'idle') {
+      dispatch(fetchInvoices()); // Fetch invoices on component mount
+    }
+  }, [invoiceStatus, dispatch]);
 
   const columns = useMemo(
     () => [
@@ -84,13 +61,21 @@ const BillingViewInvoice = () => {
         size: 200,
       },
     ],
-    [navigate] // Add navigate to dependencies
+    [navigate]
   );
 
   const table = useMaterialReactTable({
     columns,
     data: invoiceData,
   });
+
+  if (invoiceStatus === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return <MaterialReactTable table={table} />;
 };

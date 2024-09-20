@@ -13,6 +13,8 @@ import fileUploadReducer from "../reducer/rpf/uploadcsvbyemploy"
 import fileDataReducer from "../reducer/rpf/getcsvfiledata"
 import fileUploadSliceCsvByOperation from "../reducer/rpf/operationcsvupload"
 import rfpReducer from "../reducer/rpf/operatilallfile"
+import invoiceReducer from "../reducer/billing/GetInvoice"
+import invoiceSlicebyid from "../reducer/billing/GetInvoiceFromId"
 
 
 const store = configureStore({
@@ -32,6 +34,9 @@ const store = configureStore({
         operationFileUpload: fileUploadSliceCsvByOperation,
         files: fileUploadSliceCsvByOperation,
         rfp: rfpReducer,
+        invoices: invoiceReducer,
+        invoice: invoiceSlicebyid,
+
     },
 });
 

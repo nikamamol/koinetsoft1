@@ -644,7 +644,7 @@ function ResponsiveDrawer(props) {
         </ListItem>
         <Collapse in={isCollapseBilling} timeout="auto" unmountOnExit>
           {[
-            { text: 'Invoice Setting', path: '/billing/invoiceSetting' },
+            // { text: 'Invoice Setting', path: '/billing/invoiceSetting' },
             { text: 'Add Client', path: '/billing/addClient' },
             { text: 'View Client', path: '/billing/vieweClient' },
             { text: 'View Invoices', path: '/billing/viewInvoice' },

@@ -87,7 +87,7 @@ const Invoice = () => {
             ...item,
             total: item.qty * item.price,
         }));
-    
+
         const updatedInvoiceData = {
             ...invoiceData,
             items: updatedItems,
@@ -95,9 +95,9 @@ const Invoice = () => {
             tax: calculateTotal.tax,
             grandTotal: calculateTotal.grandTotal,
         };
-    
+
         setInvoiceData(updatedInvoiceData);
-    
+
         const invoiceElement = document.querySelector('.invoice');
         html2canvas(invoiceElement).then((canvas) => {
             const imgData = canvas.toDataURL('image/png');
@@ -106,19 +106,19 @@ const Invoice = () => {
             const pageHeight = 295; // A4 height in mm
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
             let heightLeft = imgHeight;
-    
+
             pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
             heightLeft -= pageHeight;
-    
+
             while (heightLeft >= 0) {
                 pdf.addPage();
                 pdf.addImage(imgData, 'PNG', 0, heightLeft, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
             }
-    
+
             pdf.save('invoice.pdf');
             setIsGeneratingPDF(false);
-    
+
             // Send updated invoice data to the backend
             axios.post('http://localhost:4000/user/createInvoice', updatedInvoiceData)
                 .then((response) => {
@@ -129,7 +129,7 @@ const Invoice = () => {
                 });
         });
     };
-    
+
 
     const handleGeneratePDFClick = () => {
         setIsGeneratingPDF(true);
@@ -289,17 +289,18 @@ const Invoice = () => {
                                 </div>
                             </div>
 
-                            <div className="text-end " style={{ width: "700px" }}>
+                            <div className="text-end " >
                                 <hr />
                                 <span className=" p-3 fw-bold ">Grand Total:</span>
                                 <span className=" p-3 fw-bold "> ${calculateTotal.grandTotal.toFixed(2)}</span>
                             </div>
+                            <hr />
                         </div>
                     </div>
                 </div>
 
                 <div className="footer">
-                    <div className="i_row_footer">
+                    <div className="i_row_footer d-flex justify-content-between align-items-start">
                         <div className="i_col ">
                             <p className="p_title">Payment Method</p>
 
@@ -324,7 +325,7 @@ const Invoice = () => {
                                 onChange={(e) => updateField('accountNumber', e.target.value)}
                             />
                         </div>
-                        <div className="">
+                        <div className="ms-2 w-25">
                             <p className="p_title">Terms and Conditions</p>
                             <p
 
