@@ -1,24 +1,32 @@
-// BillingViewInvoice.js
 import { useEffect, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux'; // Import hooks from React-Redux
-import { fetchInvoices } from '../redux/reducer/billing/GetInvoice'; // Import your slice's async thunk
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchInvoices } from '../redux/reducer/billing/GetInvoice'; // Import the delete thunk
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useNavigate } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteInvoiceById } from '../redux/reducer/billing/GetInvoiceFromId';
 
 const BillingViewInvoice = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Initialize dispatch
+  const dispatch = useDispatch();
 
-  const invoiceData = useSelector((state) => state.invoices.invoices); // Get invoices from Redux store
+  const invoiceData = useSelector((state) => state.invoices.invoices);
   const invoiceStatus = useSelector((state) => state.invoices.status);
   const error = useSelector((state) => state.invoices.error);
+  console.log(invoiceData)
 
   useEffect(() => {
     if (invoiceStatus === 'idle') {
-      dispatch(fetchInvoices()); // Fetch invoices on component mount
+      dispatch(fetchInvoices());
     }
   }, [invoiceStatus, dispatch]);
+
+  const handleDelete = (invoiceId) => {
+    if (window.confirm('Are you sure you want to delete this invoice?')) {
+      dispatch(deleteInvoiceById(invoiceId));
+    }
+  };
 
   const columns = useMemo(
     () => [
@@ -51,10 +59,14 @@ const BillingViewInvoice = () => {
         accessorKey: 'actions',
         header: 'Actions',
         Cell: ({ row }) => (
-          <div>
+          <div className='d-flex gap-3'>
             <RemoveRedEyeIcon
               style={{ cursor: 'pointer' }}
-              onClick={() => navigate(`/billing/ViewInvoiceById/${row.original.actions}`)} // Navigate to invoice details
+              onClick={() => navigate(`/billing/ViewInvoiceById/${row.original.actions}`)}
+            />
+            <DeleteIcon
+              style={{ cursor: 'pointer' }}
+              onClick={() => handleDelete(row.original.actions)} 
             />
           </div>
         ),
