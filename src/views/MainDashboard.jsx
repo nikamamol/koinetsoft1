@@ -1,17 +1,68 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import punchimage from "../assets/punchimage.jpeg"
 import campiagn from "../assets/capiagn.png"
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-
+import * as XLSX from 'xlsx';
 import CampaignRevenue from "../chart/CampaignRevenue"
 import ClaintRevenue from "../chart/ClaintRevenue"
 import TotalClient from "../chart/TotalClient"
 import DashboardTable from '../table/DashboardTable';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchClients } from '../redux/reducer/billing/ClientSlice';
+import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData';
+import { fetchFiles } from '../redux/reducer/rpf/operatilallfile';
 
 function MainDashboard() {
+    const dispatch = useDispatch();
 
+    // Fetch campaigns and clients from Redux state
+    const { campaigns } = useSelector((state) => state.campaigns);
+    const clients = useSelector((state) => state.clients.data);
+
+    const [totalLeads, setTotalLeads] = useState(0);
+
+    const { files } = useSelector((state) => state.rfp);
+
+
+    const campaignCount = campaigns ? campaigns.length : 0;  // Calculate campaign count
+    const clientCount = clients ? clients.length : 0;
+
+    useEffect(() => {
+        dispatch(fetchClients());    // Fetch clients on mount
+        dispatch(fetchCampaigns());  // Fetch campaigns on mount
+        dispatch(fetchFiles());  // Fetch campaigns on mount
+    }, [dispatch])
+
+    useEffect(() => {
+        if (files && files.length > 0) {
+            countLeads(files);
+        }
+    }, [files]);
+
+    // Function to count leads based on buffer content (Excel data)
+    const countLeads = (files) => {
+        let leadCount = 0;
+
+        files.forEach(file => {
+            if (file.content && file.content.data) {
+                // Convert buffer data to a Uint8Array
+                const uint8Array = new Uint8Array(file.content.data);
+
+                // Read Excel data using XLSX
+                const workbook = XLSX.read(uint8Array, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];  // Assuming first sheet contains data
+                const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+                // Count the rows in the worksheet (each row could represent a lead)
+                leadCount += worksheet.length;
+            }
+        });
+
+        setTotalLeads(leadCount);
+    };
+// Total lead count is direct operation upload main file 
     return (
         <div>
             <Container fluid className='my-3'>
@@ -80,7 +131,7 @@ function MainDashboard() {
                         <div className="col-lg-12 col-md-4 order-1 my-4">
                             <div className="row">
                                 {[
-                                    { label: "Total Leads", count: 10, bgClass: "bg-label-primary", iconClass: <PersonOutlineIcon /> },
+                                    { label: "Total Leads", count: totalLeads, bgClass: "bg-label-primary", iconClass: <PersonOutlineIcon /> },
                                     { label: "Total Client Approved", count: 20, bgClass: "bg-label-success", iconClass: <PersonOutlineIcon /> },
                                     { label: "Total Rejected", count: "05", bgClass: "bg-label-danger", iconClass: <PersonOutlineIcon /> },
                                     { label: "Total Inprogress", count: 25, bgClass: "bg-label-warning", iconClass: <PersonOutlineIcon /> }
@@ -119,7 +170,7 @@ function MainDashboard() {
                                         <div className='text-center mb-5'>
                                             <p className="card-title fs-4">Campaign Revenue - Jul 2024</p>
                                         </div>
-                                        <h6 className="card-subtitle mb-2">Total Campaign <span>: 100</span></h6>
+                                        <h6 className="card-subtitle mb-2">Total Campaign <span>: {campaignCount}</span></h6>
 
                                         <div className="mt-5 text-center bg-danger p-2 fw-bold text-white">
                                             <p className="fs-6 ">Total Revenue: $500</p>
@@ -142,7 +193,7 @@ function MainDashboard() {
                                         <div className='text-start mb-5'>
                                             <p className="card-title fs-4">Client Revenue - Jul 2024</p>
                                         </div>
-                                        <h6 className="card-subtitle mb-2 ">Total Client <span>: 555</span></h6>
+                                        <h6 className="card-subtitle mb-2 ">Total Client <span> : {clientCount}</span></h6>
 
                                         <div className="my-3 text-start  fw-bold">
                                             <p className="fs-5 text_color">Total Revenue: $999</p>
