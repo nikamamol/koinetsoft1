@@ -3,7 +3,7 @@ import axios from "axios";
 import baseUrl from "../../../constant/ConstantApi";
 
 // Utility to get the token from local storage
-const getToken = () => localStorage.getItem('authToken');
+const getToken = () => localStorage.getItem("authToken");
 
 // Thunk for fetching file data
 export const fetchFileData = createAsyncThunk(
@@ -42,31 +42,37 @@ export const fetchFileDataAll = createAsyncThunk(
 
 // Thunk for downloading a file
 export const downloadFile = createAsyncThunk(
-    'fileData/downloadExcelFile',
+    "fileData/downloadExcelFile",
     async({ fileId, filename }, { rejectWithValue }) => {
         try {
             const token = getToken(); // Retrieve the JWT token
-            console.log(`Starting Excel file download: ${filename} with fileId: ${fileId}`);
+            console.log(
+                `Starting Excel file download: ${filename} with fileId: ${fileId}`
+            );
 
-            const response = await axios.get(`${baseUrl}user/downloadCsvFileById/${fileId}`, {
-                responseType: 'blob', // Receive the file as a Blob
-                headers: {
-                    Authorization: `Bearer ${token}`, // Send the token in the header
-                },
-            });
+            const response = await axios.get(
+                `${baseUrl}user/downloadCsvFileById/${fileId}`, {
+                    responseType: "blob", // Receive the file as a Blob
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Send the token in the header
+                    },
+                }
+            );
 
-            console.log('Excel file download response received:', response);
+            console.log("Excel file download response received:", response);
 
             // Create a Blob from the response data
-            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const blob = new Blob([response.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
 
             // Create a URL for the Blob
             const url = window.URL.createObjectURL(blob);
 
             // Create a temporary link element
-            const link = document.createElement('a');
+            const link = document.createElement("a");
             link.href = url;
-            link.setAttribute('download', filename); // Set the filename for download
+            link.setAttribute("download", filename); // Set the filename for download
 
             // Append the link to the document body and trigger the download
             document.body.appendChild(link);
@@ -78,39 +84,44 @@ export const downloadFile = createAsyncThunk(
 
             return { fileId, filename };
         } catch (error) {
-            console.error('Error during Excel file download:', error);
+            console.error("Error during Excel file download:", error);
             return rejectWithValue(error.response || error.message);
         }
     }
 );
 
-// Thunk for updating a file
-
 export const updateCsvFileById = createAsyncThunk(
     "fileData/updateCsvFileById",
-    async({ fileId, fileData }, { rejectWithValue }) => {
+    async({ fileId, fileData, updatedData }, { rejectWithValue }) => {
         try {
             const token = getToken();
             const formData = new FormData();
-            formData.append('file', fileData.file);
+            formData.append("file", fileData.file); // Assuming fileData.file is the file blob
+
+            // Check if the fileData contains a path
             if (fileData.path) {
-                formData.append('path', fileData.path);
+                formData.append("path", fileData.path);
             }
+
+            // Log updatedData to ensure it is correctly structured
+            console.log("Updated Data:", updatedData);
+            formData.append("updatedData", JSON.stringify(updatedData)); // Ensure it's a string
 
             const response = await axios.put(
                 `${baseUrl}user/updateCsvFileById/${fileId}`,
                 formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data',
+                        "Content-Type": "multipart/form-data",
                     },
                 }
             );
-            console.log(response.data);
-            return response.data;
 
+            console.log("Response Data:", response.data);
+            return response.data; // Return the response data
         } catch (error) {
             const errorMessage = error.response ? error.response.data : error.message;
+            console.error("Error updating file:", errorMessage); // Log the error for debugging
             return rejectWithValue(errorMessage);
         }
     }
@@ -119,19 +130,21 @@ export const updateCsvFileById = createAsyncThunk(
 
 
 export const readFile = createAsyncThunk(
-    'fileData/readFile',
+    "fileData/readFile",
     async({ fileId }, { rejectWithValue }) => {
         try {
             const token = getToken();
             const response = await axios.get(`${baseUrl}user/csvFileData/${fileId}`, {
-                responseType: 'arraybuffer', // Change to 'arraybuffer' for reading the file
+                responseType: "arraybuffer", // Change to 'arraybuffer' for reading the file
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
             return { arrayBuffer: response.data }; // Return the arrayBuffer
         } catch (error) {
-            return rejectWithValue(error.response ? error.response.data : error.message);
+            return rejectWithValue(
+                error.response ? error.response.data : error.message
+            );
         }
     }
 );
@@ -142,28 +155,32 @@ export const updateFileStatus = createAsyncThunk(
     async({ fileId, checked }, { getState, rejectWithValue }) => {
         try {
             const { files } = getState().fileData;
-            const fileToUpdate = files.find(file => file.fileId === fileId);
+            const fileToUpdate = files.find((file) => file.fileId === fileId);
 
             if (!fileToUpdate) {
-                throw new Error('File not found');
+                throw new Error("File not found");
             }
 
-            const updatedStatus = fileToUpdate.status.map(status =>
-                status.userType === 'Quality' ? {...status, checked } : status
+            const updatedStatus = fileToUpdate.status.map((status) =>
+                status.userType === "Quality" ? {...status, checked } : status
             );
 
             const token = getToken();
-            const response = await axios.put(`${baseUrl}user/updateStatus/${fileId}`, {
-                status: updatedStatus
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await axios.put(
+                `${baseUrl}user/updateStatus/${fileId}`, {
+                    status: updatedStatus,
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response ? error.response.data : error.message);
+            return rejectWithValue(
+                error.response ? error.response.data : error.message
+            );
         }
     }
 );
@@ -174,50 +191,57 @@ export const updateFileStatusEmail = createAsyncThunk(
     async({ fileId, statusId, checked }, { getState, rejectWithValue }) => {
         try {
             const { files } = getState().fileData;
-            const fileToUpdate = files.find(file => file.fileId === fileId);
+            const fileToUpdate = files.find((file) => file.fileId === fileId);
 
             if (!fileToUpdate) {
-                throw new Error('File not found');
+                throw new Error("File not found");
             }
 
-            const updatedStatus = fileToUpdate.status.map(status =>
-                status.userType === 'Email Marketing' ? {...status, checked } : status
+            const updatedStatus = fileToUpdate.status.map((status) =>
+                status.userType === "Email Marketing" ? {...status, checked } : status
             );
 
             const token = getToken();
-            const response = await axios.put(`${baseUrl}user/updateStatus/${fileId}`, {
-                status: updatedStatus
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await axios.put(
+                `${baseUrl}user/updateStatus/${fileId}`, {
+                    status: updatedStatus,
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response ? error.response.data : error.message);
+            return rejectWithValue(
+                error.response ? error.response.data : error.message
+            );
         }
     }
 );
 
 // Thunk for deleting a file
 export const deleteFile = createAsyncThunk(
-    'fileData/deleteFile',
+    "fileData/deleteFile",
     async(fileId, { rejectWithValue }) => {
         try {
             const token = getToken();
-            const response = await axios.delete(`${baseUrl}user/csvFileData/${fileId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Correctly formatted Authorization header
-                },
-            });
+            const response = await axios.delete(
+                `${baseUrl}user/csvFileData/${fileId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Correctly formatted Authorization header
+                    },
+                }
+            );
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response ? error.response.data : error.message);
+            return rejectWithValue(
+                error.response ? error.response.data : error.message
+            );
         }
     }
 );
-
 
 const fileDataSlice = createSlice({
     name: "fileData",
@@ -259,40 +283,44 @@ const fileDataSlice = createSlice({
                 state.error = action.payload;
             })
             .addCase(updateFileStatus.pending, (state) => {
-                state.status = 'loading';
+                state.status = "loading";
             })
             .addCase(updateFileStatus.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.files = state.files.map(file =>
-                    file.fileId === action.payload.fileId ? {...file, status: action.payload.status } : file
+                state.status = "succeeded";
+                state.files = state.files.map((file) =>
+                    file.fileId === action.payload.fileId ? {...file, status: action.payload.status } :
+                    file
                 );
             })
             .addCase(updateFileStatus.rejected, (state, action) => {
-                state.status = 'failed';
+                state.status = "failed";
                 state.error = action.payload;
             })
             .addCase(updateFileStatusEmail.pending, (state) => {
-                state.status = 'loading';
+                state.status = "loading";
             })
             .addCase(updateFileStatusEmail.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.files = state.files.map(file =>
-                    file.fileId === action.payload.fileId ? {...file, status: action.payload.status } : file
+                state.status = "succeeded";
+                state.files = state.files.map((file) =>
+                    file.fileId === action.payload.fileId ? {...file, status: action.payload.status } :
+                    file
                 );
             })
             .addCase(updateFileStatusEmail.rejected, (state, action) => {
-                state.status = 'failed';
+                state.status = "failed";
                 state.error = action.payload;
             })
             .addCase(deleteFile.pending, (state) => {
-                state.status = 'loading';
+                state.status = "loading";
             })
             .addCase(deleteFile.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.files = state.files.filter(file => file._id !== action.meta.arg);
+                state.status = "succeeded";
+                state.files = state.files.filter(
+                    (file) => file._id !== action.meta.arg
+                );
             })
             .addCase(deleteFile.rejected, (state, action) => {
-                state.status = 'failed';
+                state.status = "failed";
                 state.error = action.payload || action.error.message;
             })
             .addCase(fetchFileDataAll.pending, (state) => {
@@ -320,30 +348,30 @@ const fileDataSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(readFile.pending, (state) => {
-                state.status = 'loading';
+                state.status = "loading";
             })
             .addCase(readFile.fulfilled, (state, action) => {
-                state.status = 'succeeded';
+                state.status = "succeeded";
                 // Handle file data here if needed
             })
             .addCase(readFile.rejected, (state, action) => {
-                state.status = 'failed';
+                state.status = "failed";
                 state.error = action.payload;
             })
             .addCase(updateCsvFileById.pending, (state) => {
-                state.status = 'loading';
+                state.status = "loading";
             })
             .addCase(updateCsvFileById.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.files = state.files.map(file =>
-                    file.fileId === action.payload.fileId ? {...file, ...action.payload.file } : file
+                state.status = "succeeded";
+                state.files = state.files.map((file) =>
+                    file.fileId === action.payload.fileId ? {...file, ...action.payload.file } :
+                    file
                 );
             })
             .addCase(updateCsvFileById.rejected, (state, action) => {
-                state.status = 'failed';
+                state.status = "failed";
                 state.error = action.payload;
             });
-
     },
 });
 

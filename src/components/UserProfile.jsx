@@ -35,7 +35,7 @@ export default function UserProfile() {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Box>
         <Tooltip title="Account settings">
           <IconButton
@@ -101,6 +101,6 @@ export default function UserProfile() {
           <span className='text-dark'>Log-Out</span> {/* Removed Link to ensure the handler is executed */}
         </MenuItem>
       </Menu>
-    </React.Fragment>
+    </>
   );
 }

@@ -2,57 +2,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import { fetchFileDataAll, readFile, updateFileStatus, updateCsvFileById } from '../redux/reducer/rpf/getcsvfiledata';
-import { Checkbox, IconButton, Tooltip, Button } from '@mui/material';
+import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
-import { SpreadsheetComponent, SheetDirective, SheetsDirective, ColumnsDirective, ColumnDirective, RangeDirective, RangesDirective } from '@syncfusion/ej2-react-spreadsheet';
-import '@syncfusion/ej2-base/styles/material.css';
-import '@syncfusion/ej2-inputs/styles/material.css';
-import '@syncfusion/ej2-buttons/styles/material.css';
-import '@syncfusion/ej2-splitbuttons/styles/material.css';
-import '@syncfusion/ej2-navigations/styles/material.css';
-import '@syncfusion/ej2-calendars/styles/material.css';
-import '@syncfusion/ej2-popups/styles/material.css';
-import '@syncfusion/ej2-lists/styles/material.css';
-import '@syncfusion/ej2-react-spreadsheet/styles/material.css';
 
-// SpreadsheetViewer Component
-const SpreadsheetViewer = ({ data }) => {
-    let spreadsheetRef;
-
-    return (
-        <div style={{ width: '100%' }}>
-            {data.length > 0 && (
-                <SpreadsheetComponent
-                    ref={(s) => (spreadsheetRef = s)}
-                    allowOpen={true}
-                    allowSave={true}
-                    saveUrl='https://services.syncfusion.com/angular/production/api/spreadsheet/save'
-                    openUrl='https://services.syncfusion.com/angular/production/api/spreadsheet/open'
-                    showRibbon={true}
-                    showFormulaBar={true}    
-                    showSheetTabs={true}
-                >
-                    <SheetsDirective>
-                        <SheetDirective>
-                            <RangesDirective>
-                                <RangeDirective dataSource={data} />
-                            </RangesDirective>
-                            <ColumnsDirective>
-                                {data[0].map((_, idx) => (
-                                    <ColumnDirective key={idx} width={120} />
-                                ))}
-                            </ColumnsDirective>
-                        </SheetDirective>
-                    </SheetsDirective>
-                </SpreadsheetComponent>
-            )}
-        </div>
-    );
-};
-
-// Main Component
 const RfpQualityCheck = () => {
     const dispatch = useDispatch();
     const { files, error, status } = useSelector((state) => ({
@@ -65,6 +19,7 @@ const RfpQualityCheck = () => {
     const [excelData, setExcelData] = useState([]);
     const [currentFileName, setCurrentFileName] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
+    const [updatedData, setUpdatedData] = useState([]);
 
     useEffect(() => {
         if (status === 'idle') {
@@ -103,6 +58,7 @@ const RfpQualityCheck = () => {
                 console.error('Error reading file:', error);
             });
     };
+
     const handleCheckboxChange = (fileId, statusId, checked) => {
         dispatch(updateFileStatus({ fileId, statusId, checked }))
             .unwrap()
@@ -116,48 +72,63 @@ const RfpQualityCheck = () => {
             });
     };
 
+    // Handle row edit and update the excelData state, then call the update API
+    const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
+        try {
+            // Create a new array from excelData to update the values
+            const updatedExcelData = [...excelData];
+            const rowIndex = row.index + 2; // Adjust for header row
 
+            // Update the row with the new values
+            updatedExcelData[rowIndex] = Object.values(values); // Map values to the row
 
-    const handleUpdateFile = () => {
-        if (selectedFile && excelData.length > 0) {
-            // Convert the updated excelData back to a worksheet
-            const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+            // Set updatedExcelData to excelData
+            setExcelData(updatedExcelData);
+
+            // Create a Blob from the updated data
+            const worksheet = XLSX.utils.aoa_to_sheet(updatedExcelData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
-            // Generate binary string from workbook
             const binaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
-
-            // Convert binary string to ArrayBuffer
             const buffer = new ArrayBuffer(binaryString.length);
             const view = new Uint8Array(buffer);
             for (let i = 0; i < binaryString.length; i++) {
                 view[i] = binaryString.charCodeAt(i) & 0xFF;
             }
 
-            // Create a Blob from the ArrayBuffer
             const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-            // Prepare the file data for updating
-            const fileData = {
-                file: new File([blob], selectedFile.filename, { type: blob.type }),
-                path: selectedFile.path || ''
-            };
+            let newFile;
+            const formData = new FormData();
 
-            dispatch(updateCsvFileById({ fileId: selectedFile.fileId, fileData }))
-                .unwrap()
-                .then(() => {
-                    toast.success('File updated successfully!');
-                })
-                .catch((error) => {
-                    toast.error('Error updating file. Please try again.');
-                    console.error('Error updating file:', error);
-                });
-        } else {
-            toast.error('No file selected or data is empty.');
+            // Check selectedFile to ensure it's valid
+            if (selectedFile && selectedFile.filename && selectedFile.fileId) {
+                newFile = new File([blob], selectedFile.filename, { type: blob.type });
+                formData.append('file', newFile);
+                if (selectedFile.path) {
+                    formData.append('path', selectedFile.path);
+                }
+            } else {
+                throw new Error("Invalid selectedFile object: No file selected or invalid fileId.");
+            }
+
+            formData.append('updatedData', JSON.stringify(updatedExcelData));
+            await dispatch(updateCsvFileById({
+                fileId: selectedFile.fileId,
+                fileData: { file: newFile, path: selectedFile.path },
+                updatedData: updatedExcelData,
+            })).unwrap();
+
+            toast.success('File updated successfully!');
+
+        } catch (error) {
+            toast.error('Error updating file. Please try again.');
+            console.error('Error updating file:', error);
+        } finally {
+            exitEditingMode(); // Close the editing mode after saving
         }
     };
-
 
     const role = localStorage.getItem('role');
 
@@ -167,6 +138,31 @@ const RfpQualityCheck = () => {
             file.status.some(statusItem => statusItem.userType === 'Quality')
         );
     }, [files, role]);
+
+    const excelColumns = useMemo(() => {
+        if (excelData.length > 0) {
+            const headers = excelData[1]; // First row contains headers
+            return headers.map((header, index) => ({
+                accessorKey: `${index}`, // String literal for unique accessor keys
+                header, // Use header directly
+                enableEditing: true, // Allow editing of cells
+            }));
+        }
+        return [];
+    }, [excelData]);
+
+    const excelTableData = useMemo(() => {
+        if (excelData.length > 1) {
+            return excelData.slice(2).map((row, rowIndex) => {
+                const rowData = {};
+                row.forEach((cell, cellIndex) => {
+                    rowData[cellIndex] = cell;
+                });
+                return rowData;
+            });
+        }
+        return [];
+    }, [excelData]);
 
     const columns = useMemo(
         () => [
@@ -250,22 +246,13 @@ const RfpQualityCheck = () => {
             {excelData.length === 0 ? (
                 <MaterialReactTable columns={columns} data={filteredFiles} />
             ) : (
-                <>
-                    {currentFileName && (
-                        <div className='p-4 bg_color_Email my-3 fw-bold text-center'>
-                            File name: {currentFileName}
-                        </div>
-                    )}
-                    <SpreadsheetViewer data={excelData} />
-                    <Button
-                        onClick={handleUpdateFile}
-                        variant="contained"
-                        color="primary"
-                        style={{ marginTop: '20px' }}
-                    >
-                        Update File
-                    </Button>
-                </>
+                <MaterialReactTable
+                    columns={excelColumns}
+                    data={excelTableData}
+                    editingMode="row"
+                    enableEditing
+                    onEditingRowSave={handleSaveRowEdits}
+                />
             )}
         </div>
     );
