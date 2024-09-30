@@ -15,6 +15,8 @@ import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData'
 import { fetchFiles } from '../redux/reducer/rpf/operatilallfile';
 
 function MainDashboard() {
+    const [currentMonth, setCurrentMonth] = useState('');
+    const [currentYear, setCurrentYear] = useState('');
     const dispatch = useDispatch();
 
     // Fetch campaigns and clients from Redux state
@@ -28,6 +30,19 @@ function MainDashboard() {
 
     const campaignCount = campaigns ? campaigns.length : 0;  // Calculate campaign count
     const clientCount = clients ? clients.length : 0;
+    const campaignStatusCount = campaigns ? campaigns.filter((campaign) => campaign.campaignStatus === 'Active').length : 0;
+
+
+
+    // Fetch campaigns and other data from Redux (Assumed already done in your code)
+
+    useEffect(() => {
+        // Get the current month and year
+        const date = new Date();
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        setCurrentMonth(monthNames[date.getMonth()]);
+        setCurrentYear(date.getFullYear());
+    }, []);
 
     useEffect(() => {
         dispatch(fetchClients());    // Fetch clients on mount
@@ -78,7 +93,7 @@ function MainDashboard() {
                                             <div className="card-body">
                                                 <h5 className="card-title text-danger">Welcome to Koinemedia! 🎉</h5>
                                                 <p className="mb-4">
-                                                    You have <span className="fw-bold">0</span> active campaigns.
+                                                    You have <span className="fw-bold">{campaignStatusCount}</span> active campaigns.
                                                 </p>
                                                 <Link to="/viewallcampaignsclick" className="btn btn-sm btn-outline-primary">View All Campaigns</Link>
                                             </div>
@@ -168,7 +183,7 @@ function MainDashboard() {
                                 <div className="card h-100 border-1">
                                     <div className="card-body">
                                         <div className='text-center mb-5'>
-                                            <p className="card-title fs-4">Campaign Revenue - Jul 2024</p>
+                                            <p className="card-title fs-4">Campaign Revenue - {currentMonth} {currentYear}</p>
                                         </div>
                                         <h6 className="card-subtitle mb-2">Total Campaign <span>: {campaignCount}</span></h6>
 
@@ -191,14 +206,14 @@ function MainDashboard() {
                                 <div className="card h-100 border-0 rounded-3 sidebar_bg">
                                     <div className="card-body">
                                         <div className='text-start mb-5'>
-                                            <p className="card-title fs-4">Client Revenue - Jul 2024</p>
+                                        <p className="card-title fs-4">Campaign Revenue - {currentMonth} {currentYear}</p>
                                         </div>
                                         <h6 className="card-subtitle mb-2 ">Total Client <span> : {clientCount}</span></h6>
 
                                         <div className="my-3 text-start  fw-bold">
                                             <p className="fs-5 text_color">Total Revenue: $999</p>
                                         </div>
-                                        <p className='mt-5'>This section provides a snapshot of client revenue for July 2024, highlighting the total number of clients and the overall revenue generated. </p>
+                                        <p className='mt-5'>This section provides a snapshot of client revenue for {currentMonth} {currentYear}, highlighting the total number of clients and the overall revenue generated. </p>
 
                                     </div>
                                 </div>
