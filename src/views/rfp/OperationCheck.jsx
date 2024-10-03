@@ -67,6 +67,7 @@ function OperationCheck() {
       .then(() => {
         alert('File uploaded successfully!');
         handleClose();
+        s
       })
       .catch(() => {
         alert('File upload failed. Please try again.');

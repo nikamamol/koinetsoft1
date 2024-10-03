@@ -209,9 +209,7 @@ const RfpEmailCheck = () => {
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleUpdateFile} disabled={!selectedFile || excelData.length === 0}>
-                Update File
-            </Button>
+       
             {excelData.length === 0 ? (
                 <MaterialReactTable columns={columns} data={filteredFiles} />
             ) : (

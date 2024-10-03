@@ -11,7 +11,7 @@ function EmailCheck() {
         </Col>
         <Col lg={8}>
           <div className='bgColor rounded-3 shadow'>
-            <h4 className='fw-bold py-3 ms-3 text_color'>Email Check</h4>
+            <h4 className='fw-bold py-3 ms-3 text_color'>PreQA Done Files</h4>
           </div>
           <RfpEmailCheck />
         </Col>

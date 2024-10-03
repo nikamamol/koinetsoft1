@@ -528,7 +528,7 @@ function ResponsiveDrawer(props) {
               {[
                 { text: "Delivery Check", path: "/rfp/operatinfinalcheck" },
                 { text: "Delivery All", path: "/rfp/operationallcheckedfiles" },
-                { text: "Unwanted Leads", path: "#" },
+                { text: "Unwanted Leads", path: "/rfp/unwantedleads" },
                 { text: "Delivery Master", path: "/rfp/operationmaster" },
               ].map((item) => (
                 <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>

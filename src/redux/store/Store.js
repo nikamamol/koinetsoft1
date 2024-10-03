@@ -28,6 +28,8 @@ import emmasterFileUploadReducer from "../reducer/rpf/uploadEmailmasterfile";
 import CsvsliceByEMMaster from "../reducer/rpf/getEmMasterFileData";
 import opmasterFileUploadReducer from "../reducer/rpf/operationMasterCsvFile";
 import CsvsliceByOPMaster from "../reducer/rpf/getoperationMasterCsvFile";
+import unwantedLeadsFileUploadReducer from "../reducer/rpf/unwantedLeads";
+import CsvsliceByUnwantedLeads from "../reducer/rpf/getUnwantedLeads"
 
 const store = configureStore({
     reducer: {
@@ -61,6 +63,8 @@ const store = configureStore({
         csvFileCheckedbyEMMaster: CsvsliceByEMMaster,
         opmasterFileUpload: opmasterFileUploadReducer,
         csvFileCheckedbyOPMaster: CsvsliceByOPMaster,
+        unwantedLeadsFileUpload: unwantedLeadsFileUploadReducer,
+        csvFileCheckedbyUnwantedLeads: CsvsliceByUnwantedLeads,
     },
 });
 

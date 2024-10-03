@@ -77,6 +77,7 @@ import EMChecked from './views/rfp/EMChecked';
 import EMDoneShowQuality from './views/rfp/EMDoneShowQuality';
 import EMMasterFile from './views/rfp/EMMasterFile';
 import OperationMaster from './views/rfp/OperationMaster';
+import UnwantedLeads from './views/rfp/UnwantedLeads';
 // import QualityMasterTab from './table/QualityMasterTab';
 
 
@@ -138,6 +139,7 @@ function App() {
             <Route path="/rfp/emdoneshowquality" element={<EMDoneShowQuality />} />
             <Route path="/rfp/emmasterfile" element={<EMMasterFile />} />
             <Route path="/rfp/operationmaster" element={<OperationMaster />} />
+            <Route path="/rfp/unwantedleads" element={<UnwantedLeads />} />
             {/* <Route path="/rfp/qualitymastertab" element={<QualityMasterTab />} /> */}
             {/* Agency */}
             <Route path="/agency/myengencies" element={<MyEngencies />} />
