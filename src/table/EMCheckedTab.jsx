@@ -85,21 +85,42 @@ const EMCheckedTab = () => {
         },
     ], []);
 
+
     const handleDownload = async (file) => {
         const { _id, originalname } = file;
-        const response = await axios.get(`${baseUrl}user/getEMCheckedCsvFileById/${_id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                responseType: 'blob',
-            },
-        });
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', originalname);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        try {
+            const response = await axios.get(`${baseUrl}user/getEMCheckedCsvFileById/${_id}`, {
+                responseType: "blob", // Receive the file as a Blob
+                headers: {
+                    Authorization: `Bearer ${token}`, // Send the token in the header
+                },
+            });
+
+            // Create a Blob from the response data
+            const blob = new Blob([response.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a temporary link element
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", originalname); // Set the filename for download
+
+            // Append the link to the document body and trigger the download
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up by removing the link and revoking the Object URL
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error("Error during file download:", error);
+            toast.error("Failed to download file");
+        }
     };
 
     const handleDelete = async (fileId) => {
