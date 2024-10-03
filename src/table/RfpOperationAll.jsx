@@ -15,7 +15,11 @@ import '@syncfusion/ej2-calendars/styles/material.css';
 import '@syncfusion/ej2-popups/styles/material.css';
 import '@syncfusion/ej2-lists/styles/material.css';
 import '@syncfusion/ej2-react-spreadsheet/styles/material.css';
+import DownloadIcon from '@mui/icons-material/Download';
+
+import axios from 'axios';
 import * as XLSX from 'xlsx';
+import baseUrl from '../constant/ConstantApi';
 
 // SpreadsheetViewer Component
 const SpreadsheetViewer = ({ data }) => {
@@ -62,40 +66,45 @@ const RfpOperationAll = () => {
         }
     }, [dispatch, navigate]);
 
-    const handleRead = (fileId) => {
-        const file = files.find(file => file._id === fileId);
-        if (file) {
-            setCurrentFileName(file.originalname); // Use originalname for display
-        }
-        dispatch(readFile({ fileId }))
-            .unwrap()
-            .then((response) => {
-                // Ensure the response contains the file buffer
-                if (response && response.buffer) {
-                    const arrayBuffer = response.buffer;
+    const handleDownload = async (file) => {
+        const { _id, originalname } = file;
+    // Replace with your base URL
+        const token = localStorage.getItem('authToken'); // Assume you have a token stored
 
-                    // Convert ArrayBuffer to Uint8Array
-                    const uint8Array = new Uint8Array(arrayBuffer);
-
-                    // Read the workbook from the Uint8Array
-                    const workbook = XLSX.read(uint8Array, { type: 'array' });
-
-                    // Get the first sheet
-                    const sheetName = workbook.SheetNames[0];
-                    const sheet = workbook.Sheets[sheetName];
-
-                    // Convert the sheet to JSON
-                    const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-                    setExcelData(data);
-                } else {
-                    console.error('No file buffer found in the response');
-                }
-            })
-            .catch((error) => {
-                console.error('Error reading file:', error);
+        try {
+            const response = await axios.get(`${baseUrl}user/getCsvFileByIdOperation/${_id}`, {
+                responseType: "blob", // Receive the file as a Blob
+                headers: {
+                    Authorization: `Bearer ${token}`, // Send the token in the header
+                },
             });
-    };
 
+            // Create a Blob from the response data
+            const blob = new Blob([response.data], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a temporary link element
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", originalname); // Set the filename for download
+
+            // Append the link to the document body and trigger the download
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up by removing the link and revoking the Object URL
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error("Error during file download:", error);
+            alert("Failed to download file");
+        }
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -116,7 +125,7 @@ const RfpOperationAll = () => {
             {
                 accessorKey: 'status',
                 header: 'Status',
-                size: 200,
+                size: 150,
                 Cell: ({ row }) => (
                     <>
                         <Checkbox
@@ -133,9 +142,11 @@ const RfpOperationAll = () => {
                 header: 'Actions',
                 size: 150,
                 Cell: ({ row }) => (
-                    <Tooltip title="View File">
-                        <IconButton onClick={() => handleRead(row.original._id)}>
-                            <VisibilityIcon style={{ cursor: 'pointer', color: 'blue', width: '30px', height: '30px' }} />
+                    <Tooltip title="Download File">
+                        <IconButton onClick={() => handleDownload(row.original)}>
+                            <DownloadIcon
+                                style={{ cursor: 'pointer', color: 'blue', width: '30px', height: '30px' }}
+                            />
                         </IconButton>
                     </Tooltip>
                 ),
