@@ -24,7 +24,7 @@ function OperationChecked() {
       return;
     }
 
-    
+
   };
 
   return (
@@ -34,9 +34,9 @@ function OperationChecked() {
           <Col lg={3}></Col>
           <Col lg={8}>
             <div className='bgColor rounded-3 shadow'>
-              <h4 className='fw-bold py-3 ms-3 text_color'>Operation Checked All Files</h4>
+              <h4 className='fw-bold py-3 ms-3 text_color'>Delivery Checked All Files</h4>
             </div>
-           
+
             <RfpOperationAll />
           </Col>
         </Row>

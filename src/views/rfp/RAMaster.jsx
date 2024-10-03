@@ -4,25 +4,33 @@ import { Col, Container, Row, Button, Modal, Form } from 'react-bootstrap';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SendIcon from '@mui/icons-material/Send';
 import BackupIcon from '@mui/icons-material/Backup';
-import RfpOperation from '../../table/RfpOperation';
-import { uploadOperationFile } from '../../redux/reducer/rpf/operationcsvupload';
-import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData'; // Import fetchCampaigns action
-import { useDropzone } from 'react-dropzone'; // Import react-dropzone
+import { useDropzone } from 'react-dropzone';
+import RAMasterTab from '../../table/RAMasterTab';
+import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
+import { qualitycheckedupload } from '../../redux/reducer/rpf/qualitychecked';
 
-function OperationCheck() {
+function RAMaster() {
   const [show, setShow] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const dispatch = useDispatch();
-  const uploadStatus = useSelector((state) => state.operationfileUpload);
-  const { campaigns, status, error } = useSelector((state) => state.campaigns);
   
-  // Fetch the user role from localStorage
-  const userRole = localStorage.getItem('role'); // assuming 'userRole' is stored in localStorage
+  // Fetch data from Redux store
+  const { campaigns, status, error } = useSelector((state) => state.campaigns);
+  const qualityCheckedState = useSelector((state) => state.qualitycheckedupload);
 
+  // Debugging log
+  console.log('Quality Checked State:', qualityCheckedState);
+
+  const { loading } = qualityCheckedState || { loading: false }; // Fallback to prevent destructuring error
+
+  const userRole = localStorage.getItem('role');
+  
   useEffect(() => {
-    dispatch(fetchCampaigns());
-  }, [dispatch]);
+    if (status === 'idle') {
+      dispatch(fetchCampaigns());
+    }
+  }, [dispatch, status]);
 
   const handleShow = () => {
     if (userRole !== 'oxmanager' && userRole !== 'admin') {
@@ -42,9 +50,9 @@ function OperationCheck() {
     setSelectedFile(e.target.files[0]);
   };
 
-  // Handle drag-and-drop functionality
+  // Drag and drop
   const onDrop = useCallback((acceptedFiles) => {
-    setSelectedFile(acceptedFiles[0]); // Set the first dropped file
+    setSelectedFile(acceptedFiles[0]);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -62,14 +70,14 @@ function OperationCheck() {
     formData.append('campaignCode', selectedCampaignData?.campaignCode || '');
     formData.append('file', selectedFile);
 
-    dispatch(uploadOperationFile(formData))
+    dispatch(qualitycheckedupload(formData))
       .unwrap()
       .then(() => {
         alert('File uploaded successfully!');
         handleClose();
       })
-      .catch(() => {
-        alert('File upload failed. Please try again.');
+      .catch((err) => {
+        alert(`File upload failed: ${err}`);
       });
   };
 
@@ -80,7 +88,7 @@ function OperationCheck() {
           <Col lg={3}></Col>
           <Col lg={8}>
             <div className="bgColor rounded-3 shadow">
-              <h4 className="fw-bold py-3 ms-3 text_color">Delivery Final Check RFP List</h4>
+              <h4 className="fw-bold py-3 ms-3 text_color">Research Analyst Master Files</h4>
             </div>
             <div className="my-3 d-flex justify-content-end">
               <Button variant="primary" className="p-2" onClick={handleShow}>
@@ -96,6 +104,8 @@ function OperationCheck() {
                       <Form.Label>Select Campaign</Form.Label>
                       <Form.Control as="select" onChange={handleCampaignChange} value={selectedCampaign}>
                         <option value="">Select Campaign</option>
+                        {status === 'loading' && <option>Loading campaigns...</option>}
+                        {status === 'failed' && <option>Error loading campaigns</option>}
                         {status === 'succeeded' && campaigns.length > 0 ? (
                           campaigns.map((campaign) => (
                             <option key={campaign._id} value={campaign._id}>
@@ -103,12 +113,11 @@ function OperationCheck() {
                             </option>
                           ))
                         ) : (
-                          <option>Loading campaigns...</option>
+                          status === 'succeeded' && <option>No campaigns found</option>
                         )}
                       </Form.Control>
                     </Form.Group>
 
-                    {/* Drag and Drop Area */}
                     <div
                       {...getRootProps()}
                       className={`dropzone mt-3 p-3 border border-dashed rounded-3 bg-primary text-white ${isDragActive ? 'active' : ''}`}
@@ -130,34 +139,27 @@ function OperationCheck() {
                       )}
                     </div>
 
-                    {/* Show the selected file name */}
                     {selectedFile && (
                       <div className="mt-3">
                         <strong>Selected File:</strong> {selectedFile.name}
                       </div>
                     )}
 
-                    {/* Fallback file input */}
                     <Form.Group controlId="formFile" className="mt-3">
                       <Form.Label>Or upload a file manually</Form.Label>
                       <Form.Control type="file" onChange={handleFileChange} />
                     </Form.Group>
 
                     <div className="mt-3">
-                      <Button
-                        variant="success"
-                        onClick={handleFileUpload}
-                        disabled={uploadStatus === 'loading'}
-                      >
-                        <SendIcon /> Send
+                      <Button variant="success" onClick={handleFileUpload} disabled={loading}>
+                        <SendIcon /> {loading ? 'Uploading...' : 'Send'}
                       </Button>
                     </div>
                   </Form>
                 </Modal.Body>
               </Modal>
             </div>
-
-            <RfpOperation />
+            <RAMasterTab />
           </Col>
         </Row>
       </Container>
@@ -165,4 +167,4 @@ function OperationCheck() {
   );
 }
 
-export default OperationCheck;
+export default RAMaster;

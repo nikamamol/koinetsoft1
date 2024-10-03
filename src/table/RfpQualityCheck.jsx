@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
-import { fetchFileDataAll, readFile, updateFileStatus, updateCsvFileById } from '../redux/reducer/rpf/getcsvfiledata';
+import { fetchFileDataAll, readFile, updateFileStatus, updateCsvFileById, downloadFile } from '../redux/reducer/rpf/getcsvfiledata';
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 
@@ -72,6 +74,13 @@ const RfpQualityCheck = () => {
             });
     };
 
+    const handleDownload = (fileId, filename) => {
+        dispatch(downloadFile({ fileId, filename }))
+            .unwrap()
+            .catch((error) => {
+                console.error('Error downloading file:', error);
+            });
+    };
     // Handle row edit and update the excelData state, then call the update API
     const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
         try {
@@ -217,16 +226,22 @@ const RfpQualityCheck = () => {
                 header: 'Actions',
                 Cell: ({ row }) => (
                     <div className="d-flex gap-3">
-                        <Tooltip title="Read File">
-                            <IconButton onClick={() => handleRead(row.original.fileId)}>
-                                <RemoveRedEyeIcon
-                                    style={{ cursor: 'pointer', color: 'black', width: '30px', height: '30px' }}
+                        <Tooltip title="Download File">
+                            <IconButton >
+                                <CloudDownloadIcon
+
+                                    style={{
+                                        color: "black",
+                                        width: '30px',
+                                        height: '30px'
+                                    }}
+                                    onClick={() => handleDownload(row.original.fileId, row.original.filename)}
                                 />
                             </IconButton>
                         </Tooltip>
                     </div>
                 ),
-                size: 200,
+                size: 150,
             },
         ],
         [handleRead, handleCheckboxChange, checkboxes]

@@ -69,6 +69,15 @@ import { registerLicense } from '@syncfusion/ej2-base';
 import OperationChecked from './views/rfp/OperationChecked';
 import CreateNewInvoice from './views/billing/CreateNewInvoice';
 import ViewInvoiceById from './views/billing/ViewInvoiceById';
+import RAMaster from './views/rfp/RAMaster';
+import QualityChecked from './views/rfp/QualityChecked';
+import QualityMaster from './views/rfp/QualityMaster';
+import QualityDoneShowEmail from './views/rfp/QualityDoneShowEmail';
+import EMChecked from './views/rfp/EMChecked';
+import EMDoneShowQuality from './views/rfp/EMDoneShowQuality';
+import EMMasterFile from './views/rfp/EMMasterFile';
+import OperationMaster from './views/rfp/OperationMaster';
+// import QualityMasterTab from './table/QualityMasterTab';
 
 
 const Layout = ({ children }) => {
@@ -121,6 +130,15 @@ function App() {
             <Route path="/rfp/qualitycheck" element={<QualityCheck />} />
             <Route path="/rfp/emailcheck" element={<EmailCheck />} />
             <Route path="/rfp/operationallcheckedfiles" element={<OperationChecked />} />
+            <Route path="/rfp/receivedmaster" element={<RAMaster />} />
+            <Route path="/rfp/qualitychecked" element={<QualityChecked />} />
+            <Route path="/rfp/qualitymaster" element={<QualityMaster />} />
+            <Route path="/rfp/qualitydoneshowemail" element={<QualityDoneShowEmail />} />
+            <Route path="/rfp/emcheckedfilesand_upload" element={<EMChecked />} />
+            <Route path="/rfp/emdoneshowquality" element={<EMDoneShowQuality />} />
+            <Route path="/rfp/emmasterfile" element={<EMMasterFile />} />
+            <Route path="/rfp/operationmaster" element={<OperationMaster />} />
+            {/* <Route path="/rfp/qualitymastertab" element={<QualityMasterTab />} /> */}
             {/* Agency */}
             <Route path="/agency/myengencies" element={<MyEngencies />} />
             <Route path="/agency/inviteagency" element={<InviteAgencies />} />
