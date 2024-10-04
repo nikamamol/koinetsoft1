@@ -13,20 +13,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchClients } from '../redux/reducer/billing/ClientSlice';
 import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData';
 import { fetchFiles } from '../redux/reducer/rpf/operatilallfile';
+import { fetchCsvFilesbyUnwantedLeads } from "../redux/reducer/rpf/getUnwantedLeads"
 
 function MainDashboard() {
     const [currentMonth, setCurrentMonth] = useState('');
     const [currentYear, setCurrentYear] = useState('');
-    const dispatch = useDispatch();
+    const [totalLeads, setTotalLeads] = useState(0);
+    const [totalUnwantedLeads, setTotalUnwantedLeads] = useState(0);
 
+    const dispatch = useDispatch();
     // Fetch campaigns and clients from Redux state
     const { campaigns } = useSelector((state) => state.campaigns);
     const clients = useSelector((state) => state.clients.data);
 
-    const [totalLeads, setTotalLeads] = useState(0);
 
     const { files } = useSelector((state) => state.rfp);
-
+    const { csvFiles } = useSelector((state) => state.csvFileCheckedbyUnwantedLeads);
 
     const campaignCount = campaigns ? campaigns.length : 0;  // Calculate campaign count
     const clientCount = clients ? clients.length : 0;
@@ -48,6 +50,7 @@ function MainDashboard() {
         dispatch(fetchClients());    // Fetch clients on mount
         dispatch(fetchCampaigns());  // Fetch campaigns on mount
         dispatch(fetchFiles());  // Fetch campaigns on mount
+        dispatch(fetchCsvFilesbyUnwantedLeads())
     }, [dispatch])
 
     useEffect(() => {
@@ -55,6 +58,12 @@ function MainDashboard() {
             countLeads(files);
         }
     }, [files]);
+    useEffect(() => {
+        if (csvFiles && csvFiles.length > 0) {
+            unwantedCountLeads(csvFiles);
+        }
+    }, [files]);
+
 
     // Function to count leads based on buffer content (Excel data)
     const countLeads = (files) => {
@@ -77,7 +86,28 @@ function MainDashboard() {
 
         setTotalLeads(leadCount);
     };
-// Total lead count is direct operation upload main file 
+
+    const unwantedCountLeads = (files) => {
+        let unwantedLeadCount = 0;
+
+        csvFiles.forEach(file => {
+            if (file.content && file.content.data) {
+                // Convert buffer data to a Uint8Array
+                const uint8Array = new Uint8Array(file.content.data);
+
+                // Read Excel data using XLSX
+                const workbook = XLSX.read(uint8Array, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];  // Assuming first sheet contains data
+                const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+                // Count the rows in the worksheet (each row could represent a lead)
+                unwantedLeadCount += worksheet.length;
+            }
+        });
+
+        setTotalUnwantedLeads(unwantedLeadCount);
+    }
+    // Total lead count is direct operation upload main file 
     return (
         <div>
             <Container fluid className='my-3'>
@@ -147,11 +177,11 @@ function MainDashboard() {
                             <div className="row">
                                 {[
                                     { label: "Total Leads", count: totalLeads, bgClass: "bg-label-primary", iconClass: <PersonOutlineIcon /> },
-                                    { label: "Total Client Approved", count: 20, bgClass: "bg-label-success", iconClass: <PersonOutlineIcon /> },
-                                    { label: "Total Rejected", count: "05", bgClass: "bg-label-danger", iconClass: <PersonOutlineIcon /> },
-                                    { label: "Total Inprogress", count: 25, bgClass: "bg-label-warning", iconClass: <PersonOutlineIcon /> }
+                                    // { label: "Total Client Approved", count: 20, bgClass: "bg-label-success", iconClass: <PersonOutlineIcon /> },
+                                    { label: "Total Rejected", count: totalUnwantedLeads, bgClass: "bg-label-danger", iconClass: <PersonOutlineIcon /> },
+                                    // { label: "Total Inprogress", count: 25, bgClass: "bg-label-warning", iconClass: <PersonOutlineIcon /> }
                                 ].map((item, index) => (
-                                    <div className="col-lg-3 col-md-12 col-6 mb-4" key={index}>
+                                    <div className="col-lg-6 col-md-12 col-6 mb-4" key={index}>
                                         <div className="card h-100 cardShadow border-0">
                                             <div className="card-body">
                                                 <div className="d-flex">
@@ -206,7 +236,7 @@ function MainDashboard() {
                                 <div className="card h-100 border-0 rounded-3 sidebar_bg">
                                     <div className="card-body">
                                         <div className='text-start mb-5'>
-                                        <p className="card-title fs-4">Campaign Revenue - {currentMonth} {currentYear}</p>
+                                            <p className="card-title fs-4">Campaign Revenue - {currentMonth} {currentYear}</p>
                                         </div>
                                         <h6 className="card-subtitle mb-2 ">Total Client <span> : {clientCount}</span></h6>
 

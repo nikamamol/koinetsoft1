@@ -29,6 +29,14 @@ export const fetchCampaignById = createAsyncThunk(
     }
 );
 
+// Create an async thunk for updating a campaign status
+export const updateCampaignStatus = createAsyncThunk(
+    'campaigns/updateCampaignStatus',
+    async({ id, status }) => {
+        const response = await axios.put(`${baseUrl}user/campaigns/${id}`, { status });
+        return response.data;
+    }
+);
 
 // Create a slice
 const campaignsSlice = createSlice({
@@ -56,6 +64,22 @@ const campaignsSlice = createSlice({
                 state.currentCampaign = action.payload;
             })
             .addCase(fetchCampaignById.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(updateCampaignStatus.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateCampaignStatus.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                // You might want to update the campaigns array with the updated campaign
+                const updatedCampaign = action.payload;
+                const index = state.campaigns.findIndex(campaign => campaign._id === updatedCampaign._id);
+                if (index !== -1) {
+                    state.campaigns[index] = updatedCampaign; // Update the specific campaign in the array
+                }
+            })
+            .addCase(updateCampaignStatus.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             });

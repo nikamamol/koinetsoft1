@@ -672,10 +672,8 @@ function ResponsiveDrawer(props) {
             {isCollapseCamp ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </ListItemButton>
         </ListItem>
-        {/* Collapse for Campaigns */}
-        <Collapse in={openCampaigns} timeout="auto" unmountOnExit>
+        {/* <Collapse in={openCampaigns} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {/* Enterprises */}
             <ListItem disablePadding sx={{ display: "block" }} onClick={handleEnterprisesClick}>
               <ListItemButton
                 sx={{
@@ -685,16 +683,13 @@ function ResponsiveDrawer(props) {
                 }}
               >
                 <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
-                  {/* No icon needed for Enterprise */}
                 </ListItemIcon>
                 <ListItemText primary="Enterprises" />
                 {openEnterprises ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItemButton>
             </ListItem>
-            {/* Collapse for Enterprises */}
             <Collapse in={openEnterprises} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                {/* Options under Enterprises */}
                 {[
                   { text: "All Campaigns", path: "/campaigns/enterprises/allCampaigns" },
                   { text: "Active Campaigns", path: "/campaigns/enterprises/activecampaigns" },
@@ -710,7 +705,6 @@ function ResponsiveDrawer(props) {
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
-                        {/* No icon specified for dropdown items */}
                       </ListItemIcon>
                       <ListItemText primary={item.text} />
                     </ListItemButton>
@@ -719,9 +713,9 @@ function ResponsiveDrawer(props) {
               </List>
             </Collapse>
           </List>
-        </Collapse>
+        </Collapse> */}
         {/* Agency */}
-        <Collapse in={openCampaigns} timeout="auto" unmountOnExit>
+        {/* <Collapse in={openCampaigns} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem disablePadding sx={{ display: "block" }} onClick={handleAgencyClick}>
               <ListItemButton
@@ -732,16 +726,13 @@ function ResponsiveDrawer(props) {
                 }}
               >
                 <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
-                  {/* No icon needed for Agency */}
                 </ListItemIcon>
                 <ListItemText primary="Agency" />
                 {openAgency ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItemButton>
             </ListItem>
-            {/* Collapse for Agency */}
             <Collapse in={openAgency} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                {/* Options under Agency */}
                 {[
                   { text: "All Campaigns", path: "/campaigns/agency/allCampaigns" },
                   { text: "Active Campaigns", path: "/campaigns/agency/activecampaigns" },
@@ -757,7 +748,6 @@ function ResponsiveDrawer(props) {
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
-                        {/* No icon specified for dropdown items */}
                       </ListItemIcon>
                       <ListItemText primary={item.text} />
                     </ListItemButton>
@@ -766,7 +756,7 @@ function ResponsiveDrawer(props) {
               </List>
             </Collapse>
           </List>
-        </Collapse>
+        </Collapse> */}
         {/* In-House Campaigns */}
         <Collapse in={openCampaigns} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
@@ -775,13 +765,11 @@ function ResponsiveDrawer(props) {
                 sx={{
                   minHeight: 48,
                   justifyContent: "center",
-                  px: 7,
+                  px: 5,
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" }}>
-                  {/* No icon needed for In-House Campaigns */}
-                </ListItemIcon>
-                <ListItemText primary="In-House Campaigns" />
+              
+                <ListItemText primary="Your Campaigns" />
                 {openInHouse ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItemButton>
             </ListItem>
@@ -791,9 +779,12 @@ function ResponsiveDrawer(props) {
                 {/* Options under In-House Campaigns */}
                 {[
                   { text: "All Campaigns", path: "/campaigns/inhousecampaigns/allCampaigns" },
+                  { text: "Completed Campaigns", path: "/campaigns/inhousecampaigns/completedcampaign" },
                   { text: "Active Campaigns", path: "/campaigns/inhousecampaigns/activecampaigns" },
-                  { text: "Paused Campaigns", path: "/campaigns/inhousecampaigns/pausedCampaigns" },
-                  { text: "Closed Campaigns", path: "/campaigns/inhousecampaigns/closedCampaigns" },
+                  // { text: "Paused Campaigns", path: "/campaigns/inhousecampaigns/pausedCampaigns" },
+                  { text: "New Campaigns", path: "/campaigns/inhousecampaigns/inhousenewcampaign" },
+                  // { text: "Closed Campaigns", path: "/campaigns/inhousecampaigns/closedCampaigns" },
+                  { text: "Expired Campaigns", path: "/campaigns/inhousecampaigns/expiredcampaigns" },
                   { text: "Create Campaign", path: "/campaigns/inhousecampaigns/createCampaign" },
                 ].map((item) => (
                   <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>

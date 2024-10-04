@@ -78,6 +78,9 @@ import EMDoneShowQuality from './views/rfp/EMDoneShowQuality';
 import EMMasterFile from './views/rfp/EMMasterFile';
 import OperationMaster from './views/rfp/OperationMaster';
 import UnwantedLeads from './views/rfp/UnwantedLeads';
+import NewInHouseCamp from './views/leads/inhousecampaign/NewInHouseCamp';
+import ExpiredCampaignIn from './views/leads/inhousecampaign/ExpiredCampaignIn';
+import InHouseCompletedCampaign from './views/leads/inhousecampaign/InHouseCompletedCampaign';
 // import QualityMasterTab from './table/QualityMasterTab';
 
 
@@ -162,8 +165,11 @@ function App() {
             <Route path="/campaigns/inhousecampaigns/activecampaigns" element={<ActiveCampaignsIn />} />
             <Route path="/campaigns/inhousecampaigns/allCampaigns" element={<AllCampaignsIn />} />
             <Route path="/campaigns/inhousecampaigns/closedCampaigns" element={<ClosedCampaignsIn />} />
-            <Route path="/campaigns/inhousecampaigns/pausedCampaigns" element={<PausedCampaignsIn />} />
+            {/* <Route path="/campaigns/inhousecampaigns/pausedCampaigns" element={<PausedCampaignsIn />} /> */}
             <Route path="/campaigns/inhousecampaigns/createCampaign" element={<CreateCampaign />} />
+            <Route path="/campaigns/inhousecampaigns/expiredcampaigns" element={<ExpiredCampaignIn />} />
+            <Route path="/campaigns/inhousecampaigns/completedcampaign" element={<InHouseCompletedCampaign />} />
+            <Route path="/campaigns/inhousecampaigns/inhousenewcampaign" element={<NewInHouseCamp />} />
             <Route path="/campaigns/inhousecampaigns/campaigndetail/:id" element={<ViewCampaignDetails />} />
 
             {/* billing */}
