@@ -5,6 +5,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllraMasterFile, downloadFileByRaMaster, deleteRaMasterFile } from '../redux/reducer/rpf/ramasterdataget'; // Adjust the import path
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import baseUrl from '../constant/ConstantApi';
 
 const RAMasterTab = () => {
   const dispatch = useDispatch();
@@ -85,17 +88,62 @@ const RAMasterTab = () => {
   );
 
   // Handle file download
-  const handleDownload = (file) => {
+  const handleDownload = async (file) => {
     const { _id, originalname } = file;
-    dispatch(downloadFileByRaMaster({ fileId: _id, filename: originalname }));
-  };
+    const token = localStorage.getItem('authToken');
+    try {
+        const response = await axios.get(`${baseUrl}user/getramasterCsvFileData/${_id}`, {
+            responseType: "blob", // Receive the file as a Blob
+            headers: {
+                Authorization: `Bearer ${token}`, // Send the token in the header
+            },
+        });
+
+        // Create a Blob from the response data
+        const blob = new Blob([response.data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        // Create a URL for the Blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Create a temporary link element
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", originalname); // Set the filename for download
+
+        // Append the link to the document body and trigger the download
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up by removing the link and revoking the Object URL
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+        console.error("Error during file download:", error);
+        toast.error("Failed to download file");
+    }
+};
 
   // Handle file deletion
-  const handleDelete = (fileId) => {
+  const handleDelete = async (fileId) => {
+    const token = localStorage.getItem("authToken");
     if (window.confirm('Are you sure you want to delete this file?')) {
-      dispatch(deleteRaMasterFile(fileId));
+        try {
+            await axios.delete(`${baseUrl}user/deleteRaMasterCsvFileById/${fileId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            dispatch(fetchAllraMasterFile()); // Correct action dispatched here
+            toast.success('File deleted successfully');
+        } catch (error) {
+            console.error("Error deleting file:", error);
+            toast.error('Failed to delete file');
+        }
     }
-  };
+};
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;

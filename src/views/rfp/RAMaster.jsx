@@ -7,7 +7,8 @@ import BackupIcon from '@mui/icons-material/Backup';
 import { useDropzone } from 'react-dropzone';
 import RAMasterTab from '../../table/RAMasterTab';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
-import { qualitycheckedupload } from '../../redux/reducer/rpf/qualitychecked';
+import {ramasterupload} from '../../redux/reducer/rpf/ramasterupload';
+
 
 function RAMaster() {
   const [show, setShow] = useState(false);
@@ -17,7 +18,7 @@ function RAMaster() {
   
   // Fetch data from Redux store
   const { campaigns, status, error } = useSelector((state) => state.campaigns);
-  const qualityCheckedState = useSelector((state) => state.qualitycheckedupload);
+  const qualityCheckedState = useSelector((state) => state.ramasterfileUpload);
 
   // Debugging log
   console.log('Quality Checked State:', qualityCheckedState);
@@ -70,7 +71,7 @@ function RAMaster() {
     formData.append('campaignCode', selectedCampaignData?.campaignCode || '');
     formData.append('file', selectedFile);
 
-    dispatch(qualitycheckedupload(formData))
+    dispatch(ramasterupload(formData))
       .unwrap()
       .then(() => {
         alert('File uploaded successfully!');
