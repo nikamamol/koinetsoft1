@@ -22,6 +22,8 @@ function ViewLandingPages() {
     return date.toLocaleDateString('en-GB', options); // Formats date as "24 Jun 2024"
   };
 
+  const userRole = localStorage.getItem('role');
+
   return (
     <div>
       <Container fluid className="my-5">
@@ -33,44 +35,50 @@ function ViewLandingPages() {
             <div className="bgColor rounded-3 shadow">
               <h4 className="fw-bold py-3 ms-3 text_color">View All Landing Pages</h4>
             </div>
-            <div className="container-xxl flex-grow-1 container-p-y">
-              <div className="card border-0 rounded-4 shadow">
-                <div className="table-responsive text-nowrap">
-                  {templateStatus === 'loading' && <p>Loading...</p>}
-                  {templateStatus === 'failed' && <p>Error: {error}</p>}
-                  {templateStatus === 'succeeded' && (
-                    <table className="table table-hover" id="myTable">
-                      <thead>
-                        <tr className='p-4'>
-                          <th>Sr No</th>
-                          <th>Title</th>
-                          <th>Date</th>
-                          <th>View</th>
-                        </tr>
-                      </thead>
-                      <tbody className="table-border-bottom-0">
-                        {templates.map((template, index) => (
-                          <tr key={template._id}>
-                            <td>
-                              <i className="fab fa-angular fa-lg text-danger me-3"></i> <strong>{index + 1}</strong>
-                            </td>
-                            <td>
-                              <p>{template.template_title}</p>
-                            </td>
-                            <td>{formatDate(template.createdAt)}</td>
-                            <td>
-                              <a className="dropdown-item delete" href={`/viewpage/${template._id}`}>
-                                <RemoveRedEyeIcon />
-                              </a>
-                            </td>
+            {userRole === 'admin' || userRole === "oxmanager" || userRole === "email_marketing" ? (
+              <div className="container-xxl flex-grow-1 container-p-y">
+                <div className="card border-0 rounded-4 shadow">
+                  <div className="table-responsive text-nowrap">
+                    {templateStatus === 'loading' && <p>Loading...</p>}
+                    {templateStatus === 'failed' && <p>Error: {error}</p>}
+                    {templateStatus === 'succeeded' && (
+                      <table className="table table-hover" id="myTable">
+                        <thead>
+                          <tr className="p-4">
+                            <th>Sr No</th>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>View</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
+                        </thead>
+                        <tbody className="table-border-bottom-0">
+                          {templates.map((template, index) => (
+                            <tr key={template._id}>
+                              <td>
+                                <i className="fab fa-angular fa-lg text-danger me-3"></i> <strong>{index + 1}</strong>
+                              </td>
+                              <td>
+                                <p>{template.template_title}</p>
+                              </td>
+                              <td>{formatDate(template.createdAt)}</td>
+                              <td>
+                                <a className="dropdown-item delete" href={`/viewpage/${template._id}`}>
+                                  <RemoveRedEyeIcon />
+                                </a>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="text-center mt-4">
+                <h5 className="text-danger">User not authorized to view this page</h5>
+              </div>
+            )}
           </Col>
         </Row>
       </Container>

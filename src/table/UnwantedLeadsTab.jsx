@@ -12,6 +12,8 @@ import { fetchCsvFilesbyUnwantedLeads } from '../redux/reducer/rpf/getUnwantedLe
 const UnwantedLeadsTab = () => {
     const dispatch = useDispatch();
     const { csvFiles = [], loading, error } = useSelector((state) => state.csvFileCheckedbyUnwantedLeads || {}); // Ensure correct slice name
+    const userType = localStorage.getItem('role');
+    const allowedRoles = ['oxmanager', 'admin'];
 
     useEffect(() => {
         dispatch(fetchCsvFilesbyUnwantedLeads()); // Dispatch the action to fetch files
@@ -138,6 +140,9 @@ const UnwantedLeadsTab = () => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+    if (!allowedRoles.includes(userType)) {
+        return <p className='text-danger'>You do not have permission to view this data.</p>;
+    }
 
     return (
         <div>

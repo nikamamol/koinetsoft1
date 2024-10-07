@@ -12,10 +12,14 @@ import baseUrl from '../constant/ConstantApi';
 const QualityDoneShowEmailTab = () => {
     const dispatch = useDispatch();
     const { csvFiles, loading, error } = useSelector((state) => state.csvFileCheckedbyQualityChecked);
-const token=localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
+    const userRole = localStorage.getItem('role'); // Assuming 'userRole' is the key used to store the role in local storage
+
     useEffect(() => {
-        dispatch(fetchCsvFilesbyQualityChecked());
-    }, [dispatch]);
+        if (userRole) {
+            dispatch(fetchCsvFilesbyQualityChecked());
+        }
+    }, [dispatch, userRole]);
 
     const formatDate = (dateString) => {
         const options = { day: 'numeric', month: 'short', year: 'numeric' };
@@ -72,6 +76,7 @@ const token=localStorage.getItem('authToken');
                             />
                         </IconButton>
                     </Tooltip>
+                    {/* Uncomment if you need the delete action */}
                     {/* <Tooltip title="Delete File">
                         <IconButton onClick={() => handleDelete(row.original._id)}>
                             <DeleteIcon
@@ -83,7 +88,6 @@ const token=localStorage.getItem('authToken');
             ),
         },
     ], []);
-
 
     const handleDownload = async (file) => {
         const { _id, originalname } = file;
@@ -121,6 +125,7 @@ const token=localStorage.getItem('authToken');
             toast.error("Failed to download file");
         }
     };
+
     const handleDelete = async (fileId) => {
         if (window.confirm('Are you sure you want to delete this file?')) {
             try {
@@ -130,12 +135,18 @@ const token=localStorage.getItem('authToken');
                     },
                 });
                 dispatch(fetchCsvFilesbyQualityChecked()); // Refresh the file list after deletion
-               toast.success('File deleted successfully');
+                toast.success('File deleted successfully');
             } catch (error) {
                 alert(`Failed to delete file: ${error.message}`);
             }
         }
     };
+
+    // Check if the user role is allowed
+    const allowedRoles = ['oxmanager', 'admin', 'email_marketing'];
+    if (!allowedRoles.includes(userRole)) {
+        return <p style={{ color: 'red' }}>You do not have permission to view this content.</p>;
+    }
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;

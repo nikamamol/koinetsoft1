@@ -15,7 +15,7 @@ function AddClient() {
     city: '',
     pincode: ''
   });
-
+  const userRole = localStorage.getItem('role');
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -23,7 +23,7 @@ function AddClient() {
     });
   };
 
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     axios.post(`${baseUrl}user/addnewClient`, formData)
@@ -330,7 +330,7 @@ function AddClient() {
                         </div>
                       </div>
                       <div className="text-center">
-                        <button type="submit" className="btn btn-danger me-2">Save</button>
+                        <button type="submit" className="btn btn-danger me-2" disabled={!(userRole === 'oxmanager' || userRole === 'admin')}>Save</button>
                         <button type="reset" className="btn btn-outline-secondary" onClick={() => setFormData({
                           company_name: '',
                           client_name: '',

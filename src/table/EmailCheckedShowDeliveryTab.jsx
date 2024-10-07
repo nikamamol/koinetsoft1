@@ -4,20 +4,19 @@ import { IconButton, Tooltip, Checkbox } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchCsvFilesbyEMChecked } from '../redux/reducer/rpf/getEmCheckData'; // Adjust the path based on your structure
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
-import { fetchCsvFilesbyQualityMaster } from '../redux/reducer/rpf/getQualityMasterData';
 
-const QualityMasterTab = () => {
+
+function EmailCheckedShowDeliveryTab() {
     const dispatch = useDispatch();
-    const { csvFiles = [], loading, error } = useSelector((state) => state.csvFileCheckedbyQualityMaster || {});
+    const { csvFiles, loading, error } = useSelector((state) => state.csvFileCheckedbyEMChecked);
     const token = localStorage.getItem('authToken');
-    const userRole = localStorage.getItem('role'); // Assuming you store user role in local storage
-
 
     useEffect(() => {
-        dispatch(fetchCsvFilesbyQualityMaster());
+        dispatch(fetchCsvFilesbyEMChecked()); // Ensure correct action is dispatched
     }, [dispatch]);
 
     const formatDate = (dateString) => {
@@ -25,6 +24,7 @@ const QualityMasterTab = () => {
         return new Date(dateString).toLocaleDateString('en-GB', options);
     };
 
+    const userType = localStorage.getItem('role');
     const columns = useMemo(() => [
         {
             accessorKey: '_id',
@@ -61,6 +61,7 @@ const QualityMasterTab = () => {
                 const status = cell.getValue();
                 return <Checkbox color="success" checked={status === 'Done'} />;
             },
+
         },
         {
             accessorKey: 'actions',
@@ -91,7 +92,7 @@ const QualityMasterTab = () => {
     const handleDownload = async (file) => {
         const { _id, originalname } = file;
         try {
-            const response = await axios.get(`${baseUrl}user/getQualityMasterCsvFileById/${_id}`, {
+            const response = await axios.get(`${baseUrl}user/getEMCheckedCsvFileById/${_id}`, {
                 responseType: "blob", // Receive the file as a Blob
                 headers: {
                     Authorization: `Bearer ${token}`, // Send the token in the header
@@ -128,38 +129,35 @@ const QualityMasterTab = () => {
     const handleDelete = async (fileId) => {
         if (window.confirm('Are you sure you want to delete this file?')) {
             try {
-                await axios.delete(`${baseUrl}user/deleteQualityMasterCsvFileById/${fileId}`, {
+                await axios.delete(`${baseUrl}user/deleteEMCheckedCsvFileById/${fileId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                dispatch(fetchCsvFilesbyQualityMaster()); // Correct action dispatched here
+                dispatch(fetchCsvFilesbyEMChecked()); // Refresh the file list after deletion
                 toast.success('File deleted successfully');
             } catch (error) {
-                console.error("Error deleting file:", error);
-                toast.error('Failed to delete file');
+                alert(`Failed to delete file: ${error.message}`);
             }
         }
     };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
-   
-    // Check if user role is one of the allowed roles
-    if (userRole !== 'quality' && userRole !== 'oxmanager' && userRole !== 'admin') {
-        return <p>You do not have permission to view this content.</p>;
-    }
 
     return (
         <div>
-            <MaterialReactTable
-                columns={columns}
-                data={csvFiles}
-                enableColumnResizing
-                enableStickyHeader
-            />
+            {userType === 'admin' || userType === "oxmanager" ?
+                <MaterialReactTable
+                    columns={columns}
+                    data={csvFiles}
+                    enableColumnResizing
+                    enableStickyHeader
+                /> : <div className='text-center mt-2'>
+                    <p className='text-danger'>You do not have permission to view this content.</p>
+                </div>}
         </div>
     );
-};
+}
 
-export default QualityMasterTab;
+export default EmailCheckedShowDeliveryTab

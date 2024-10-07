@@ -142,7 +142,7 @@ const RfpQualityCheck = () => {
     const role = localStorage.getItem('role');
 
     const filteredFiles = useMemo(() => {
-        if (role !== 'quality' && role !== 'admin') return [];
+        if (role !== 'quality' ) return [];
         return files.filter(file =>
             file.status.some(statusItem => statusItem.userType === 'Quality')
         );

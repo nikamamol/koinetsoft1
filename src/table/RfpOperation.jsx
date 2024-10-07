@@ -10,21 +10,16 @@ const RfpActive = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // For redirection
   const { files, status, error } = useSelector((state) => state.files);
-  
+
   const [checkboxes, setCheckboxes] = useState({});
+  const userType = localStorage.getItem('role');
+  const allowedRoles = ['oxmanager']; // Specify allowed roles
+
 
   useEffect(() => {
-    // Check userType from localStorage
-    const userType = localStorage.getItem('role');
-    
-    if (userType !== 'oxmanager' && userType !== 'admin') {
-      // If user is not an oxmanager, redirect or show an error
-      alert('Access Denied: You do not have permission to view this page.');
-      navigate('/dashboard'); // Replace with appropriate route for unauthorized access
-    } else {
-      // Fetch files if the user is authorized
-      dispatch(fetchFiles());
-    }
+    // Fetch files if the user is authorized
+    dispatch(fetchFiles());
+
   }, [dispatch, navigate]);
 
   const formatDate = (dateString) => {
@@ -115,22 +110,25 @@ const RfpActive = () => {
     ],
     [checkboxes]
   );
-
+  if (!allowedRoles.includes(userType)) {
+    return <p className='text-danger'>You do not have permission to view this data.</p>;
+  }
   return (
     <div>
-      
+
       {status === 'loading' && <p>Loading files...</p>}
       {status === 'succeeded' && files.length > 0 ? (
         <MaterialReactTable
           columns={columns}
           data={files}
-          // other props if needed
+        // other props if needed
         />
       ) : status === 'succeeded' && files.length === 0 ? (
         <p>No files available</p>
       ) : (
         <p></p>
       )}
+      
     </div>
   );
 };

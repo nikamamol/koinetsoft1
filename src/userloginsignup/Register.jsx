@@ -117,6 +117,7 @@ const Register = () => {
                                         <option value="user">User</option>
                                         <option value="supervisor">Supervisor</option>
                                         <option value="oxmanager">OX Manager</option>
+                                        <option value="reasercher">Reaserch Analyst</option>
                                         <option value="agent">Agent</option>
                                         <option value="client">Client</option>
                                         <option value="quality">Quality</option>

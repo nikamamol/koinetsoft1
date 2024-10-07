@@ -123,7 +123,7 @@ const RfpEmailCheck = () => {
     const role = localStorage.getItem('role');
 
     const filteredFiles = useMemo(() => {
-        if (role !== 'email marketing' && role !== 'admin') return [];
+        if (role !== 'email_marketing' && role !== 'admin' &&   role !== 'oxmanager') return [];
         return files.filter(file =>
             file.status.some(statusItem => statusItem.userType === 'Email Marketing')
         );
@@ -165,17 +165,26 @@ const RfpEmailCheck = () => {
                         .filter(statusItem => statusItem.userType === 'Email Marketing')
                         .map((statusItem) => (
                             <div key={statusItem._id} style={{ display: 'flex', alignItems: 'center' }}>
-                                <Checkbox
-                                    color="success"
-                                    checked={checkboxes[statusItem._id] || false}
-                                    onChange={(e) => handleCheckboxChange(row.original.fileId, statusItem._id, e.target.checked)}
-                                />
+                                {role === 'email_marketing' ? ( // Check if the role is 'email_marketing'
+                                    <Checkbox
+                                        color="success"
+                                        checked={checkboxes[statusItem._id] || false}
+                                        onChange={(e) => handleCheckboxChange(row.original.fileId, statusItem._id, e.target.checked)}
+                                    />
+                                ) : (
+                                    <Checkbox
+                                        color="success"
+                                        checked={checkboxes[statusItem._id] || false}
+                                        disabled // Disable checkbox for unauthorized roles
+                                    />
+                                )}
                                 {statusItem.userType}
                             </div>
                         ))}
                 </div>
             ),
         },
+        
         {
             accessorKey: 'actions',
             header: 'Actions',
@@ -199,7 +208,7 @@ const RfpEmailCheck = () => {
     if (status === 'loading') return <div>Loading...</div>;
     if (status === 'failed') return <div>Error: {error}</div>;
 
-    if (role !== 'email marketing' && role !== 'admin') {
+    if (role !== 'email_marketing' && role !== 'admin' &&   role !== 'oxmanager') {
         return (
             <div className='text-center'>
                 <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page</h1>

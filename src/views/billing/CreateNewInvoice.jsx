@@ -13,7 +13,7 @@ import Logo from "../../assets/Logo.png"
 const Invoice = () => {
     const [invoiceData, setInvoiceData] = useState({
         logo: '',
-        date: 'April 20, 2023',
+        date: 'April 20, 2024',
         invoiceNumber: '3452324',
         clientName: 'Test Pvt Ltd.',
         clientAddress: 'xyz, text, United States',
@@ -353,10 +353,9 @@ const Invoice = () => {
 
 
 
-
-
-
 function CreateNewInvoice() {
+    const userRole = localStorage.getItem('role');
+
     return (
         <div>
             <Container fluid className="my-5">
@@ -367,7 +366,13 @@ function CreateNewInvoice() {
                             <h4 className="fw-bold py-3 ms-3 text_color">Create Invoice</h4>
                         </div>
                         <div>
-                            <Invoice />
+                            {(userRole === 'admin' || userRole === 'oxmanager') ? (
+                                <Invoice />
+                            ) : (
+                                <div className="text-center mt-4">
+                                    <h5 className='text-danger'>User not authorized to view this page</h5>
+                                </div>
+                            )}
                         </div>
                     </Col>
                 </Row>

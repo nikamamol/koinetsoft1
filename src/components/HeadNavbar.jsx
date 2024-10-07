@@ -157,6 +157,7 @@ function ResponsiveDrawer(props) {
     navigate(path);
   };
 
+  const userType = localStorage.getItem('role');
   const drawer = (
     <div className='sidebar_bg'>
 
@@ -168,31 +169,34 @@ function ResponsiveDrawer(props) {
 
       </div>
       {/* <Divider /> */}
-      <List>
-        <ListItem disablePadding sx={{ display: 'block' }}>
-          <ListItemButton
-            component={Link}
-            to="/campaigns/inhousecampaigns/createCampaign"
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 2.5,
-            }}
-            onClick={handleListItemClick}
-          >
-            <ListItemIcon
+      {userType === 'admin' || userType === "oxmanager" ?
+        <List>
+          <ListItem disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              component={Link}
+              to="/campaigns/inhousecampaigns/createCampaign"
               sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
               }}
+              onClick={handleListItemClick}
             >
-              {/* Add any icon here if needed */}
-            </ListItemIcon>
-            <ListItemText sx={{ opacity: open ? 1 : 0 }} className='btn btn-danger'>New Campaign +</ListItemText>
-          </ListItemButton>
-        </ListItem>
-      </List>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                {/* Add any icon here if needed */}
+              </ListItemIcon>
+              <ListItemText sx={{ opacity: open ? 1 : 0 }} className='btn btn-danger'>New Campaign +</ListItemText>
+            </ListItemButton>
+          </ListItem>
+        </List> : null
+      }
+
       {/* Dashboard Section */}
       <List>
         <ListItem disablePadding sx={{ display: 'block' }} onClick={handleListItemClick}>
@@ -377,182 +381,185 @@ function ResponsiveDrawer(props) {
 
       {/* *************RPF Start New******************************************************************** */}
       <List>
-      {/* RPF Main Menu */}
-      <ListItem disablePadding sx={{ display: "block" }} onClick={handleRFPClick}>
-        <ListItemButton
-          sx={{
-            minHeight: 48,
-            justifyContent: open ? "initial" : "center",
-            px: 2.5,
-          }}
-        >
-          <ListItemIcon
+        {/* RPF Main Menu */}
+        <ListItem disablePadding sx={{ display: "block" }} onClick={handleRFPClick}>
+          <ListItemButton
             sx={{
-              minWidth: 0,
-              mr: open ? 3 : "auto",
-              justifyContent: "center",
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
             }}
           >
-            <VerifiedUserIcon />
-          </ListItemIcon>
-          <ListItemText primary="RPF Files" sx={{ opacity: open ? 1 : 0 }} />
-          {isCollapseRFP ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-        </ListItemButton>
-      </ListItem>
-
-      {/* RPF Sub-menus */}
-      <Collapse in={isCollapseRFP} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          {/* RA Team */}
-          <ListItem disablePadding sx={{ display: "block" }} onClick={handleRAClick}>
-            <ListItemButton
+            <ListItemIcon
               sx={{
-                minHeight: 48,
+                minWidth: 0,
+                mr: open ? 3 : "auto",
                 justifyContent: "center",
-                px: 7,
               }}
             >
-              <ListItemText primary="RA Team" />
-              {openRA ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </ListItemButton>
-          </ListItem>
-          <Collapse in={openRA} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {[
-                { text: "PreQA", path: "/rfp/received" },
-                { text: "PreQA All", path: "/rfp/receivedall" },
-                { text: "PreQA Master", path: "/rfp/receivedmaster" },
-              ].map((item) => (
-                <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemText primary={item.text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
+              <VerifiedUserIcon />
+            </ListItemIcon>
+            <ListItemText primary="RPF Files" sx={{ opacity: open ? 1 : 0 }} />
+            {isCollapseRFP ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </ListItemButton>
+        </ListItem>
 
-          {/* Quality Team */}
-          <ListItem disablePadding sx={{ display: "block" }} onClick={handleQualityClick}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: "center",
-                px: 7,
-              }}
-            >
-              <ListItemText primary="Quality Team" />
-              {openQuality ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </ListItemButton>
-          </ListItem>
-          <Collapse in={openQuality} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {[
-                { text: "PreQA Done", path: "/rfp/qualitycheck" },
-                { text: "EM Done", path: "/rfp/emdoneshowquality" },
-                { text: "Quality Checked", path: "/rfp/qualitychecked" },
-                { text: "Quality Master", path: "/rfp/qualitymaster" },
-              ].map((item) => (
-                <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemText primary={item.text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
+        {/* RPF Sub-menus */}
+        <Collapse in={isCollapseRFP} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {/* RA Team */}
+            <ListItem disablePadding sx={{ display: "block" }} onClick={handleRAClick}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: "center",
+                  px: 7,
+                }}
+              >
+                <ListItemText primary="RA Team" />
+                {openRA ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={openRA} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {[
+                  { text: "PreQA", path: "/rfp/received" },
+                  { text: "PreQA All", path: "/rfp/receivedall" },
+                  { text: "PreQA Master", path: "/rfp/receivedmaster" },
+                ].map((item) => (
+                  <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: "center",
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemText primary={item.text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
 
-          {/* Email Team */}
-          <ListItem disablePadding sx={{ display: "block" }} onClick={handleEmailClick}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: "center",
-                px: 7,
-              }}
-            >
-              <ListItemText primary="Email Team" />
-              {openEmail ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </ListItemButton>
-          </ListItem>
-          <Collapse in={openEmail} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {[
-                { text: "PreQA Done", path: "/rfp/emailcheck" },
-                { text: "Quality Done", path: "/rfp/qualitydoneshowemail" },
-                { text: "Email Checked", path: "/rfp/emcheckedfilesand_upload" },
-                { text: "Email Master", path: "/rfp/emmasterfile" },
-              ].map((item) => (
-                <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemText primary={item.text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
+            {/* Quality Team */}
+            <ListItem disablePadding sx={{ display: "block" }} onClick={handleQualityClick}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: "center",
+                  px: 7,
+                }}
+              >
+                <ListItemText primary="Quality Team" />
+                {openQuality ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={openQuality} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {[
+                  { text: "PreQA Done", path: "/rfp/qualitycheck" },
+                  { text: "EM Done", path: "/rfp/emdoneshowquality" },
+                  { text: "Quality Checked", path: "/rfp/qualitychecked" },
+                  { text: "Quality Master", path: "/rfp/qualitymaster" },
+                ].map((item) => (
+                  <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: "center",
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemText primary={item.text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
 
-          {/* Operation Team */}
-          <ListItem disablePadding sx={{ display: "block" }} onClick={handleOperationClick}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: "center",
-                px: 7,
-              }}
-            >
-              <ListItemText primary="Delivery" />
-              {openOperation ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </ListItemButton>
-          </ListItem>
-          <Collapse in={openOperation} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {[
-                { text: "Delivery Check", path: "/rfp/operatinfinalcheck" },
-                { text: "Delivery All", path: "/rfp/operationallcheckedfiles" },
-                { text: "Unwanted Leads", path: "/rfp/unwantedleads" },
-                { text: "Delivery Master", path: "/rfp/operationmaster" },
-              ].map((item) => (
-                <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemText primary={item.text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
-        </List>
-      </Collapse>
-    </List>
+            {/* Email Team */}
+            <ListItem disablePadding sx={{ display: "block" }} onClick={handleEmailClick}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: "center",
+                  px: 7,
+                }}
+              >
+                <ListItemText primary="Email Team" />
+                {openEmail ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={openEmail} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {[
+                  { text: "PreQA Done", path: "/rfp/emailcheck" },
+                  { text: "Quality Done", path: "/rfp/qualitydoneshowemail" },
+                  { text: "Email Checked", path: "/rfp/emcheckedfilesand_upload" },
+                  { text: "Email Master", path: "/rfp/emmasterfile" },
+                ].map((item) => (
+                  <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: "center",
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemText primary={item.text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
+
+            {/* Operation Team */}
+            <ListItem disablePadding sx={{ display: "block" }} onClick={handleOperationClick}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: "center",
+                  px: 7,
+                }}
+              >
+                <ListItemText primary="Delivery" />
+                {openOperation ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={openOperation} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {[
+                  { text: "Delivery Check", path: "/rfp/operatinfinalcheck" },
+                  { text: "EM Done", path: "/rfp/emailcheckedshowdelivery" },
+                  { text: "Quality Done", path: "/rfp/qualitydonefiles" },
+                  { text: "Delivery All", path: "/rfp/operationallcheckedfiles" },
+                  { text: "Unwanted Leads", path: "/rfp/unwantedleads" },
+                  { text: "Delivery Master", path: "/rfp/operationmaster" },
+                ].map((item) => (
+                  <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
+                    <ListItemButton
+                      sx={{
+                        minHeight: 48,
+                        justifyContent: "center",
+                        px: 2.5,
+                      }}
+                    >
+                      <ListItemText primary={item.text} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
+          </List>
+        </Collapse>
+      </List>
       {/* *************RPF End New******************************************************************** */}
 
 
       {/* Enterprise Section */}
-      <List>
+
+      {/* <List>
         <ListItem disablePadding sx={{ display: "block" }} onClick={handleCollapseEnterprise}>
           <ListItemButton
             sx={{
@@ -593,7 +600,7 @@ function ResponsiveDrawer(props) {
             </ListItem>
           ))}
         </Collapse>
-      </List>
+      </List> */}
 
       {/* Agency Section */}
       <List>
@@ -768,7 +775,7 @@ function ResponsiveDrawer(props) {
                   px: 5,
                 }}
               >
-              
+
                 <ListItemText primary="Your Campaigns" />
                 {openInHouse ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItemButton>

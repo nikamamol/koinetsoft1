@@ -55,20 +55,18 @@ const RfpOperationAll = () => {
 
     // Use Redux selectors to access the state
     const { files, status, error } = useSelector((state) => state.rfp);
+    const userType = localStorage.getItem('role');
+    const allowedRoles = ['oxmanager', 'delivery', 'admin'];
 
     useEffect(() => {
-        const userType = localStorage.getItem('role');
-        if (userType !== 'oxmanager' && userType !== 'admin') {
-            alert('Access Denied: You do not have permission to view this page.');
-            navigate('/dashboard');
-        } else {
-            dispatch(fetchFiles()); // Dispatch the action to fetch files
-        }
+
+        dispatch(fetchFiles()); // Dispatch the action to fetch files
+
     }, [dispatch, navigate]);
 
     const handleDownload = async (file) => {
         const { _id, originalname } = file;
-    // Replace with your base URL
+        // Replace with your base URL
         const token = localStorage.getItem('authToken'); // Assume you have a token stored
 
         try {
@@ -155,6 +153,9 @@ const RfpOperationAll = () => {
         []
     );
 
+    if (!allowedRoles.includes(userType)) {
+        return <p className='text-danger'>You do not have permission to view this data.</p>;
+    }
     return (
         <div>
             {excelData.length === 0 ? (

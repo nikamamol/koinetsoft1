@@ -4,7 +4,7 @@ import { IconButton, Tooltip, Checkbox } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllraMasterFile, downloadFileByRaMaster, deleteRaMasterFile } from '../redux/reducer/rpf/ramasterdataget'; // Adjust the import path
+import { fetchAllraMasterFile } from '../redux/reducer/rpf/ramasterdataget'; // Adjust the import path
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import baseUrl from '../constant/ConstantApi';
@@ -13,9 +13,15 @@ const RAMasterTab = () => {
   const dispatch = useDispatch();
   const { files = [], loading, error } = useSelector((state) => state.raFileUpload || {});
 
+  // Retrieve the user's role from localStorage
+  const role = localStorage.getItem('role');
+  const allowedRoles = ['oxmanager', 'researcher', 'admin']; // Specify allowed roles
+
   useEffect(() => {
-    dispatch(fetchAllraMasterFile());
-  }, [dispatch]);
+    if (allowedRoles.includes(role)) {
+      dispatch(fetchAllraMasterFile());
+    }
+  }, [dispatch, role]);
 
   const formatDate = (dateString) => {
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
@@ -92,61 +98,57 @@ const RAMasterTab = () => {
     const { _id, originalname } = file;
     const token = localStorage.getItem('authToken');
     try {
-        const response = await axios.get(`${baseUrl}user/getramasterCsvFileData/${_id}`, {
-            responseType: "blob", // Receive the file as a Blob
-            headers: {
-                Authorization: `Bearer ${token}`, // Send the token in the header
-            },
-        });
+      const response = await axios.get(`${baseUrl}user/getramasterCsvFileData/${_id}`, {
+        responseType: 'blob',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-        // Create a Blob from the response data
-        const blob = new Blob([response.data], {
-            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
+      const blob = new Blob([response.data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
 
-        // Create a URL for the Blob
-        const url = window.URL.createObjectURL(blob);
-
-        // Create a temporary link element
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", originalname); // Set the filename for download
-
-        // Append the link to the document body and trigger the download
-        document.body.appendChild(link);
-        link.click();
-
-        // Clean up by removing the link and revoking the Object URL
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
-
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', originalname);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-        console.error("Error during file download:", error);
-        toast.error("Failed to download file");
+      console.error('Error during file download:', error);
+      toast.error('Failed to download file');
     }
-};
+  };
 
   // Handle file deletion
   const handleDelete = async (fileId) => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem('authToken');
     if (window.confirm('Are you sure you want to delete this file?')) {
-        try {
-            await axios.delete(`${baseUrl}user/deleteRaMasterCsvFileById/${fileId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            dispatch(fetchAllraMasterFile()); // Correct action dispatched here
-            toast.success('File deleted successfully');
-        } catch (error) {
-            console.error("Error deleting file:", error);
-            toast.error('Failed to delete file');
-        }
+      try {
+        await axios.delete(`${baseUrl}user/deleteRaMasterCsvFileById/${fileId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        dispatch(fetchAllraMasterFile());
+        toast.success('File deleted successfully');
+      } catch (error) {
+        console.error('Error deleting file:', error);
+        toast.error('Failed to delete file');
+      }
     }
-};
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+
+  // Conditionally render the table only if the role is allowed
+  if (!allowedRoles.includes(role)) {
+    return <p>You do not have permission to view this data.</p>;
+  }
 
   return (
     <div>

@@ -12,7 +12,9 @@ import baseUrl from '../constant/ConstantApi';
 const QualityCheckedTab = () => {
     const dispatch = useDispatch();
     const { csvFiles, loading, error } = useSelector((state) => state.csvFileCheckedbyQualityChecked);
-const token=localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
+    const userRole = localStorage.getItem('role'); // Assuming you store user role in local storage
+
     useEffect(() => {
         dispatch(fetchCsvFilesbyQualityChecked());
     }, [dispatch]);
@@ -121,7 +123,6 @@ const token=localStorage.getItem('authToken');
         }
     };
 
-
     const handleDelete = async (fileId) => {
         if (window.confirm('Are you sure you want to delete this file?')) {
             try {
@@ -131,7 +132,7 @@ const token=localStorage.getItem('authToken');
                     },
                 });
                 dispatch(fetchCsvFilesbyQualityChecked()); // Refresh the file list after deletion
-               toast.success('File deleted successfully');
+                toast.success('File deleted successfully');
             } catch (error) {
                 alert(`Failed to delete file: ${error.message}`);
             }
@@ -140,6 +141,11 @@ const token=localStorage.getItem('authToken');
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+
+    // Check if user role is one of the allowed roles
+    if (userRole !== 'quality' && userRole !== 'oxmanager' && userRole !== 'admin') {
+        return <p>You do not have permission to view this content.</p>;
+    }
 
     return (
         <div>

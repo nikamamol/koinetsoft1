@@ -81,6 +81,8 @@ import UnwantedLeads from './views/rfp/UnwantedLeads';
 import NewInHouseCamp from './views/leads/inhousecampaign/NewInHouseCamp';
 import ExpiredCampaignIn from './views/leads/inhousecampaign/ExpiredCampaignIn';
 import InHouseCompletedCampaign from './views/leads/inhousecampaign/InHouseCompletedCampaign';
+import EmailCheckedShowDelivery from './views/rfp/EmailCheckedShowDelivery';
+import QualitycheckedShowDelivery from './views/rfp/QualitycheckedShowDelivery';
 // import QualityMasterTab from './table/QualityMasterTab';
 
 
@@ -143,6 +145,8 @@ function App() {
             <Route path="/rfp/emmasterfile" element={<EMMasterFile />} />
             <Route path="/rfp/operationmaster" element={<OperationMaster />} />
             <Route path="/rfp/unwantedleads" element={<UnwantedLeads />} />
+            <Route path="/rfp/emailcheckedshowdelivery" element={<EmailCheckedShowDelivery />} />
+            <Route path="/rfp/qualitydonefiles" element={<QualitycheckedShowDelivery />} />
             {/* <Route path="/rfp/qualitymastertab" element={<QualityMasterTab />} /> */}
             {/* Agency */}
             <Route path="/agency/myengencies" element={<MyEngencies />} />
@@ -178,7 +182,7 @@ function App() {
             <Route path="/billing/invoiceSetting" element={<InvoiceSetting />} />
             <Route path="/billing/processPayment" element={<ProcessPayment />} />
             <Route path="/billing/vieweClient" element={<VieweClient />} />
-           <Route path="/billing/viewClient/:id" element={<ViewClientDetailsId />} />
+            <Route path="/billing/viewClient/:id" element={<ViewClientDetailsId />} />
             <Route path="/billing/viewInvoice" element={<ViewInvoice />} />
             <Route path="/billing/createnewinvoice" element={<CreateNewInvoice />} />
             <Route path="/billing/ViewInvoiceById/:id" element={<ViewInvoiceById />} />

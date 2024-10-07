@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import { fetchCampaigns, updateCampaignStatus } from '../redux/reducer/createcampaign/GetCampaignData';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { useNavigate } from 'react-router-dom';
 import { Checkbox, Box } from '@mui/material';
 import { toast } from 'react-toastify';
@@ -20,6 +19,7 @@ const InHouseAllCamp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { campaigns, status, error } = useSelector((state) => state.campaigns);
+  const userRole = localStorage.getItem('role'); // Assuming you have a user state
   const [checkboxState, setCheckboxState] = useState({});
 
   useEffect(() => {
@@ -29,14 +29,13 @@ const InHouseAllCamp = () => {
   }, [dispatch, status]);
 
   useEffect(() => {
-    // Set initial checkbox state based on fetched campaigns
     const initialCheckboxState = {};
     campaigns.forEach((campaign) => {
       initialCheckboxState[campaign._id] = {
         checkbox1: campaign.campaignStatus === 'Completed',
         checkbox2: campaign.campaignStatus === 'Active',
         checkbox3: campaign.campaignStatus === 'New',
-        checkbox4: campaign.campaignStatus === 'Expired', // Added this for the 'Expired' checkbox
+        checkbox4: campaign.campaignStatus === 'Expired',
       };
     });
     setCheckboxState(initialCheckboxState);
@@ -49,7 +48,7 @@ const InHouseAllCamp = () => {
     if (name === 'checkbox1' && checked) newStatus = 'Completed';
     else if (name === 'checkbox2' && checked) newStatus = 'Active';
     else if (name === 'checkbox3' && checked) newStatus = 'New';
-    else if (name === 'checkbox4' && checked) newStatus = 'Expired'; // Ensure this checks for Expired status
+    else if (name === 'checkbox4' && checked) newStatus = 'Expired';
 
     if (newStatus) {
       try {
@@ -69,6 +68,7 @@ const InHouseAllCamp = () => {
     }));
   };
 
+  const userAuthentication = userRole === "admin" || userRole === "oxmanager"
   const columns = useMemo(
     () => [
       {
@@ -119,6 +119,7 @@ const InHouseAllCamp = () => {
               name="checkbox1"
               checked={checkboxState[row.original._id]?.checkbox1 || false}
               onChange={(e) => handleCheckboxChange(e, row.original._id)}
+              disabled={userRole !== 'oxmanager' && userRole !== 'admin'}
               color="primary"
             />
             Completed
@@ -126,6 +127,7 @@ const InHouseAllCamp = () => {
               name="checkbox2"
               checked={checkboxState[row.original._id]?.checkbox2 || false}
               onChange={(e) => handleCheckboxChange(e, row.original._id)}
+              disabled={userRole !== 'oxmanager' && userRole !== 'admin'}
               color="secondary"
             />
             Active
@@ -133,13 +135,15 @@ const InHouseAllCamp = () => {
               name="checkbox3"
               checked={checkboxState[row.original._id]?.checkbox3 || false}
               onChange={(e) => handleCheckboxChange(e, row.original._id)}
+              disabled={userRole !== 'oxmanager' && userRole !== 'admin'}
               color="success"
             />
             New
             <Checkbox
-              name="checkbox4" // Changed this to checkbox4 for Expired
+              name="checkbox4"
               checked={checkboxState[row.original._id]?.checkbox4 || false}
               onChange={(e) => handleCheckboxChange(e, row.original._id)}
+              disabled={userRole !== 'oxmanager' && userRole !== 'admin'}
               color="error"
             />
             Expired
@@ -152,19 +156,19 @@ const InHouseAllCamp = () => {
         Cell: ({ row }) => (
           <div>
             <RemoveRedEyeIcon
-              onClick={() => navigate(`/campaigns/inhousecampaigns/campaigndetail/${row.original._id}`)}
-              style={{ cursor: 'pointer', color: 'dark', marginRight: '15px' }}
+              onClick={userAuthentication ? () => navigate(`/campaigns/inhousecampaigns/campaigndetail/${row.original._id}`) : undefined}
+              style={{
+                cursor: userAuthentication ? 'pointer' : 'not-allowed',
+                color: userAuthentication ? 'dark' : 'gray', // Change color when disabled
+                marginRight: '15px'
+              }}
             />
-            {/* <ModeEditIcon
-              onClick={() => alert(`Editing campaign ${row.original._id}`)}
-              style={{ cursor: 'pointer', color: 'dark' }}
-            /> */}
           </div>
         ),
         size: 150,
       },
     ],
-    [checkboxState, navigate]
+    [checkboxState, navigate, userRole]
   );
 
   if (status === 'loading') return <p>Loading...</p>;

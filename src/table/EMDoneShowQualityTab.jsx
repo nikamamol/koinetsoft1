@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { IconButton, Tooltip, Checkbox } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCsvFilesbyEMChecked } from '../redux/reducer/rpf/getEmCheckData'; // Adjust the path based on your structure
@@ -13,6 +12,7 @@ const EMDoneShowQualityTab = () => {
     const dispatch = useDispatch();
     const { csvFiles, loading, error } = useSelector((state) => state.csvFileCheckedbyEMChecked);
     const token = localStorage.getItem('authToken');
+    const userRole = localStorage.getItem('role'); // Assuming you store user role as 'userRole'
 
     useEffect(() => {
         dispatch(fetchCsvFilesbyEMChecked()); // Ensure correct action is dispatched
@@ -73,18 +73,10 @@ const EMDoneShowQualityTab = () => {
                             />
                         </IconButton>
                     </Tooltip>
-                    {/* <Tooltip title="Delete File">
-                        <IconButton onClick={() => handleDelete(row.original._id)}>
-                            <DeleteIcon
-                                style={{ cursor: 'pointer', color: 'red', width: '30px', height: '30px' }}
-                            />
-                        </IconButton>
-                    </Tooltip> */}
                 </div>
             ),
         },
     ], []);
-
 
     const handleDownload = async (file) => {
         const { _id, originalname } = file;
@@ -116,13 +108,11 @@ const EMDoneShowQualityTab = () => {
             // Clean up by removing the link and revoking the Object URL
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
-
         } catch (error) {
             console.error("Error during file download:", error);
             toast.error("Failed to download file");
         }
     };
-
 
     const handleDelete = async (fileId) => {
         if (window.confirm('Are you sure you want to delete this file?')) {
@@ -142,6 +132,11 @@ const EMDoneShowQualityTab = () => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+
+    // Check if the user role is "quality"
+    if (userRole !== 'quality') {
+        return <p>You do not have permission to view this data.</p>;
+    }
 
     return (
         <div>

@@ -11,6 +11,10 @@ const RfpReceivedAll = () => {
   const dispatch = useDispatch();
   const { files, status, error } = useSelector((state) => state.fileData);
 
+  // Get role from localStorage
+  const role = localStorage.getItem('role'); // Make sure the key matches what you store in localStorage
+  const allowedRoles = ['oxmanager', 'researcher', 'admin', 'quality', 'email_marketing'];
+
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchFileDataAll());
@@ -88,15 +92,14 @@ const RfpReceivedAll = () => {
                     className={allChecked ? 'enabled' : 'disabled'}
                     style={{
                       cursor: allChecked ? 'pointer' : 'not-allowed',
-                      color: allChecked ? 'black' : 'secondary', // Apply 'secondary' color when disabled
+                      color: allChecked ? 'black' : 'secondary',
                       width: '30px',
-                      height: '30px'
+                      height: '30px',
                     }}
                     onClick={() => allChecked && handleDownload(row.original.fileId, row.original.filename)}
                   />
                 </IconButton>
               </Tooltip>
-
             </div>
           );
         },
@@ -104,6 +107,11 @@ const RfpReceivedAll = () => {
     ],
     [handleDownload]
   );
+
+  // Check if the role is not allowed
+  if (!allowedRoles.includes(role)) {
+    return <div>Access denied. You do not have permission to view this data.</div>;
+  }
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Error: {error}</div>;

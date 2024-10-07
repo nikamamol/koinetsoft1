@@ -4,6 +4,7 @@ import AgencyMyAgency from '../../table/AgencyMyAgency'
 import Navbar from "../../components/HeadNavbar"
 
 function MyEngencies() {
+  const userType = localStorage.getItem("role");
   return (
     <div>
       <Navbar />
@@ -13,9 +14,15 @@ function MyEngencies() {
           </Col>
           <Col lg={8}>
             <div className='bgColor rounded-3 shadow'>
-              <h4 className='fw-bold py-3 ms-3 text_color'>Agency</h4>
+              <h4 className='fw-bold py-3 ms-3 text_color'>View All Agency</h4>
             </div>
-            <AgencyMyAgency />
+            {(userType === 'admin' || userType === 'oxmanager') ? (
+              <AgencyMyAgency />
+            ) : (
+              <div className="text-center mt-4">
+                <h5 className='text-danger'>User not authorized to view this page</h5>
+              </div>
+            )}
           </Col>
         </Row>
       </Container>

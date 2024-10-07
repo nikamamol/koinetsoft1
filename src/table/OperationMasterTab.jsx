@@ -13,6 +13,8 @@ const OperationMasterTab = () => {
     const dispatch = useDispatch();
     const { csvFiles = [], loading, error } = useSelector((state) => state.csvFileCheckedbyOPMaster || {}); // Correct slice name
     const token = localStorage.getItem('authToken');
+    const userType = localStorage.getItem('role');
+    const allowedRoles = ['oxmanager', 'delivery', 'admin'];
 
     useEffect(() => {
         dispatch(fetchCsvFilesbyOPMaster()); // Dispatch the action to fetch files
@@ -147,6 +149,9 @@ const OperationMasterTab = () => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+    if (!allowedRoles.includes(userType)) {
+        return <p className='text-danger'>You do not have permission to view this data.</p>;
+    }
 
     return (
         <div>

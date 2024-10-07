@@ -261,6 +261,7 @@ function InviteAgencies() {
     }
   };
 
+  const userType = localStorage.getItem('role')
   return (
     <div>
       <Container fluid className='my-5'>
@@ -268,349 +269,354 @@ function InviteAgencies() {
           <Col lg={3}></Col>
           <Col lg={8}>
             <div className='bgColor rounded-3 shadow'>
-              <h4 className='fw-bold py-3 ms-3 text_color'>Add New Vendor</h4>
+              <h4 className='fw-bold py-3 ms-3 text_color'>Add New Agency</h4>
             </div>
-            <div className="row">
-              <div className="col-xxl">
-                <div className="card mb-4">
-                  <div className="card-header d-flex align-items-center justify-content-between">
-                    <small className="text-muted float-end p-2">
-                      Fields marked <span className="text-danger">*</span> are mandatory
-                    </small>
-                  </div>
-                  <div className="card-body">
-                    <form onSubmit={handleSubmit}>
-                      {/* Add hidden input for token if needed */}
-                      <input type="hidden" name="_token" />
+            {userType === 'admin' || userType === 'oxmanager' ?
+              <div className="row">
+                <div className="col-xxl">
+                  <div className="card mb-4">
+                    <div className="card-header d-flex align-items-center justify-content-between">
+                      <small className="text-muted float-end p-2">
+                        Fields marked <span className="text-danger">*</span> are mandatory
+                      </small>
+                    </div>
+                    <div className="card-body">
+                      <form onSubmit={handleSubmit}>
+                        {/* Add hidden input for token if needed */}
+                        <input type="hidden" name="_token" />
 
-                      <div className="row">
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="company_name" className="col-sm-6 col-form-label">
-                            Company Name <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="company_name"
-                            name="company_name"
-                            placeholder="Marathon B2B"
-                            value={formData.company_name}
-                            onChange={handleChange}
-                            required
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="company_type" className="col-sm-6 col-form-label">
-                            Company Type <span className="text-danger">*</span>
-                          </label>
-                          <select
-                            id="company_type"
-                            name="company_type"
-                            className="form-select"
-                            value={formData.company_type}
-                            onChange={handleChange}
-                            required
-                          >
-                            <option value="">--Select Company Type--</option>
-                            <option value="Privately held">Privately held</option>
-                            <option value="Publicly held">Publicly held</option>
-                            <option value="Limited Liability Partnership">Limited Liability Partnership</option>
-                            <option value="Single Person Owned">Single Person Owned</option>
-                            <option value="Unregistered">Unregistered</option>
-                          </select>
-                        </div>
-                        {/* Other fields here */}
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="vendor_profile" className="col-sm-6 col-form-label">
-                            Vendor Profile <span className="text-danger">*</span>
-                          </label>
-                          <select
-                            id="vendor_profile"
-                            name="vendor_profile"
-                            className="form-select"
-                            value={formData.vendor_profile}
-                            onChange={handleChange}
-                            required
-                          >
-                            <option value="">--Select Profile--</option>
-                            <option value="Enterprise">Enterprise</option>
-                            <option value="Agency">Agency</option>
-                            <option value="Publisher">Publisher</option>
-                          </select>
-                        </div>
+                        <div className="row">
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="company_name" className="col-sm-6 col-form-label">
+                              Company Name <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="company_name"
+                              name="company_name"
+                              placeholder="Marathon B2B"
+                              value={formData.company_name}
+                              onChange={handleChange}
+                              required
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="company_type" className="col-sm-6 col-form-label">
+                              Company Type <span className="text-danger">*</span>
+                            </label>
+                            <select
+                              id="company_type"
+                              name="company_type"
+                              className="form-select"
+                              value={formData.company_type}
+                              onChange={handleChange}
+                              required
+                            >
+                              <option value="">--Select Company Type--</option>
+                              <option value="Privately held">Privately held</option>
+                              <option value="Publicly held">Publicly held</option>
+                              <option value="Limited Liability Partnership">Limited Liability Partnership</option>
+                              <option value="Single Person Owned">Single Person Owned</option>
+                              <option value="Unregistered">Unregistered</option>
+                            </select>
+                          </div>
+                          {/* Other fields here */}
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="vendor_profile" className="col-sm-6 col-form-label">
+                              Vendor Profile <span className="text-danger">*</span>
+                            </label>
+                            <select
+                              id="vendor_profile"
+                              name="vendor_profile"
+                              className="form-select"
+                              value={formData.vendor_profile}
+                              onChange={handleChange}
+                              required
+                            >
+                              <option value="">--Select Profile--</option>
+                              <option value="Enterprise">Enterprise</option>
+                              <option value="Agency">Agency</option>
+                              <option value="Publisher">Publisher</option>
+                            </select>
+                          </div>
 
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="agency_id" className="col-sm-6 col-form-label">
-                            Agency
-                          </label>
-                          <select
-                            id="agency_id"
-                            name="agency_id"
-                            className="form-select"
-                            value={formData.agency_id}
-                            onChange={handleChange}
-                            required
-                          >
-                            <option value="0">--Select Agency--</option>
-                            <option value="21">XYZ</option>
-                          </select>
-                        </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="agency_id" className="col-sm-6 col-form-label">
+                              Agency
+                            </label>
+                            <select
+                              id="agency_id"
+                              name="agency_id"
+                              className="form-select"
+                              value={formData.agency_id}
+                              onChange={handleChange}
+                              required
+                            >
+                              <option value="0">--Select Agency--</option>
+                              <option value="21">XYZ</option>
+                            </select>
+                          </div>
 
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="country" className="col-sm-6 col-form-label">
-                            Country <span className="text-danger">*</span>
-                          </label>
-                          <select
-                            id="country"
-                            name="country"
-                            className="form-select"
-                            value={formData.country}
-                            onChange={handleChange}
-                            required
-                          >
-                            <option value="">--Select Country--</option>
-                            {updatedCountryOptions.map(option => (
-                              <option key={option.value} value={option.value}>
-                                {option.name} ({option.value})
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="country" className="col-sm-6 col-form-label">
+                              Country <span className="text-danger">*</span>
+                            </label>
+                            <select
+                              id="country"
+                              name="country"
+                              className="form-select"
+                              value={formData.country}
+                              onChange={handleChange}
+                              required
+                            >
+                              <option value="">--Select Country--</option>
+                              {updatedCountryOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                  {option.name} ({option.value})
+                                </option>
+                              ))}
+                            </select>
+                          </div>
 
 
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="state" className="col-sm-6 col-form-label">State <span className="text-danger">*</span></label>
-                          <input
-                            type="text"
-                            required
-                            name="state"
-                            id="state"
-                            className="form-control"
-                            placeholder="Maharashtra"
-                            value={formData.state}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        {/* More fields as needed */}
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="city" className="form-label">City <span className="text-danger">*</span></label>
-                          <input
-                            type="text"
-                            required
-                            name="city"
-                            id="city"
-                            className="form-control"
-                            placeholder="Pune"
-                            value={formData.city}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="pincode" className="form-label">Pincode <span className="text-danger">*</span></label>
-                          <input
-                            type="text"
-                            required
-                            name="pincode"
-                            id="pincode"
-                            maxLength="6"
-                            className="form-control"
-                            placeholder="400001"
-                            value={formData.pincode}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="address" className="form-label">Address <span className="text-danger">*</span></label>
-                          <input
-                            type="text"
-                            required
-                            name="address"
-                            id="address"
-                            className="form-control"
-                            placeholder="1300, Corporate Avenue, Pune"
-                            value={formData.address}
-                            onChange={handleChange}
-                          />
-                        </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="state" className="col-sm-6 col-form-label">State <span className="text-danger">*</span></label>
+                            <input
+                              type="text"
+                              required
+                              name="state"
+                              id="state"
+                              className="form-control"
+                              placeholder="Maharashtra"
+                              value={formData.state}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          {/* More fields as needed */}
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="city" className="form-label">City <span className="text-danger">*</span></label>
+                            <input
+                              type="text"
+                              required
+                              name="city"
+                              id="city"
+                              className="form-control"
+                              placeholder="Pune"
+                              value={formData.city}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="pincode" className="form-label">Pincode <span className="text-danger">*</span></label>
+                            <input
+                              type="text"
+                              required
+                              name="pincode"
+                              id="pincode"
+                              maxLength="6"
+                              className="form-control"
+                              placeholder="400001"
+                              value={formData.pincode}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="address" className="form-label">Address <span className="text-danger">*</span></label>
+                            <input
+                              type="text"
+                              required
+                              name="address"
+                              id="address"
+                              className="form-control"
+                              placeholder="1300, Corporate Avenue, Pune"
+                              value={formData.address}
+                              onChange={handleChange}
+                            />
+                          </div>
 
-                        <div className="">
-                          <div className="text-center py-2 bg-light">Primary Contact</div>
+                          <div className="">
+                            <div className="text-center py-2 bg-light">Primary Contact</div>
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="primary_first_name" className="form-label">
+                              First Name <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="primary_first_name"
+                              name="primary_first_name"
+                              placeholder="John"
+                              value={formData.primary_first_name}
+                              onChange={handleChange}
+                              required
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="primary_last_name" className="form-label">
+                              Last Name <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="primary_last_name"
+                              name="primary_last_name"
+                              placeholder="Doe"
+                              value={formData.primary_last_name}
+                              onChange={handleChange}
+                              required
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="primary_phone_no" className="form-label">
+                              Phone No <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="tel"
+                              className="form-control"
+                              id="primary_phone_no"
+                              name="primary_phone_no"
+                              placeholder="0000000000"
+                              value={formData.primary_phone_no}
+                              onChange={handleChange}
+                              required
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="primary_email" className="form-label">
+                              Email <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="email"
+                              className="form-control"
+                              id="primary_email"
+                              name="primary_email"
+                              placeholder="john.doe@example.com"
+                              value={formData.primary_email}
+                              onChange={handleChange}
+                              required
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="primary_designation" className="form-label">
+                              Designation <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="primary_designation"
+                              name="primary_designation"
+                              placeholder="Manager"
+                              value={formData.primary_designation}
+                              onChange={handleChange}
+                              required
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="password" className="form-label">
+                              Password <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              id="password"
+                              name="password"
+                              placeholder="********"
+                              value={formData.password}
+                              onChange={handleChange}
+                              required
+                            />
+                          </div>
+                          <div className="">
+                            <div className="text-center py-2 bg-light">Secondary Contact</div>
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="secondary_first_name" className="form-label">
+                              First Name
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="secondary_first_name"
+                              name="secondary_first_name"
+                              placeholder="Jane"
+                              value={formData.secondary_first_name}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="secondary_last_name" className="form-label">
+                              Last Name
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="secondary_last_name"
+                              name="secondary_last_name"
+                              placeholder="Doe"
+                              value={formData.secondary_last_name}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="secondary_phone_no" className="form-label">
+                              Phone No
+                            </label>
+                            <input
+                              type="tel"
+                              className="form-control"
+                              id="secondary_phone_no"
+                              name="secondary_phone_no"
+                              placeholder="0000000000"
+                              value={formData.secondary_phone_no}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="secondary_email" className="form-label">
+                              Email
+                            </label>
+                            <input
+                              type="email"
+                              className="form-control"
+                              id="secondary_email"
+                              name="secondary_email"
+                              placeholder="jane.doe@example.com"
+                              value={formData.secondary_email}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="mb-3 col-md-6">
+                            <label htmlFor="secondary_designation" className="form-label">
+                              Designation
+                            </label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="secondary_designation"
+                              name="secondary_designation"
+                              placeholder="Assistant Manager"
+                              value={formData.secondary_designation}
+                              onChange={handleChange}
+                            />
+                          </div>
                         </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="primary_first_name" className="form-label">
-                            First Name <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="primary_first_name"
-                            name="primary_first_name"
-                            placeholder="John"
-                            value={formData.primary_first_name}
-                            onChange={handleChange}
-                            required
-                          />
+                        <div className="text-center my-4">
+                          <button type="submit" className="btn btn-primary">
+                            Submit
+                          </button>
                         </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="primary_last_name" className="form-label">
-                            Last Name <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="primary_last_name"
-                            name="primary_last_name"
-                            placeholder="Doe"
-                            value={formData.primary_last_name}
-                            onChange={handleChange}
-                            required
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="primary_phone_no" className="form-label">
-                            Phone No <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="tel"
-                            className="form-control"
-                            id="primary_phone_no"
-                            name="primary_phone_no"
-                            placeholder="0000000000"
-                            value={formData.primary_phone_no}
-                            onChange={handleChange}
-                            required
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="primary_email" className="form-label">
-                            Email <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="email"
-                            className="form-control"
-                            id="primary_email"
-                            name="primary_email"
-                            placeholder="john.doe@example.com"
-                            value={formData.primary_email}
-                            onChange={handleChange}
-                            required
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="primary_designation" className="form-label">
-                            Designation <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="primary_designation"
-                            name="primary_designation"
-                            placeholder="Manager"
-                            value={formData.primary_designation}
-                            onChange={handleChange}
-                            required
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="password" className="form-label">
-                            Password <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            type="password"
-                            className="form-control"
-                            id="password"
-                            name="password"
-                            placeholder="********"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                          />
-                        </div>
-                        <div className="">
-                          <div className="text-center py-2 bg-light">Secondary Contact</div>
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_first_name" className="form-label">
-                            First Name
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="secondary_first_name"
-                            name="secondary_first_name"
-                            placeholder="Jane"
-                            value={formData.secondary_first_name}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_last_name" className="form-label">
-                            Last Name
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="secondary_last_name"
-                            name="secondary_last_name"
-                            placeholder="Doe"
-                            value={formData.secondary_last_name}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_phone_no" className="form-label">
-                            Phone No
-                          </label>
-                          <input
-                            type="tel"
-                            className="form-control"
-                            id="secondary_phone_no"
-                            name="secondary_phone_no"
-                            placeholder="0000000000"
-                            value={formData.secondary_phone_no}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_email" className="form-label">
-                            Email
-                          </label>
-                          <input
-                            type="email"
-                            className="form-control"
-                            id="secondary_email"
-                            name="secondary_email"
-                            placeholder="jane.doe@example.com"
-                            value={formData.secondary_email}
-                            onChange={handleChange}
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label htmlFor="secondary_designation" className="form-label">
-                            Designation
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="secondary_designation"
-                            name="secondary_designation"
-                            placeholder="Assistant Manager"
-                            value={formData.secondary_designation}
-                            onChange={handleChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="text-center my-4">
-                        <button type="submit" className="btn btn-primary">
-                          Submit
-                        </button>
-                      </div>
-                    </form>
-                    {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                      </form>
+                      {successMessage && <Alert variant="success">{successMessage}</Alert>}
+                    </div>
                   </div>
                 </div>
+              </div> : <div className="text-center mt-4">
+                <h5 className='text-danger'>User not authorized to view this page</h5>
               </div>
-            </div>
+            }
+
           </Col>
           <Col lg={1}></Col>
         </Row>

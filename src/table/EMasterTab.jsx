@@ -14,6 +14,10 @@ const EMasterTab = () => {
     const { csvFiles, loading, error } = useSelector((state) => state.csvFileCheckedbyEMMaster);
     const token = localStorage.getItem('authToken');
 
+    
+    const userRole = localStorage.getItem('role'); // Assuming user role is stored in local storage
+    const allowedRoles = ['oxmanager', 'admin', 'email_marketing'];
+
     useEffect(() => {
         dispatch(fetchCsvFilesbyEMMaster());
     }, [dispatch]);
@@ -138,6 +142,11 @@ const EMasterTab = () => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+        // Conditionally render the table based on user role
+        if (!allowedRoles.includes(userRole)) {
+            return <p className='text-danger'>You do not have permission to view this content.</p>;
+        }
+    
 
     return (
         <div>
