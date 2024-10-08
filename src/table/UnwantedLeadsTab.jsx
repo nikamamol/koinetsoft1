@@ -7,7 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
-import { fetchCsvFilesbyUnwantedLeads } from '../redux/reducer/rpf/getUnwantedLeads'; // Ensure correct import
+import { fetchCsvFilesbyUnwantedLeads } from '../redux/reducer/rpf/getUnwantedLeads';
+ // Ensure correct import
+ import Hourglass from "../assets/Hourglass.gif";
+
 
 const UnwantedLeadsTab = () => {
     const dispatch = useDispatch();
@@ -138,7 +141,11 @@ const UnwantedLeadsTab = () => {
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <>
+            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+        </>
+    )
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
     if (!allowedRoles.includes(userType)) {
         return <p className='text-danger'>You do not have permission to view this data.</p>;

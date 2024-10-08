@@ -9,6 +9,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const AgencyMyAgency = () => {
   const [data, setData] = useState([]);

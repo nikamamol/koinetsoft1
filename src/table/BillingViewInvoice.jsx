@@ -6,6 +6,8 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteInvoiceById } from '../redux/reducer/billing/GetInvoiceFromId';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const BillingViewInvoice = () => {
   const navigate = useNavigate();
@@ -81,10 +83,11 @@ const BillingViewInvoice = () => {
     data: invoiceData,
   });
 
-  if (invoiceStatus === 'loading') {
-    return <div>Loading...</div>;
-  }
-
+  if (invoiceStatus === "loading") return (
+    <>
+        <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+    </>
+)
   if (error) {
     return <div>Error: {error}</div>;
   }

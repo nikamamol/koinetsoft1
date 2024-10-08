@@ -5,6 +5,8 @@ import { fetchFileDataAll, readFile, updateFileStatus, updateCsvFileById, downlo
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
@@ -142,7 +144,7 @@ const RfpQualityCheck = () => {
     const role = localStorage.getItem('role');
 
     const filteredFiles = useMemo(() => {
-        if (role !== 'quality' && role !== 'oxmanager'&& role !== 'admin' ) return [];
+        if (role !== 'quality' && role !== 'oxmanager' && role !== 'admin') return [];
         return files.filter(file =>
             file.status.some(statusItem => statusItem.userType === 'Quality')
         );
@@ -248,7 +250,12 @@ const RfpQualityCheck = () => {
         [handleRead, handleCheckboxChange, checkboxes]
     );
 
-    if (status === 'loading') return <div>Loading...</div>;
+
+    if (status === "loading") return (
+        <>
+            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+        </>
+    )
     if (status === 'failed') return <div>Error: {error}</div>;
 
     if (role !== 'quality' && role !== 'admin' && role !== 'oxmanager') {

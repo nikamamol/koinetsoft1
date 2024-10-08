@@ -8,6 +8,8 @@ import { fetchCsvFilesbyEMChecked } from '../redux/reducer/rpf/getEmCheckData'; 
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const EMCheckedTab = () => {
     const dispatch = useDispatch();
@@ -139,8 +141,13 @@ const EMCheckedTab = () => {
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <>
+            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+        </>
+    )
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+    if (!csvFiles.length) return <p>No data available</p>
 
     return (
         <div>

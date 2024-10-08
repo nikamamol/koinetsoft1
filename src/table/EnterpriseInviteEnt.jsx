@@ -3,6 +3,8 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 // updated data structure with new fields
 const data = [

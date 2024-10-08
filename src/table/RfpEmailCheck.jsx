@@ -6,6 +6,8 @@ import { fetchFileDataAll, updateFileStatusEmail, readFile, updateCsvFileById, d
 import { Checkbox, IconButton, Tooltip, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 import * as XLSX from 'xlsx';
 
@@ -205,7 +207,11 @@ const RfpEmailCheck = () => {
         },
     ], [handleRead, handleCheckboxChange, checkboxes]);
 
-    if (status === 'loading') return <div>Loading...</div>;
+     if (status === 'loading') return (
+        <>
+            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+        </>
+    )
     if (status === 'failed') return <div>Error: {error}</div>;
 
     if (role !== 'email_marketing' && role !== 'admin' && role !== 'oxmanager') {

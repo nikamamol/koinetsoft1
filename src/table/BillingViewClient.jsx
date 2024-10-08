@@ -5,6 +5,8 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
 import { deleteClient, fetchClients } from '../redux/reducer/billing/ClientSlice';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const BillingViewClient = () => {
   const dispatch = useDispatch();
@@ -60,11 +62,12 @@ const BillingViewClient = () => {
 
   return (
     <div>
-      {clientStatus === 'loading' && <div>Loading...</div>}
+      {clientStatus === 'loading' &&       <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>    }
       {clientStatus === 'failed' && <div>Error: {error}</div>}
       {clientStatus === 'succeeded' && <MaterialReactTable table={table} />}
     </div>
   );
 };
+
 
 export default BillingViewClient;

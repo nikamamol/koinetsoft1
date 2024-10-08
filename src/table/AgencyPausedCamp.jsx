@@ -4,6 +4,8 @@ import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
 import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData';
 import { useNavigate } from 'react-router-dom';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 
 const AgencyPausedCamp = () => {
@@ -110,9 +112,11 @@ const AgencyPausedCamp = () => {
   });
 
   // Render loading, error, or the table
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
+  if (status === "loading") return (
+    <>
+        <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+    </>
+)
 
   if (status === 'failed') {
     return <div>Error: {error}</div>;

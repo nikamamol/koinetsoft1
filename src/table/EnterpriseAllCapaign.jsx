@@ -5,6 +5,8 @@ import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { useNavigate } from 'react-router-dom';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 
 
@@ -91,7 +93,11 @@ const EnterpriseAllCampaign = () => {
     [],
   );
 
-  if (status === 'loading') return <p>Loading...</p>;
+  if (status === "loading") return (
+    <>
+        <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+    </>
+)
   if (status === 'failed') return <p>Error: {error}</p>;
 
   return <MaterialReactTable columns={columns} data={campaigns} />;

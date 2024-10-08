@@ -5,6 +5,8 @@ import { IconButton, Tooltip, Checkbox } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom'; // If using React Router for navigation
 import { fetchFiles } from '../redux/reducer/rpf/operationcsvupload'; // Adjust import path as needed
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const RfpActive = () => {
   const dispatch = useDispatch();
@@ -116,7 +118,10 @@ const RfpActive = () => {
   return (
     <div>
 
-      {status === 'loading' && <p>Loading files...</p>}
+      {status === 'loading' &&  <>
+            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+        </>}
+
       {status === 'succeeded' && files.length > 0 ? (
         <MaterialReactTable
           columns={columns}

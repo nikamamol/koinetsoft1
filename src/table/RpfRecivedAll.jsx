@@ -6,6 +6,8 @@ import Checkbox from '@mui/material/Checkbox';
 import { downloadFile, fetchFileDataAll } from '../redux/reducer/rpf/getcsvfiledata';
 import { pink } from '@mui/material/colors';
 import { IconButton, Tooltip } from '@mui/material';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const RfpReceivedAll = () => {
   const dispatch = useDispatch();
@@ -138,7 +140,11 @@ const RfpReceivedAll = () => {
     return <div>Access denied. You do not have permission to view this data.</div>;
   }
 
-  if (status === 'loading') return <div>Loading...</div>;
+  if (status === "loading") return (
+    <>
+      <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+    </>
+  )
   if (status === 'failed') return (
     <div>
       Error: {error}

@@ -8,6 +8,8 @@ import { fetchAllraMasterFile } from '../redux/reducer/rpf/ramasterdataget'; // 
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import baseUrl from '../constant/ConstantApi';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const RAMasterTab = () => {
   const dispatch = useDispatch();
@@ -142,7 +144,11 @@ const RAMasterTab = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return (
+    <>
+        <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+    </>
+)
   if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
 
   // Conditionally render the table only if the role is allowed

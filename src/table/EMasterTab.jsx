@@ -8,6 +8,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import { fetchCsvFilesbyEMMaster } from '../redux/reducer/rpf/getEmMasterFileData';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const EMasterTab = () => {
     const dispatch = useDispatch();
@@ -140,7 +142,11 @@ const EMasterTab = () => {
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <>
+            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+        </>
+    )
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
         // Conditionally render the table based on user role
         if (!allowedRoles.includes(userRole)) {

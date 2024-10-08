@@ -8,6 +8,8 @@ import { fetchCsvFilesbyQualityChecked } from '../redux/reducer/rpf/getQualitych
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 function QualitycheckedShowDeliveryTab() {
     const dispatch = useDispatch();
@@ -139,7 +141,11 @@ function QualitycheckedShowDeliveryTab() {
         }
     };
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return (
+        <>
+            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+        </>
+    )
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
 
     // Check if user role is one of the allowed roles

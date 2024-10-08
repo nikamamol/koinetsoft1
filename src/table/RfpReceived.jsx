@@ -5,6 +5,8 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchFileData, downloadFile, deleteFile } from '../redux/reducer/rpf/getcsvfiledata';
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 const isToday = (dateString) => {
   const today = new Date();
@@ -156,7 +158,11 @@ const RfpReceived = () => {
     </div>;
   }
 
-  if (status === 'loading') return <div>Loading...</div>;
+  if (status === "loading") return (
+    <>
+        <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+    </>
+)
   if (status === 'failed') return <div>Error: {error}</div>;
 
   return <MaterialReactTable columns={columns} data={filteredFiles} />;
