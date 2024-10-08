@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginUser } from "../redux/reducer/registeruser/Login";
 import LogoImge from "../assets/koinetlogo.png";
 import Hourglass from "../assets/Hourglass.gif";
+import GiftImage from "../assets/robot.gif";  // Add this line to import the gift image
 import { toast } from 'react-toastify';
 
 function Login() {
@@ -15,8 +16,7 @@ function Login() {
     const [password, setPassword] = useState('');
 
     useEffect(() => {
-        // Check if the token is present in local storage or Redux state
-        const token = localStorage.getItem('authToken'); // or replace with appropriate token retrieval logic
+        const token = localStorage.getItem('authToken');
         if (token) {
             navigate('/dashboard');
         }
@@ -91,6 +91,20 @@ function Login() {
                     </div>
                 </div>
             </div>
+
+            {/* Gift Image */}
+            <img
+                src={GiftImage}  // Use the imported image here
+                alt="Gift"
+                style={{
+                    position: 'fixed',
+                    bottom: '20px',
+                    right: '20px',
+                    width: '300px',
+                    height: '300px',
+                    cursor: 'pointer',
+                }}
+            />
         </div>
     );
 }
