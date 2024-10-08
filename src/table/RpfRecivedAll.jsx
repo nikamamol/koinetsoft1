@@ -17,7 +17,7 @@ const RfpReceivedAll = () => {
 
   // Get role from localStorage
   const role = localStorage.getItem('role'); // Make sure the key matches what you store in localStorage
-  const allowedRoles = ['oxmanager', 'researcher', 'admin', 'quality', 'email_marketing'];
+  const allowedRoles = ['oxmanager', 'reasercher', 'admin', 'quality', 'email_marketing'];
 
   useEffect(() => {
     console.log('Status:', status); // Debugging log

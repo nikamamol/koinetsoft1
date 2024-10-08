@@ -9,6 +9,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import Hourglass from "../assets/Hourglass.gif";
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 
 const EMCheckedTab = () => {
@@ -87,7 +89,7 @@ const EMCheckedTab = () => {
         },
     ], []);
 
-
+    const userRole = localStorage.getItem('role')
     const handleDownload = async (file) => {
         const { _id, originalname } = file;
         try {
@@ -151,12 +153,19 @@ const EMCheckedTab = () => {
 
     return (
         <div>
-            <MaterialReactTable
+            {userRole === 'email_marketing' ? <MaterialReactTable
                 columns={columns}
                 data={csvFiles}
                 enableColumnResizing
                 enableStickyHeader
-            />
+            /> : <>
+
+                <div className='text-center mt-2 '>
+                    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                    <p className='text-danger'>You do not have permission to view this content.</p>
+                </div>
+            </>}
+
         </div>
     );
 };

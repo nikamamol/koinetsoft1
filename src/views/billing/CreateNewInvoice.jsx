@@ -8,6 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import axios from 'axios';
 import Logo from "../../assets/Logo.png"
+import Unauthorised from "../../assets/401Unauthorised.png"
+
 
 
 const Invoice = () => {
@@ -369,8 +371,10 @@ function CreateNewInvoice() {
                             {(userRole === 'admin' || userRole === 'oxmanager') ? (
                                 <Invoice />
                             ) : (
-                                <div className="text-center mt-4">
-                                    <h5 className='text-danger'>User not authorized to view this page</h5>
+
+                                <div className='text-center mt-2 '>
+                                    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                                    <p className='text-danger'>You do not have permission to view this content.</p>
                                 </div>
                             )}
                         </div>

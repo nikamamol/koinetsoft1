@@ -19,6 +19,8 @@ import { createCampaign } from '../../../redux/reducer/createcampaign/CreateNewC
 import { toast } from 'react-toastify';
 import { fetchClients } from '../../../redux/reducer/billing/ClientSlice';
 import { fetchTemplates } from '../../../redux/reducer/createteplate/GetTemplate';
+import Unauthorised from "../../../assets/401Unauthorised.png"
+
 
 function CreateCampaign() {
   const dispatch = useDispatch();
@@ -782,9 +784,11 @@ function CreateCampaign() {
                     </div>
                   </div>
                 </form>
-              </> : <div className="text-center mt-4">
-                <h5 className='text-danger'>User not authorized to view this page</h5>
-              </div>
+              </> : 
+                <div className='text-center mt-2 '>
+                    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                    <p className='text-danger'>You do not have permission to view this content.</p>
+                </div>
             }
 
           </Col>

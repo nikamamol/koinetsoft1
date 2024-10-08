@@ -2,6 +2,8 @@ import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import AgencyMyAgency from '../../table/AgencyMyAgency'
 import Navbar from "../../components/HeadNavbar"
+import Unauthorised from "../../assets/401Unauthorised.png"
+
 
 function MyEngencies() {
   const userType = localStorage.getItem("role");
@@ -19,9 +21,11 @@ function MyEngencies() {
             {(userType === 'admin' || userType === 'oxmanager') ? (
               <AgencyMyAgency />
             ) : (
-              <div className="text-center mt-4">
-                <h5 className='text-danger'>User not authorized to view this page</h5>
-              </div>
+              
+              <div className='text-center mt-2 '>
+              <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+              <p className='text-danger'>You do not have permission to view this content.</p>
+          </div>
             )}
           </Col>
         </Row>

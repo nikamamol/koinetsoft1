@@ -19,7 +19,7 @@ const RAMasterTab = () => {
 
   // Retrieve the user's role from localStorage
   const role = localStorage.getItem('role');
-  const allowedRoles = ['oxmanager', 'researcher', 'admin']; // Specify allowed roles
+  const allowedRoles = ['oxmanager', 'reasercher', 'admin']; // Specify allowed roles
 
   useEffect(() => {
     if (allowedRoles.includes(role)) {

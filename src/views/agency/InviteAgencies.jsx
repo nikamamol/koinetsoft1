@@ -3,6 +3,8 @@ import { Col, Container, Row, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../../constant/ConstantApi';
+import Unauthorised from "../../assets/401Unauthorised.png"
+
 
 function InviteAgencies() {
   // State variables for form data
@@ -612,9 +614,11 @@ function InviteAgencies() {
                     </div>
                   </div>
                 </div>
-              </div> : <div className="text-center mt-4">
-                <h5 className='text-danger'>User not authorized to view this page</h5>
-              </div>
+              </div> : 
+                <div className='text-center mt-2 '>
+                    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                    <p className='text-danger'>You do not have permission to view this content.</p>
+                </div>
             }
 
           </Col>

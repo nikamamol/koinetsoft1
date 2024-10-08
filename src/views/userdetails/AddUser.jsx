@@ -20,6 +20,7 @@ function AddUser() {
 
   const [formData, setFormData] = useState(initialFormData);
 
+  const userType= localStorage.getItem('role');
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
@@ -239,10 +240,10 @@ function AddUser() {
                       </Form.Group>
                       <div className="row gap-2 text-center">
                         <div className="col-12">
-                          <button type="submit" className="btn btn-danger me-2">
+                          <button type="submit" className="btn btn-danger me-2" disabled={userType !== "admin" && userType !== "oxmanager"}>
                             Save
                           </button>
-                          <button type="button" className="btn btn-outline-secondary" onClick={resetForm}>
+                          <button type="button" className="btn btn-outline-secondary" disabled={userType !== "admin" && userType !== "oxmanager"} onClick={resetForm}>
                             Clear
                           </button>
                         </div>
