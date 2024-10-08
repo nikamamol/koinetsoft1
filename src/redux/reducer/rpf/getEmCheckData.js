@@ -7,18 +7,28 @@ const token = localStorage.getItem("authToken");
 // Async thunk for fetching CSV files
 export const fetchCsvFilesbyEMChecked = createAsyncThunk(
     "csvFileCheckedbyEMChecked/fetchCsvFilesbyEMChecked",
-    async() => {
-        const response = await axios.get(
-            `${baseUrl}user/getCsvFilesByEMCheckedAll`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
+    async(_, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem("authToken"); // Move token retrieval inside the function
+            const response = await axios.get(
+                `${baseUrl}user/getCsvFilesByEMCheckedAll`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            return response.data.files;
+        } catch (error) {
+            // If unauthorized, return a rejected action with an error message
+            if (error.response && error.response.status === 401) {
+                return rejectWithValue('Unauthorized access - please log in again.');
             }
-        );
-        return response.data.files;
+            return rejectWithValue(error.message); // Return other error messages
+        }
     }
 );
+
 
 // CSV slice
 const CsvsliceByEMChecked = createSlice({

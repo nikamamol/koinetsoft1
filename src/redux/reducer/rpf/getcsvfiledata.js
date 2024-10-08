@@ -35,10 +35,25 @@ export const fetchFileDataAll = createAsyncThunk(
             });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            // Handle cases where error.response might not exist
+            if (error.response) {
+                // If the server responded with an error (e.g., 4xx or 5xx)
+                return rejectWithValue(error.response.data);
+            } else if (error.request) {
+                // If the request was made but no response was received
+                return rejectWithValue({
+                    message: "No response received from server. Please check your connection.",
+                });
+            } else {
+                // If something else happened while setting up the request
+                return rejectWithValue({
+                    message: "An error occurred while fetching the data.",
+                });
+            }
         }
     }
 );
+
 
 // Thunk for downloading a file
 export const downloadFile = createAsyncThunk(

@@ -16,22 +16,23 @@ const RfpReceivedAll = () => {
   const { files, status, error } = useSelector((state) => state.fileData);
 
   // Get role from localStorage
-  const role = localStorage.getItem('role'); // Make sure the key matches what you store in localStorage
+  const role = localStorage.getItem('role');
   const allowedRoles = ['oxmanager', 'reasercher', 'admin', 'quality', 'email_marketing'];
 
   useEffect(() => {
-    console.log('Status:', status); // Debugging log
-    if (status === 'idle') {
-      dispatch(fetchFileDataAll())
-        .unwrap()
-        .then(() => {
-          console.log('Data fetched successfully');
-          dispatch(fetchFileDataAll()) // Success log
-        })
-        .catch((fetchError) => {
-          console.error('Error fetching file data:', fetchError); // Log fetch errors
-        });
-    }
+    console.log('Status:', status);
+    setTimeout(() => {
+      if (status === 'idle') {
+        dispatch(fetchFileDataAll())
+          .unwrap()
+          .then(() => {
+            dispatch(fetchFileDataAll()) // Success log
+          })
+          .catch((fetchError) => {
+            console.error('Error fetching file data:', fetchError); // Log fetch errors
+          });
+      }
+    }, 200)
   }, [status, dispatch]);
 
   const handleDownload = (fileId, filename) => {
@@ -140,9 +141,9 @@ const RfpReceivedAll = () => {
   // Check if the role is not allowed
   if (!allowedRoles.includes(role)) {
     return <div className='text-center mt-2 '>
-    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-    <p className='text-danger'>You do not have permission to view this content.</p>
-  </div>;
+      <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+      <p className='text-danger'>You do not have permission to view this content.</p>
+    </div>;
   }
 
   if (status === "loading") return (
