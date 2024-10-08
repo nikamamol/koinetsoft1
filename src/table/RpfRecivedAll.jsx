@@ -16,14 +16,26 @@ const RfpReceivedAll = () => {
   const allowedRoles = ['oxmanager', 'researcher', 'admin', 'quality', 'email_marketing'];
 
   useEffect(() => {
+    console.log('Status:', status); // Debugging log
     if (status === 'idle') {
-      dispatch(fetchFileDataAll());
+      dispatch(fetchFileDataAll())
+        .unwrap()
+        .then(() => {
+          console.log('Data fetched successfully');
+          dispatch(fetchFileDataAll()) // Success log
+        })
+        .catch((fetchError) => {
+          console.error('Error fetching file data:', fetchError); // Log fetch errors
+        });
     }
   }, [status, dispatch]);
 
   const handleDownload = (fileId, filename) => {
     dispatch(downloadFile({ fileId, filename }))
       .unwrap()
+      .then(() => {
+        console.log('File downloaded successfully'); // Success log
+      })
       .catch((error) => {
         console.error('Error downloading file:', error);
       });
@@ -62,7 +74,7 @@ const RfpReceivedAll = () => {
         header: 'Status',
         size: 400,
         Cell: ({ row }) => {
-          const allChecked = row.original.status.every((statusItem) => statusItem.checked);
+          // const allChecked = row.original.status.every((statusItem) => statusItem.checked);
 
           return (
             <div className='d-flex gap-2'>
@@ -86,6 +98,19 @@ const RfpReceivedAll = () => {
               ) : (
                 <p>No status available</p>
               )}
+
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: 'action',
+        header: 'Action',
+        Cell: ({ row }) => {
+          const allChecked = row.original.status.every((statusItem) => statusItem.checked);
+
+          return (
+            <>
               <Tooltip title="Download File">
                 <IconButton disabled={!allChecked}>
                   <CloudDownloadIcon
@@ -100,10 +125,10 @@ const RfpReceivedAll = () => {
                   />
                 </IconButton>
               </Tooltip>
-            </div>
-          );
-        },
-      },
+            </>
+          )
+        }
+      }
     ],
     [handleDownload]
   );
@@ -114,7 +139,12 @@ const RfpReceivedAll = () => {
   }
 
   if (status === 'loading') return <div>Loading...</div>;
-  if (status === 'failed') return <div>Error: {error}</div>;
+  if (status === 'failed') return (
+    <div>
+      Error: {error}
+      <button className='btn btn-primary ms-2' onClick={() => dispatch(fetchFileDataAll())}>Retry</button>
+    </div>
+  );
 
   return <MaterialReactTable columns={columns} data={files} />;
 };

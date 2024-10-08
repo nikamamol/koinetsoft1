@@ -27,7 +27,7 @@ const RfpEmailCheck = () => {
             dispatch(fetchFileDataAll());
         }
     }, [status, dispatch]);
-
+    const userType = localStorage.getItem('role')
     useEffect(() => {
         const updatedCheckboxes = {};
         files.forEach(file => {
@@ -123,7 +123,7 @@ const RfpEmailCheck = () => {
     const role = localStorage.getItem('role');
 
     const filteredFiles = useMemo(() => {
-        if (role !== 'email_marketing' && role !== 'admin' &&   role !== 'oxmanager') return [];
+        if (role !== 'email_marketing' && role !== 'admin' && role !== 'oxmanager') return [];
         return files.filter(file =>
             file.status.some(statusItem => statusItem.userType === 'Email Marketing')
         );
@@ -184,7 +184,7 @@ const RfpEmailCheck = () => {
                 </div>
             ),
         },
-        
+
         {
             accessorKey: 'actions',
             header: 'Actions',
@@ -208,7 +208,7 @@ const RfpEmailCheck = () => {
     if (status === 'loading') return <div>Loading...</div>;
     if (status === 'failed') return <div>Error: {error}</div>;
 
-    if (role !== 'email_marketing' && role !== 'admin' &&   role !== 'oxmanager') {
+    if (role !== 'email_marketing' && role !== 'admin' && role !== 'oxmanager') {
         return (
             <div className='text-center'>
                 <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page</h1>
@@ -218,7 +218,7 @@ const RfpEmailCheck = () => {
 
     return (
         <div>
-       
+
             {excelData.length === 0 ? (
                 <MaterialReactTable columns={columns} data={filteredFiles} />
             ) : (

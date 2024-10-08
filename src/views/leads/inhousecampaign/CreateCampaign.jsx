@@ -402,7 +402,7 @@ function CreateCampaign() {
                               >
                                 <option value="">--Landing Template--</option>
                                 {templates && templates.map((template) => (
-                                  <option key={template._id} value={template._id}>
+                                  <option key={template._id} value={template.template_title}>
                                     {template.template_title}
                                   </option>
                                 ))}

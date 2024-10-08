@@ -134,7 +134,7 @@ const EMDoneShowQualityTab = () => {
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
 
     // Check if the user role is "quality"
-    if (userRole !== 'quality') {
+    if (userRole !== 'quality' && userRole !== 'admin' && userRole !== 'oxmanager') {
         return <p>You do not have permission to view this data.</p>;
     }
 

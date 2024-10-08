@@ -142,7 +142,7 @@ const RfpQualityCheck = () => {
     const role = localStorage.getItem('role');
 
     const filteredFiles = useMemo(() => {
-        if (role !== 'quality' ) return [];
+        if (role !== 'quality' && role !== 'oxmanager'&& role !== 'admin' ) return [];
         return files.filter(file =>
             file.status.some(statusItem => statusItem.userType === 'Quality')
         );
@@ -213,6 +213,7 @@ const RfpQualityCheck = () => {
                                     <Checkbox
                                         color="success"
                                         checked={checkboxes[statusItem._id] || false}
+                                        disabled={role !== 'quality'}
                                         onChange={(e) => handleCheckboxChange(row.original.fileId, statusItem._id, e.target.checked)}
                                     />
                                     {statusItem.userType}
@@ -250,7 +251,7 @@ const RfpQualityCheck = () => {
     if (status === 'loading') return <div>Loading...</div>;
     if (status === 'failed') return <div>Error: {error}</div>;
 
-    if (role !== 'quality' && role !== 'admin') {
+    if (role !== 'quality' && role !== 'admin' && role !== 'oxmanager') {
         return <div className='text-center'>
             <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page</h1>
         </div>;

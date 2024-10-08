@@ -84,7 +84,7 @@ function Received() {
                 <Button variant="primary" className='p-2' onClick={handleShow}>
                   <CloudUploadIcon /> Upload  or Drag 'n' drop RPF File
                 </Button>
-                <Modal show={show} onHide={handleClose} centered>
+                <Modal show={show} onHide={handleClose}  centered>
                   <Modal.Header closeButton>
                     <Modal.Title>Upload Your RPF File (.csv format)</Modal.Title>
                   </Modal.Header>
