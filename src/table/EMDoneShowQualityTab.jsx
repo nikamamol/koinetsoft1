@@ -9,7 +9,6 @@ import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import Hourglass from "../assets/Hourglass.gif";
 
-
 const EMDoneShowQualityTab = () => {
     const dispatch = useDispatch();
     const { csvFiles, loading, error } = useSelector((state) => state.csvFileCheckedbyEMChecked);
@@ -17,7 +16,16 @@ const EMDoneShowQualityTab = () => {
     const userRole = localStorage.getItem('role'); // Assuming you store user role as 'userRole'
 
     useEffect(() => {
-        dispatch(fetchCsvFilesbyEMChecked()); // Ensure correct action is dispatched
+        // Fetch CSV files when the component mounts
+        const fetchData = async () => {
+            try {
+                await dispatch(fetchCsvFilesbyEMChecked());
+            } catch (err) {
+                console.error('Error fetching data:', err);
+                toast.error("Failed to fetch data");
+            }
+        };
+        fetchData();
     }, [dispatch]);
 
     const formatDate = (dateString) => {
@@ -132,11 +140,14 @@ const EMDoneShowQualityTab = () => {
         }
     };
 
+    // Render loading spinner if loading
     if (loading) return (
-        <>
-            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
-        </>
-    )
+        <div className='text-center mt-5'>
+            <img src={Hourglass} alt="Loading..." height={40} width={40} />
+        </div>
+    );
+
+    // Render error message if error exists
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
 
     // Check if the user role is "quality"
@@ -144,6 +155,7 @@ const EMDoneShowQualityTab = () => {
         return <p>You do not have permission to view this data.</p>;
     }
 
+    // Render the table if everything is fine
     return (
         <div>
             <MaterialReactTable

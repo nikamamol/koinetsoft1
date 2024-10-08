@@ -96,6 +96,7 @@ function Login() {
             <img
                 src={GiftImage}  // Use the imported image here
                 alt="Gift"
+                 className="d-none d-lg-block"
                 style={{
                     position: 'fixed',
                     bottom: '20px',
