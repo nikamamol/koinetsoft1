@@ -34,7 +34,7 @@ function RAMaster() {
   }, [dispatch, status]);
 
   const handleShow = () => {
-    if (userRole !== 'oxmanager' && userRole !== 'admin') {
+    if (userRole !== 'oxmanager' && userRole !== 'admin'&& userRole !== 'reasercher') {
       alert('You do not have permission to upload files.');
       return;
     }

@@ -16,6 +16,8 @@ import '@syncfusion/ej2-popups/styles/material.css';
 import '@syncfusion/ej2-lists/styles/material.css';
 import '@syncfusion/ej2-react-spreadsheet/styles/material.css';
 import DownloadIcon from '@mui/icons-material/Download';
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 import axios from 'axios';
 import * as XLSX from 'xlsx';
@@ -156,7 +158,10 @@ const RfpOperationAll = () => {
     );
 
     if (!allowedRoles.includes(userType)) {
-        return <p className='text-danger'>You do not have permission to view this data.</p>;
+        return <div className='text-center mt-2 '>
+        <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+        <p className='text-danger'>You do not have permission to view this content.</p>
+      </div>;
     }
     return (
         <div>

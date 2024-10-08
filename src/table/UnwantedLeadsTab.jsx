@@ -10,6 +10,8 @@ import baseUrl from '../constant/ConstantApi';
 import { fetchCsvFilesbyUnwantedLeads } from '../redux/reducer/rpf/getUnwantedLeads';
  // Ensure correct import
  import Hourglass from "../assets/Hourglass.gif";
+ import Unauthorised from "../assets/401Unauthorised.png"
+
 
 
 const UnwantedLeadsTab = () => {
@@ -148,7 +150,10 @@ const UnwantedLeadsTab = () => {
     )
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
     if (!allowedRoles.includes(userType)) {
-        return <p className='text-danger'>You do not have permission to view this data.</p>;
+        return <div className='text-center mt-2 '>
+        <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+        <p className='text-danger'>You do not have permission to view this content.</p>
+      </div>;
     }
 
     return (

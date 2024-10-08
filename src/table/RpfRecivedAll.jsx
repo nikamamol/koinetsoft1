@@ -7,6 +7,8 @@ import { downloadFile, fetchFileDataAll } from '../redux/reducer/rpf/getcsvfiled
 import { pink } from '@mui/material/colors';
 import { IconButton, Tooltip } from '@mui/material';
 import Hourglass from "../assets/Hourglass.gif";
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 
 const RfpReceivedAll = () => {
@@ -137,7 +139,10 @@ const RfpReceivedAll = () => {
 
   // Check if the role is not allowed
   if (!allowedRoles.includes(role)) {
-    return <div>Access denied. You do not have permission to view this data.</div>;
+    return <div className='text-center mt-2 '>
+    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+    <p className='text-danger'>You do not have permission to view this content.</p>
+  </div>;
   }
 
   if (status === "loading") return (

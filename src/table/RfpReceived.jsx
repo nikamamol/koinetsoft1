@@ -6,6 +6,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { fetchFileData, downloadFile, deleteFile } from '../redux/reducer/rpf/getcsvfiledata';
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import Hourglass from "../assets/Hourglass.gif";
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 
 const isToday = (dateString) => {
@@ -153,16 +155,17 @@ const RfpReceived = () => {
   );
 
   if (userRole !== 'user') {
-    return <div className='text-center'>
-      <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page.</h1>
-    </div>;
+    return <div className='text-center mt-2 '>
+      <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+      <p className='text-danger'>You do not have permission to view this content.</p>
+    </div>
   }
 
   if (status === "loading") return (
     <>
-        <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+      <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
     </>
-)
+  )
   if (status === 'failed') return <div>Error: {error}</div>;
 
   return <MaterialReactTable columns={columns} data={filteredFiles} />;

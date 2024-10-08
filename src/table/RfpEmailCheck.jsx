@@ -7,6 +7,8 @@ import { Checkbox, IconButton, Tooltip, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import Hourglass from "../assets/Hourglass.gif";
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 
 import * as XLSX from 'xlsx';
@@ -207,7 +209,7 @@ const RfpEmailCheck = () => {
         },
     ], [handleRead, handleCheckboxChange, checkboxes]);
 
-     if (status === 'loading') return (
+    if (status === 'loading') return (
         <>
             <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
         </>
@@ -216,8 +218,9 @@ const RfpEmailCheck = () => {
 
     if (role !== 'email_marketing' && role !== 'admin' && role !== 'oxmanager') {
         return (
-            <div className='text-center'>
-                <h1 className='bg-danger p-2 text-light'>You are not authorized to view this page</h1>
+            <div className='text-center mt-2 '>
+                <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                <p className='text-danger'>You do not have permission to view this content.</p>
             </div>
         );
     }

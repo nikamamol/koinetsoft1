@@ -6,6 +6,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom'; // If using React Router for navigation
 import { fetchFiles } from '../redux/reducer/rpf/operationcsvupload'; // Adjust import path as needed
 import Hourglass from "../assets/Hourglass.gif";
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 
 const RfpActive = () => {
@@ -113,7 +115,10 @@ const RfpActive = () => {
     [checkboxes]
   );
   if (!allowedRoles.includes(userType)) {
-    return <p className='text-danger'>You do not have permission to view this data.</p>;
+    return <div className='text-center mt-2 '>
+    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+    <p className='text-danger'>You do not have permission to view this content.</p>
+  </div>;
   }
   return (
     <div>

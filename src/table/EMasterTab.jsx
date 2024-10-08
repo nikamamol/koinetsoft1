@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import { fetchCsvFilesbyEMMaster } from '../redux/reducer/rpf/getEmMasterFileData';
 import Hourglass from "../assets/Hourglass.gif";
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 
 const EMasterTab = () => {
@@ -150,7 +152,10 @@ const EMasterTab = () => {
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
         // Conditionally render the table based on user role
         if (!allowedRoles.includes(userRole)) {
-            return <p className='text-danger'>You do not have permission to view this content.</p>;
+            return <div className='text-center mt-2 '>
+            <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+            <p className='text-danger'>You do not have permission to view this content.</p>
+          </div>;
         }
     
 

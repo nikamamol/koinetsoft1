@@ -9,6 +9,8 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import Hourglass from "../assets/Hourglass.gif";
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 
 
@@ -159,9 +161,10 @@ function EmailCheckedShowDeliveryTab() {
                     data={csvFiles}
                     enableColumnResizing
                     enableStickyHeader
-                /> : <div className='text-center mt-2'>
-                    <p className='text-danger'>You do not have permission to view this content.</p>
-                </div>}
+                /> : <div className='text-center mt-2 '>
+                <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                <p className='text-danger'>You do not have permission to view this content.</p>
+              </div>}
         </div>
     );
 }

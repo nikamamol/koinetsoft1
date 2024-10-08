@@ -38,7 +38,7 @@ function EMChecked() {
     }, [show, dispatch]);
 
     const handleShow = () => {
-        if (userRole !== 'oxmanager' && userRole !== 'admin') {
+        if (userRole !== 'oxmanager' && userRole !== 'email_marketing' && userRole !== 'admin') {
             alert('You do not have permission to upload files.');
             return;
         }
