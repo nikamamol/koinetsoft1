@@ -30,6 +30,7 @@ export default function UserProfile() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('username');
     localStorage.removeItem('role');
+    localStorage.removeItem('timer');
     // Navigate to login page
     navigate('/');
   };
@@ -46,7 +47,7 @@ export default function UserProfile() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <span className='me-2 text-dark'>{username}</span>  
+            <span className='me-2 text-dark'>{username}</span>
             <Avatar sx={{ width: 40, height: 40, backgroundColor: "#f7434fcc", padding: "5px" }}>
               {username.charAt(0).toUpperCase()}
             </Avatar>
@@ -89,7 +90,7 @@ export default function UserProfile() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar /> 
+          <Avatar />
           <Link to="/user/profile" className='text-decoration-none text-dark'>
             Profile
           </Link>
@@ -104,3 +105,6 @@ export default function UserProfile() {
     </>
   );
 }
+
+
+

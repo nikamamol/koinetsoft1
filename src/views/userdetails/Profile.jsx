@@ -3,9 +3,18 @@ import { Col, Container, Row } from 'react-bootstrap';
 import UserProfile from "../../assets/userProfile.jpeg";
 import axios from 'axios';
 import baseUrl from '../../constant/ConstantApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserDetails } from '../../redux/reducer/registeruser/UserDetails';
+// import { fetchUserDetails } from '../redux/reducer/registeruser/UserDetails';
 
 function Profile() {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector((state) => state.user);
+
+  useEffect(() => {
+      dispatch(fetchUserDetails());
+  }, [dispatch]);
 
   useEffect(() => {
     // Fetch user profile data
@@ -128,7 +137,23 @@ function Profile() {
                           aria-describedby="basic-icon-default-email2"
                           value={user ? user.email : ""}
                         />
-                        <div className="form-text">You can use letters, numbers & periods</div>
+                        
+                      </div>
+                      <div className="mb-3 col-md-6">
+                        <label htmlFor="basic-icon-default-role">Role <span className="text-danger">*</span></label>
+                        <input
+                          type="text"
+                          required
+                          name="role"
+                          id="role"
+                          className="form-control"
+                          placeholder="Admin"
+                          style={{ textTransform: "capitalize" }}
+                          // aria-label="john.doe"
+                          aria-describedby="basic-icon-default-role2"
+                          value={user ? user.role : ""}
+                        />
+                        
                       </div>
                       {/* Additional fields go here */}
                       <div className="row text-center">

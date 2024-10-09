@@ -35,6 +35,7 @@ import { useTheme } from '@emotion/react';
 import { Collapse } from '@mui/material';
 import LogoImage from "../assets/koinetlogo.png"
 import UserProfile from './UserProfile';
+import Counter from '../views/counter/Counter';
 
 const drawerWidth = 240;
 
@@ -306,7 +307,7 @@ function ResponsiveDrawer(props) {
           {[
             { text: 'View User', path: '/user/viewUser' },
             { text: 'Add User', path: '/user/addUser' },
-            { text: 'Attendance', path: '/user/attendance' },
+            // { text: 'Attendance', path: '/user/attendance' },
           ].map((item) => (
             <ListItem key={item.text} disablePadding sx={{ display: 'block' }} onClick={() => handleNavigation(item.path)}>
               <ListItemButton
@@ -873,6 +874,32 @@ function ResponsiveDrawer(props) {
         </Collapse>
       </List>
 
+      {/* Attendance */}
+      <List>
+        <ListItem disablePadding sx={{ display: 'block' }} onClick={handleCollapseUser}>
+          <Link to="/user/attendance" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Attendance" sx={{ opacity: open ? 1 : 0 }} />
+              {/* {isCollapse ? <ExpandLessIcon /> : <ExpandMoreIcon />} */}
+            </ListItemButton>
+          </Link>
+        </ListItem>
+      </List>
 
       {/* Support Section */}
       <List>
@@ -1060,7 +1087,8 @@ function ResponsiveDrawer(props) {
             <MenuIcon />
           </IconButton>
 
-          <div variant="p" noWrap component="div" className='ms-auto'>
+          <div variant="p" noWrap component="div" className='ms-auto d-flex'>
+            <Counter />
             <UserProfile />
           </div>
         </Toolbar>

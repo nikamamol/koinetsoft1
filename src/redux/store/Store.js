@@ -30,6 +30,7 @@ import opmasterFileUploadReducer from "../reducer/rpf/operationMasterCsvFile";
 import CsvsliceByOPMaster from "../reducer/rpf/getoperationMasterCsvFile";
 import unwantedLeadsFileUploadReducer from "../reducer/rpf/unwantedLeads";
 import CsvsliceByUnwantedLeads from "../reducer/rpf/getUnwantedLeads"
+import userReducer from "../reducer/registeruser/UserDetails"
 
 const store = configureStore({
     reducer: {
@@ -65,6 +66,7 @@ const store = configureStore({
         csvFileCheckedbyOPMaster: CsvsliceByOPMaster,
         unwantedLeadsFileUpload: unwantedLeadsFileUploadReducer,
         csvFileCheckedbyUnwantedLeads: CsvsliceByUnwantedLeads,
+        user: userReducer,
     },
 });
 
