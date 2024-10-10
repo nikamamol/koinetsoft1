@@ -23,9 +23,7 @@ export default function UserProfile() {
 
   // Fetch user details on component mount
   useEffect(() => {
-    dispatch(fetchUserDetails()).catch((err) => {
-      console.error('Error fetching user details:', err);
-    });
+    dispatch(fetchUserDetails());
   }, [dispatch]);
 
   const username = user?.username || 'User';
@@ -39,32 +37,35 @@ export default function UserProfile() {
   };
 
   const handleLogout = async () => {
-    if (!user || !user._id) {
-      console.error('User ID is not available.');
-      alert('Error logging out. Please try again.');
-      return;
-    }
+    const userId = user?._id; // Get the user ID from the user object
 
-    const userId = user._id;
-    console.log('Logging out user:', userId);
+    if (!userId) {
+        alert('User ID is not available.'); // Handle case where user ID is not found
+        return;
+    }
 
     try {
-      // Make the logout API request
-      await axios.post(`${baseUrl}user/logout`, { userId });
+        // Make the logout API request
+        await axios.post(`${baseUrl}user/logout`, { userId });
 
-      // Clear local storage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('username');
-      localStorage.removeItem('role');
-      localStorage.removeItem('timer');
+        // Clear local storage
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+        localStorage.removeItem('timer');
 
-      // Navigate to login page
-      navigate('/');
+        // Optionally, reset user state in Redux store if you have a slice for it
+        // dispatch(logoutUser()); // Uncomment this if you have a logout action
+
+        // Navigate to login page
+        navigate('/');
     } catch (error) {
-      console.error('Logout error:', error);
-      alert('Error logging out. Please try again.');
+        console.error('Logout error:', error);
+        alert('Error logging out. Please try again.');
     }
-  };
+};
+
+
 
   return (
     <>

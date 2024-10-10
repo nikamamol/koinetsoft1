@@ -6,8 +6,6 @@ import {
 import axios from 'axios';
 import baseUrl from '../constant/ConstantApi';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { ToastContainer, toast } from 'react-toastify'; // Import toast for notifications
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast notifications
 
 const AttendanceTable = () => {
   const [loginData, setLoginData] = useState([]);
@@ -29,23 +27,18 @@ const AttendanceTable = () => {
             for (let i = 0; i < loginTimes.length; i++) {
               const loginTime = new Date(loginTimes[i].timestamp);
               const inTime = loginTime.toLocaleTimeString();
-              const logoutTime = (i < logoutTimes.length) 
-                ? new Date(logoutTimes[i].timestamp) 
-                : null;
+              const logoutTime = i < logoutTimes.length ? new Date(logoutTimes[i].timestamp) : null;
 
               let totalWorkHours = 'N/A';
               let totalWorkHoursNum = 0;
-              if (logoutTime) {
-                const hoursDiff = (logoutTime - loginTime);
-                if (hoursDiff >= 0) {
-                  const totalSeconds = Math.floor(hoursDiff / 1000);
-                  const hours = Math.floor(totalSeconds / 3600);
-                  const minutes = Math.floor((totalSeconds % 3600) / 60);
-                  totalWorkHoursNum = hours + minutes / 60;
-                  totalWorkHours = `${hours.toString().padStart(2, '0')}:${minutes
-                    .toString()
-                    .padStart(2, '0')}:00`;
-                }
+              if (logoutTime && logoutTime > loginTime) {
+                const hoursDiff = (logoutTime - loginTime); // Difference in milliseconds
+                const totalSeconds = Math.floor(hoursDiff / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                totalWorkHoursNum = hours + minutes / 60;
+                totalWorkHours = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
               }
 
               let status = 'Absent ❌';
@@ -94,7 +87,6 @@ const AttendanceTable = () => {
         setLoginData(flattenedLoginData); // Update state with flattened data
       } catch (error) {
         console.error('Error fetching login data', error);
-        toast.error("Error fetching login data. Please try again."); // Notify user
       }
     };
 
@@ -108,17 +100,11 @@ const AttendanceTable = () => {
   };
 
   const handleSaveComments = async (index) => {
+    // Implement the logic to save the comments (e.g., send to API)
     const updatedComment = loginData[index].comments;
-    try {
-      await axios.post(`${baseUrl}user/saveComment`, {
-        userId: loginData[index].username,
-        comment: updatedComment,
-      });
-      toast.success(`Comment saved for ${loginData[index].username}`); // Notify user
-    } catch (error) {
-      toast.error("Error saving comment. Please try again."); // Notify user
-      console.error("Error saving comment", error);
-    }
+    // Example API call (you can modify as needed):
+    // await axios.post(`${baseUrl}user/saveComment`, { userId: loginData[index].username, comment: updatedComment });
+    console.log(`Saving comment for ${loginData[index].username}: ${updatedComment}`);
   };
 
   const columns = useMemo(
@@ -196,12 +182,7 @@ const AttendanceTable = () => {
     data: loginData,
   });
 
-  return (
-    <>
-      <MaterialReactTable table={table} />
-      <ToastContainer /> {/* Toast container for notifications */}
-    </>
-  );
+  return <MaterialReactTable table={table} />;
 };
 
 export default AttendanceTable;
