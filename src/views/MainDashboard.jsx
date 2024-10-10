@@ -63,7 +63,7 @@ function MainDashboard() {
         if (csvFiles && csvFiles.length > 0) {
             unwantedCountLeads(csvFiles);
         }
-    }, [files]);
+    }, [csvFiles]);
 
 
     // Function to count leads based on buffer content (Excel data)
@@ -108,6 +108,7 @@ function MainDashboard() {
 
         setTotalUnwantedLeads(unwantedLeadCount);
     }
+
     // Total lead count is direct operation upload main file 
     return (
         <div>
