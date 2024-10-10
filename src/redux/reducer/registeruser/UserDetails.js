@@ -1,13 +1,14 @@
 // src/redux/userSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import baseUrl from '../../../constant/ConstantApi';
 
 export const fetchUserDetails = createAsyncThunk(
     'user/fetchUserDetails',
     async(_, { rejectWithValue }) => {
         const token = localStorage.getItem('authToken'); // Retrieve the token from local storage
         try {
-            const response = await axios.get('http://localhost:4000/user/userdetails', {
+            const response = await axios.get(`${baseUrl}user/userdetails`, {
                 headers: {
                     Authorization: token // Send the token in the authorization header
                 }
