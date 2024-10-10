@@ -8,14 +8,25 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchUserDetails } from '../redux/reducer/registeruser/UserDetails';
+import axios from 'axios';
+import baseUrl from '../constant/ConstantApi';
 
 export default function UserProfile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector((state) => state.user);
 
-  // Retrieve username from local storage
-  const username = localStorage.getItem('username') || 'User'; // Default to 'User' if not found
+  // Fetch user details on component mount
+  useEffect(() => {
+    dispatch(fetchUserDetails());
+  }, [dispatch]);
+
+  const username = user?.username || 'User';
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,15 +36,36 @@ export default function UserProfile() {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    // Clear local storage
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('username');
-    localStorage.removeItem('role');
-    localStorage.removeItem('timer');
-    // Navigate to login page
-    navigate('/');
-  };
+  const handleLogout = async () => {
+    const userId = user?._id; // Get the user ID from the user object
+
+    if (!userId) {
+        alert('User ID is not available.'); // Handle case where user ID is not found
+        return;
+    }
+
+    try {
+        // Make the logout API request
+        await axios.post(`${baseUrl}user/logout`, { userId });
+
+        // Clear local storage
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+        localStorage.removeItem('timer');
+
+        // Optionally, reset user state in Redux store if you have a slice for it
+        // dispatch(logoutUser()); // Uncomment this if you have a logout action
+
+        // Navigate to login page
+        navigate('/');
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error logging out. Please try again.');
+    }
+};
+
+
 
   return (
     <>
@@ -99,12 +131,11 @@ export default function UserProfile() {
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          <span className='text-dark'>Log-Out</span> {/* Removed Link to ensure the handler is executed */}
+          <span className='text-dark'>Log-Out</span>
         </MenuItem>
       </Menu>
+      {loading && <div>Loading...</div>}
+      {error && <div className="error">{error}</div>}
     </>
   );
 }
-
-
-
