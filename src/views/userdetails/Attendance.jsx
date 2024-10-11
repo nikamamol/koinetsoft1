@@ -15,9 +15,9 @@ function Attendance() {
             
               <div className="col-xxl">
               <div className='bgColor rounded-3 shadow'>
-                <h4 className='fw-bold py-3 ms-3 text_color'>Attendance</h4>
+                <h4 className='fw-bold py-3 ms-3 text_color'>Attendance Table</h4>
               </div>
-                <div className="card shadow border-0 mb-4">
+                {/* <div className="card shadow border-0 mb-4">
                   <div className="card-body">
                     <form
                       action="#"
@@ -61,7 +61,7 @@ function Attendance() {
                       </div>
                     </form>
                   </div>
-                </div>
+                </div> */}
                 <AttendanceTable/>
               </div>
             </div>

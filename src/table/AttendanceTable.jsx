@@ -9,6 +9,12 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const AttendanceTable = () => {
   const [loginData, setLoginData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]); // For storing filtered data
+  const [filters, setFilters] = useState({
+    fromDate: '',
+    toDate: '',
+    userId: ''
+  });
 
   // Fetch data from the login API on component mount
   useEffect(() => {
@@ -26,13 +32,16 @@ const AttendanceTable = () => {
           if (loginTimes.length > 0) {
             for (let i = 0; i < loginTimes.length; i++) {
               const loginTime = new Date(loginTimes[i].timestamp);
-              const inTime = loginTime.toLocaleTimeString();
-              const logoutTime = i < logoutTimes.length ? new Date(logoutTimes[i].timestamp) : null;
+              const logoutTime = i < logoutTimes.length ? new Date(logoutTimes[i]?.timestamp) : null; // Added optional chaining
 
+              const inTime = loginTime.toLocaleTimeString();
+
+              // Check if logoutTime is defined
               let totalWorkHours = 'N/A';
               let totalWorkHoursNum = 0;
+
               if (logoutTime && logoutTime > loginTime) {
-                const hoursDiff = (logoutTime - loginTime); // Difference in milliseconds
+                const hoursDiff = logoutTime - loginTime; // Difference in milliseconds
                 const totalSeconds = Math.floor(hoursDiff / 1000);
                 const hours = Math.floor(totalSeconds / 3600);
                 const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -59,6 +68,7 @@ const AttendanceTable = () => {
                 username: user.username,
                 date: loginTime.toLocaleDateString(),
                 inTime,
+                logoutDate: logoutTime ? logoutTime.toLocaleDateString() : 'N/A', // Added logout date
                 outTime: logoutTime ? logoutTime.toLocaleTimeString() : 'N/A',
                 totalWorkHours,
                 status,
@@ -74,6 +84,7 @@ const AttendanceTable = () => {
               username: user.username,
               date: 'N/A',
               inTime: 'N/A',
+              logoutDate: 'N/A', // Set logout date to 'N/A'
               outTime: 'N/A',
               totalWorkHours: 'N/A',
               status: 'Inactive',
@@ -85,6 +96,7 @@ const AttendanceTable = () => {
         });
 
         setLoginData(flattenedLoginData); // Update state with flattened data
+        setFilteredData(flattenedLoginData); // Initially, filtered data is the same as fetched data
       } catch (error) {
         console.error('Error fetching login data', error);
       }
@@ -100,13 +112,12 @@ const AttendanceTable = () => {
   };
 
   const handleSaveComments = async (index) => {
-    // Implement the logic to save the comments (e.g., send to API)
     const updatedComment = loginData[index].comments;
-    // Example API call (you can modify as needed):
-    // await axios.post(`${baseUrl}user/saveComment`, { userId: loginData[index].username, comment: updatedComment });
     console.log(`Saving comment for ${loginData[index].username}: ${updatedComment}`);
   };
 
+
+  
   const columns = useMemo(
     () => [
       {
@@ -121,12 +132,17 @@ const AttendanceTable = () => {
       },
       {
         accessorKey: 'date',
-        header: 'Date',
+        header: 'Log-in Date',
         size: 150,
       },
       {
         accessorKey: 'inTime',
         header: 'In Time',
+        size: 150,
+      },
+      {
+        accessorKey: 'logoutDate', // Changed to logoutDate
+        header: 'Log-out Date', // Updated header for logout date
         size: 150,
       },
       {
@@ -144,11 +160,11 @@ const AttendanceTable = () => {
         header: 'Status',
         size: 100,
         Cell: ({ cell }) => (
-          <div style={{ 
-            backgroundColor: cell.row.original.statusColor, 
+          <div style={{
+            backgroundColor: cell.row.original.statusColor,
             textAlign: 'center',
-            padding: '2px', 
-            borderRadius: '10px' 
+            padding: '2px',
+            borderRadius: '10px'
           }}>
             {cell.getValue()}
           </div>
@@ -179,10 +195,14 @@ const AttendanceTable = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data: loginData,
+    data: filteredData, // Use filtered data for table rendering
   });
 
-  return <MaterialReactTable table={table} />;
+  return (
+    <>
+      <MaterialReactTable table={table} />
+    </>
+  );
 };
 
 export default AttendanceTable;
