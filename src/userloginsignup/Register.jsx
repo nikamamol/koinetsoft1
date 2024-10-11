@@ -120,7 +120,7 @@ const Register = () => {
                                         <option value="supervisor">Supervisor</option>
                                         <option value="oxmanager">OX Manager</option>
                                         <option value="developer">Web Developer</option>
-                                        <option value="hr">HR Exicative</option>
+                                        <option value="hr">HR Executive </option>
                                         <option value="reasercher">Reaserch Analyst</option>
                                         <option value="agent">Agent</option>
                                         <option value="client">Client</option>

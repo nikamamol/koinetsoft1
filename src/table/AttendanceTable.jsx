@@ -170,25 +170,25 @@ const AttendanceTable = () => {
           </div>
         ),
       },
-      {
-        accessorKey: 'comments',
-        header: 'Comments',
-        size: 200,
-        Cell: ({ cell, row }) => {
-          const index = row.index;
-          return (
-            <div className='d-flex gap-1'>
-              <textarea
-                type="text"
-                value={cell.getValue()}
-                onChange={(e) => handleCommentChange(index, e.target.value)}
-                style={{ width: '100%', height: "25px", border: "0.5px solid #243642" }}
-              />
-              <CheckCircleIcon style={{ cursor: 'pointer' }} onClick={() => handleSaveComments(index)} />
-            </div>
-          );
-        },
-      },
+      // {
+      //   accessorKey: 'comments',
+      //   header: 'Comments',
+      //   size: 200,
+      //   Cell: ({ cell, row }) => {
+      //     const index = row.index;
+      //     return (
+      //       <div className='d-flex gap-1'>
+      //         <textarea
+      //           type="text"
+      //           value={cell.getValue()}
+      //           onChange={(e) => handleCommentChange(index, e.target.value)}
+      //           style={{ width: '100%', height: "25px", border: "0.5px solid #243642" }}
+      //         />
+      //         <CheckCircleIcon style={{ cursor: 'pointer' }} onClick={() => handleSaveComments(index)} />
+      //       </div>
+      //     );
+      //   },
+      // },
     ],
     [loginData], // Add loginData to the dependencies to keep it updated
   );
