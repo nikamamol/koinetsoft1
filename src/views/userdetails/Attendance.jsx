@@ -1,9 +1,12 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import AttendanceTable from '../../table/AttendanceTable';
+import Unauthorised from "../../assets/401Unauthorised.png"
+
 
 
 function Attendance() {
+  const userRole = localStorage.getItem("role");
   return (
     <div>
       <Container fluid className="mt-5">
@@ -12,11 +15,11 @@ function Attendance() {
           <Col lg={8}>
             <div className="row">
               {/* Basic Layout */}
-            
+
               <div className="col-xxl">
-              <div className='bgColor rounded-3 shadow'>
-                <h4 className='fw-bold py-3 ms-3 text_color'>Attendance Table</h4>
-              </div>
+                <div className='bgColor rounded-3 shadow'>
+                  <h4 className='fw-bold py-3 ms-3 text_color'>Attendance Table</h4>
+                </div>
                 {/* <div className="card shadow border-0 mb-4">
                   <div className="card-body">
                     <form
@@ -62,12 +65,18 @@ function Attendance() {
                     </form>
                   </div>
                 </div> */}
-                <AttendanceTable/>
+                {userRole === 'admin' || userRole === "oxmanager" || userRole === "hr" ? <AttendanceTable /> : <>
+                  <div className='text-center mt-2 '>
+                    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                    <p className='text-danger'>You do not have permission to view this content.</p>
+                  </div></>
+                }
+                {/* <AttendanceTable/> */}
               </div>
             </div>
           </Col>
         </Row>
-        
+
       </Container>
     </div>
   );

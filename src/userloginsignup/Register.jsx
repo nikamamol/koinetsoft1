@@ -3,6 +3,8 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../redux/reducer/registeruser/Register';
+import Hourglass from "../assets/Hourglass.gif";
+
 
 import LogoImge1 from "../assets/koinetlogo.png";
 
@@ -117,6 +119,8 @@ const Register = () => {
                                         <option value="user">User</option>
                                         <option value="supervisor">Supervisor</option>
                                         <option value="oxmanager">OX Manager</option>
+                                        <option value="developer">Web Developer</option>
+                                        <option value="hr">HR Exicative</option>
                                         <option value="reasercher">Reaserch Analyst</option>
                                         <option value="agent">Agent</option>
                                         <option value="client">Client</option>
@@ -132,7 +136,11 @@ const Register = () => {
                                     </Button>
                                 </div>
                             </Form>
-                            {status === 'loading' && <p>Loading...</p>}
+                            {status === 'loading' && <>
+                                <div className="text-center mt-3">
+                                    <img src={Hourglass} alt="" height={40} width={40} />
+                                </div>
+                            </>}
                             {error && <p className="text-danger">{error.message || 'An error occurred'}</p>}
                         </Card>
                     </Col>
