@@ -6,10 +6,15 @@ import {
 import axios from 'axios';
 import baseUrl from '../constant/ConstantApi';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Unauthorised from "../assets/401Unauthorised.png"
+
 
 const AttendanceTable = () => {
+  // State to hold the login data
   const [loginData, setLoginData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]); // For storing filtered data
+  // State to hold the filtered data
+  const [filteredData, setFilteredData] = useState([]);
+  // State to manage filters
   const [filters, setFilters] = useState({
     fromDate: '',
     toDate: '',
@@ -30,6 +35,7 @@ const AttendanceTable = () => {
           const logoutTimes = user.logoutTimes;
 
           if (loginTimes.length > 0) {
+            // Iterate through each login time
             for (let i = 0; i < loginTimes.length; i++) {
               const loginTime = new Date(loginTimes[i].timestamp);
               const logoutTime = i < logoutTimes.length ? new Date(logoutTimes[i]?.timestamp) : null; // Added optional chaining
@@ -50,6 +56,7 @@ const AttendanceTable = () => {
                 totalWorkHours = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
               }
 
+              // Determine status based on total work hours
               let status = 'Absent ❌';
               let statusColor = '#FFCCCB';
               if (totalWorkHoursNum >= 10) {
@@ -63,6 +70,7 @@ const AttendanceTable = () => {
                 statusColor = '#FFD700';
               }
 
+              // Add flattened data for this login entry
               flattenedLoginData.push({
                 serialNumber,
                 username: user.username,
@@ -74,11 +82,13 @@ const AttendanceTable = () => {
                 status,
                 statusColor,
                 comments: '', // Placeholder for comments
+                loginTime // Store the original login time for sorting
               });
 
               serialNumber++;
             }
           } else {
+            // If no login data, push an inactive entry
             flattenedLoginData.push({
               serialNumber,
               username: user.username,
@@ -95,8 +105,13 @@ const AttendanceTable = () => {
           }
         });
 
-        setLoginData(flattenedLoginData); // Update state with flattened data
-        setFilteredData(flattenedLoginData); // Initially, filtered data is the same as fetched data
+        // Sort data by date in descending order (most recent first)
+        const sortedData = flattenedLoginData.sort((a, b) => {
+          return new Date(b.loginTime) - new Date(a.loginTime);
+        });
+
+        setLoginData(sortedData); // Update state with sorted data
+        setFilteredData(sortedData); // Initially, filtered data is the same as fetched data
       } catch (error) {
         console.error('Error fetching login data', error);
       }
@@ -104,20 +119,22 @@ const AttendanceTable = () => {
 
     fetchLoginData(); // Call the function to fetch login data
   }, []);
+  const userType = localStorage.getItem("role");
 
+  // Handle comment change for each row
   const handleCommentChange = (index, newComment) => {
     const updatedData = [...loginData];
     updatedData[index].comments = newComment;
     setLoginData(updatedData);
   };
 
+  // Handle saving comments (example logic)
   const handleSaveComments = async (index) => {
     const updatedComment = loginData[index].comments;
     console.log(`Saving comment for ${loginData[index].username}: ${updatedComment}`);
   };
 
-
-  
+  // Define columns for the MaterialReactTable
   const columns = useMemo(
     () => [
       {
@@ -170,6 +187,7 @@ const AttendanceTable = () => {
           </div>
         ),
       },
+      // Uncomment if comments functionality is needed
       // {
       //   accessorKey: 'comments',
       //   header: 'Comments',
@@ -193,6 +211,7 @@ const AttendanceTable = () => {
     [loginData], // Add loginData to the dependencies to keep it updated
   );
 
+  // Create the table using MaterialReactTable hook
   const table = useMaterialReactTable({
     columns,
     data: filteredData, // Use filtered data for table rendering
@@ -200,7 +219,15 @@ const AttendanceTable = () => {
 
   return (
     <>
-      <MaterialReactTable table={table} />
+      {userType === "admin" || userType === "hr" || userType === "oxmanager" ? <MaterialReactTable table={table} /> : <>
+        <div className='text-center mt-2 '>
+          <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+          <p className='text-danger'>You do not have permission to view this content.</p>
+        </div>
+      </>
+
+      }
+
     </>
   );
 };

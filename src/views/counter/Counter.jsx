@@ -18,7 +18,7 @@ const Counter = () => {
                 const elapsedTime = Math.floor((currentTime - startTime) / 1000);
                 const totalTime = time + elapsedTime;
 
-                // setTime(totalTime);
+                setTime(totalTime);
                 // localStorage.setItem('timer', totalTime);
             }, 1000);
 

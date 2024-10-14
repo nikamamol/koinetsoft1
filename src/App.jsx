@@ -83,6 +83,7 @@ import ExpiredCampaignIn from './views/leads/inhousecampaign/ExpiredCampaignIn';
 import InHouseCompletedCampaign from './views/leads/inhousecampaign/InHouseCompletedCampaign';
 import EmailCheckedShowDelivery from './views/rfp/EmailCheckedShowDelivery';
 import QualitycheckedShowDelivery from './views/rfp/QualitycheckedShowDelivery';
+import UpdateCampaign from './views/leads/inhousecampaign/UpdateCampaign';
 // import QualityMasterTab from './table/QualityMasterTab';
 
 
@@ -175,6 +176,7 @@ function App() {
             <Route path="/campaigns/inhousecampaigns/completedcampaign" element={<InHouseCompletedCampaign />} />
             <Route path="/campaigns/inhousecampaigns/inhousenewcampaign" element={<NewInHouseCamp />} />
             <Route path="/campaigns/inhousecampaigns/campaigndetail/:id" element={<ViewCampaignDetails />} />
+            <Route path="/campaigns/inhousecampaigns/updateCampaignById/:id" element={<UpdateCampaign />} />
 
             {/* billing */}
             <Route path="/billing/addClient" element={<AddClient />} />

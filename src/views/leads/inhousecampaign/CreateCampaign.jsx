@@ -265,7 +265,6 @@ function CreateCampaign() {
                               <label htmlFor="client_select" className="form-label">Campaign For Client  <span className="text-danger">*</span></label>
                               <select
                                 id="client_select"
-                                required
                                 name="clientSelect"
                                 value={formData.clientSelect}
                                 onChange={handleChange}
@@ -283,25 +282,25 @@ function CreateCampaign() {
                             <div className="mb-3 col-md-6">
                               <label for="campaign_name" className="form-label">Campaign Name <span className="text-danger">*</span></label>
                               <input type="text" className="form-control" value={formData.campaignName}
-                                onChange={handleChange} id="campaign_name" name="campaignName" placeholder="Melt the Ice Campaign" aria-label="Melt the Ice Campaign" aria-describedby="basic-icon-default-fullname2" required="" />
+                                onChange={handleChange} id="campaign_name" name="campaignName" placeholder="Melt the Ice Campaign" aria-label="Melt the Ice Campaign" aria-describedby="basic-icon-default-fullname2" />
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="campaign_code" className="form-label">Campaign Code <span className="text-danger">*</span></label>
                               <input type="text" id="campaign_code" value={formData.campaignCode}
-                                onChange={handleChange} className="form-control phone-mask" name="campaignCode" placeholder="ICE" aria-label="ICE" aria-describedby="basic-icon-default-phone2" required />
+                                onChange={handleChange} className="form-control phone-mask" name="campaignCode" placeholder="ICE" aria-label="ICE" aria-describedby="basic-icon-default-phone2" />
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="start_date" className="form-label">Start Date <span className="text-danger">*</span></label>
-                              <input type="date" id="start_date" name='startDate' className="form-control" value={formData.startDate} onChange={handleChange} min="2024-07-19" required />
+                              <input type="date" id="start_date" name='startDate' className="form-control" value={formData.startDate} onChange={handleChange} min="2024-07-19" />
                             </div>
 
                             <div className="mb-3 col-md-6">
                               <label for="end_date" className="form-label">End Date <span className="text-danger">*</span></label>
-                              <input className="form-control" value={formData.endDate} onChange={handleChange} type="date" min="2024-07-19" required="" name="endDate" id="end_date" />
+                              <input className="form-control" value={formData.endDate} onChange={handleChange} type="date" min="2024-07-19" name="endDate" id="end_date" />
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="campaign_type" className="form-label">Type Of Campaign  <span className="text-danger">*</span></label>
-                              <select id="campaign_type" value={formData.campaignType} onChange={handleChange} required="" name="campaignType" className="form-select">
+                              <select id="campaign_type" value={formData.campaignType} onChange={handleChange} name="campaignType" className="form-select">
                                 <option value="">--Select Campaign Type--</option>
                                 <option value="Tele Marketing">Tele Marketing</option>
                                 <option value="Email Marketing">Email Marketing</option>
@@ -309,7 +308,7 @@ function CreateCampaign() {
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="campaign_nature" className="form-label">Nature Of Campaign<span className="text-danger">*</span></label>
-                              <select id="campaign_nature" value={formData.campaignNature} onChange={handleChange} required="" name='campaignNature' className="form-select">
+                              <select id="campaign_nature" value={formData.campaignNature} onChange={handleChange} name='campaignNature' className="form-select">
                                 <option value="">--Select Campaign Nature--</option>
                                 <option value="HQL">HQL</option>
                                 <option value="SQL">SQL</option>
@@ -322,23 +321,23 @@ function CreateCampaign() {
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="target" className="form-label">Target</label>  <span className="text-danger"> *</span>
-                              <input className="form-control" name='target' type="number" value={formData.target} onChange={handleChange} required="" placeholder="3000" id="target" />
+                              <input className="form-control" name='target' type="number" value={formData.target} onChange={handleChange} placeholder="3000" id="target" />
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="lead_per_day" className="form-label">Lead Per Day</label> <span className="text-danger"> *</span>
-                              <input className="form-control" type="number" name='leadPerDay' value={formData.leadPerDay} onChange={handleChange} placeholder="100" required="" id="lead_per_day" />
+                              <input className="form-control" type="number" name='leadPerDay' value={formData.leadPerDay} onChange={handleChange} placeholder="100" id="lead_per_day" />
                             </div>
                             <div className="mb-3 col-md-6">
-                              <label for="voice_log_required" className="form-label">Voice Log Required</label> <span className="text-danger"> *</span>
-                              <select id="voice_log_required" name="voiceLogRequired" value={formData.voiceLogRequired} onChange={handleChange} required="" className="form-select">
-                                <option value="">--Voice Log Required--</option>
+                              <label for="voice_log_required" className="form-label">Voice Log</label> <span className="text-danger"> *</span>
+                              <select id="voice_log_required" name="voiceLogRequired" value={formData.voiceLogRequired} onChange={handleChange} className="form-select">
+                                <option value="">--Voice Log--</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                               </select>
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="billing_day" className="form-label">Billing Day</label> <span className="text-danger"> *</span>
-                              <select id="billing_day" value={formData.billingDay} name='billingDay' onChange={handleChange} required="" className="form-select">
+                              <select id="billing_day" value={formData.billingDay} name='billingDay' onChange={handleChange} className="form-select">
                                 <option value="">--Billing Day--</option>
                                 <option value="1">1st of the month</option>
                                 <option value="2">2nd of the month</option>
@@ -387,7 +386,7 @@ function CreateCampaign() {
                                   onChange={handleChange}
                                   type="number"
                                   name="cpl"
-                                  required
+
                                   id="cpl"
                                 />
                               </div>
@@ -400,7 +399,7 @@ function CreateCampaign() {
                                 value={formData.template}
                                 name="template"
                                 onChange={handleChange}
-                                required
+
                                 className="form-select"
                               >
                                 <option value="">--Landing Template--</option>
@@ -422,7 +421,7 @@ function CreateCampaign() {
                               <div className="row">
                                 <div className="col-lg-6 mb-2">
                                   <label for="campaign_superwiser" className="form-label">Supervisor<span className="text-danger">*</span></label>
-                                  <select id="supervisor" value={formData.supervisor} onChange={handleChange} required="" name='supervisor' className="form-select">
+                                  <select id="supervisor" value={formData.supervisor} onChange={handleChange} name='supervisor' className="form-select">
                                     <option value="">Select Supervisor</option>
                                     <option value="ankush surywanshi 1">
                                       Ankush Surywanshi 1
@@ -434,7 +433,7 @@ function CreateCampaign() {
                                 </div>
                                 <div className="mb-2 col-lg-6 ">
                                   <label for="target" className="form-label">Target</label> <span className="text-danger"> *</span>
-                                  <input className="form-control" name="supervisorTarget" value={formData.supervisorTarget} onChange={handleChange} type="number" placeholder="100" required="" id="cpl" />
+                                  <input className="form-control" name="supervisorTarget" value={formData.supervisorTarget} onChange={handleChange} type="number" placeholder="100" id="cpl" />
                                 </div>
                               </div>
                             </div>
@@ -486,27 +485,27 @@ function CreateCampaign() {
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="revenue" className="form-label">Revenue</label> <span className="text-danger"> *</span>
-                              <input className="form-control" value={formData.revenue} onChange={handleChange} type="text" placeholder="1000000" name="revenue" required="" id="revenue" />
+                              <input className="form-control" value={formData.revenue} onChange={handleChange} type="text" placeholder="1000000" name="revenue" id="revenue" />
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="company_size" className="form-label">Company Size</label><span className="text-danger"> *</span>
-                              <input className="form-control" type="text" value={formData.companySize} onChange={handleChange} placeholder="50" name="companySize" required="" id="company_size" />
+                              <input className="form-control" type="text" value={formData.companySize} onChange={handleChange} placeholder="50" name="companySize" id="company_size" />
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="job_title" className="form-label">Job Title</label> <span className="text-danger"> *</span>
-                              <textarea className="form-control enablebutton" value={formData.jobTitle} onChange={handleChange} type="text" placeholder="Director" name="jobTitle" required="" id="job_title"></textarea>
+                              <textarea className="form-control enablebutton" value={formData.jobTitle} onChange={handleChange} type="text" placeholder="Director" name="jobTitle" id="job_title"></textarea>
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="geo" className="form-label">Geo</label> <span className="text-danger"> *</span>
-                              <textarea className="form-control enablebutton" value={formData.geo} onChange={handleChange} type="text" placeholder="USA" name="geo" required="" id="geo"></textarea>
+                              <textarea className="form-control enablebutton" value={formData.geo} onChange={handleChange} type="text" placeholder="USA" name="geo" id="geo"></textarea>
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="industry" className="form-label">Industry</label>  <span className="text-danger"> *</span>
-                              <textarea className="form-control enablebutton" value={formData.industry} onChange={handleChange} type="text" placeholder="Information Technology" name="industry" required="" id="industry"></textarea>
+                              <textarea className="form-control enablebutton" value={formData.industry} onChange={handleChange} type="text" placeholder="Information Technology" name="industry" id="industry"></textarea>
                             </div>
                             <div className="mb-3 col-md-6">
                               <label for="note" className="form-label">Note</label> <span className="text-danger"> *</span>
-                              <textarea className="form-control enablebutton" type="text" placeholder="Note" value={formData.note} onChange={handleChange} name="note" required="" id="note"></textarea>
+                              <textarea className="form-control enablebutton" type="text" placeholder="Note" value={formData.note} onChange={handleChange} name="note" id="note"></textarea>
                             </div>
 
                             {/* forth part */}
@@ -528,7 +527,7 @@ function CreateCampaign() {
                                 type="file"
                                 multiple
                                 onChange={handleChange}
-                                required
+
                                 accept=".pdf, .xlsx, .xls, .csv"
                                 name="suppressionList"
                               />
@@ -551,7 +550,7 @@ function CreateCampaign() {
                               <input
                                 className="form-control"
                                 type="file"
-                                required
+
                                 multiple onChange={handleChange}
                                 accept=".pdf, .xlsx, .xls, .csv"
                                 id="abm_list"
@@ -569,7 +568,7 @@ function CreateCampaign() {
                                 <div className="row">
                                   <div className="mb-3 col-md-6" id="div_abm_cpc" style={{ display: 'bkock' }}>
                                     <label for="abm_cpc" className="form-label">ABM CPC</label> <span className="text-danger"> *</span>
-                                    <select id="abm_cpc" required="" value={formData.abmCpc} onChange={handleChange} name="abmCpc" className="form-select">
+                                    <select id="abm_cpc" value={formData.abmCpc} onChange={handleChange} name="abmCpc" className="form-select">
                                       <option value="">--Select--</option>
                                       <option value="Company">Company</option>
                                       <option value="Domain">Domain</option>
@@ -579,7 +578,7 @@ function CreateCampaign() {
                                   </div>
                                   <div className="mb-3 col-md-6" id="div_non_abm_cpc" style={{ display: 'block' }}>
                                     <label for="non_abm_cpc" className="form-label">Non ABM CPC</label> <span className="text-danger"> *</span>
-                                    <select id="non_abm_cpc" value={formData.nonAbmCpc} onChange={handleChange} required="" name="nonAbmCpc" className="form-select">
+                                    <select id="non_abm_cpc" value={formData.nonAbmCpc} onChange={handleChange} name="nonAbmCpc" className="form-select">
                                       <option value="">--Select--</option>
                                       <option value="Company">Company</option>
                                       <option value="Domain">Domain</option>
@@ -588,7 +587,7 @@ function CreateCampaign() {
                                   </div>
                                   <div className="mb-3 col-md-6 client_select">
                                     <label for="no_of_contacts" className="form-label">No Of Contacts</label> <span className="text-danger"> *</span>
-                                    <input className="form-control" value={formData.noOfContacts} onChange={handleChange} type="number" placeholder="100" name="noOfContacts" required="" id="no_of_contacts" />
+                                    <input className="form-control" value={formData.noOfContacts} onChange={handleChange} type="number" placeholder="100" name="noOfContacts" id="no_of_contacts" />
                                   </div>
                                 </div>
                               </div>
@@ -795,6 +794,7 @@ function CreateCampaign() {
                                   <button className="btn btn-outline-danger w-100 mt-2">
                                     Save Campaign
                                   </button>
+                                  
                                 </div>
                               </div>
                             </div>

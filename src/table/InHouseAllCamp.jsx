@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Checkbox, Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import Hourglass from "../assets/Hourglass.gif";
+import EditIcon from '@mui/icons-material/Edit';
 
 
 const formatDate = (dateString) => {
@@ -159,6 +160,14 @@ const InHouseAllCamp = () => {
           <div>
             <RemoveRedEyeIcon
               onClick={userAuthentication ? () => navigate(`/campaigns/inhousecampaigns/campaigndetail/${row.original._id}`) : undefined}
+              style={{
+                cursor: userAuthentication ? 'pointer' : 'not-allowed',
+                color: userAuthentication ? 'dark' : 'gray', // Change color when disabled
+                marginRight: '15px'
+              }}
+            />
+             <EditIcon
+              onClick={userAuthentication ? () => navigate(`/campaigns/inhousecampaigns/updateCampaignById/${row.original._id}`) : undefined}
               style={{
                 cursor: userAuthentication ? 'pointer' : 'not-allowed',
                 color: userAuthentication ? 'dark' : 'gray', // Change color when disabled
