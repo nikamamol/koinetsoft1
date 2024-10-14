@@ -214,7 +214,7 @@ body {
 }
 
 .sidebar_bg {
-    background-color: #F8F4E1;
+    background: linear-gradient(to bottom, white 20%, #E5D9F5 60%, #D7C3F1 100%);
 }
 
 .active-tab {

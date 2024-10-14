@@ -1,6 +1,6 @@
 import  { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import UserProfile from "../../assets/userProfile.jpeg";
+import UserProfile from "../../assets/man.webp";
 import axios from 'axios';
 import baseUrl from '../../constant/ConstantApi';
 import { useDispatch, useSelector } from 'react-redux';
