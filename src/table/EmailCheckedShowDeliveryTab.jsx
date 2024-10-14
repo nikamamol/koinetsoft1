@@ -125,7 +125,7 @@ function EmailCheckedShowDeliveryTab() {
             window.URL.revokeObjectURL(url);
 
         } catch (error) {
-            console.error("Error during file download:", error);
+            // console.error("Error during file download:", error);
             toast.error("Failed to download file");
         }
     };

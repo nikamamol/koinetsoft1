@@ -73,7 +73,7 @@ const RfpEmailCheck = () => {
             })
             .catch((error) => {
                 toast.error('Error updating status. Please try again.');
-                console.error('Error updating status:', error);
+                // console.error('Error updating status:', error);
             });
     };
 
@@ -81,7 +81,8 @@ const RfpEmailCheck = () => {
         dispatch(downloadFile({ fileId, filename }))
             .unwrap()
             .catch((error) => {
-                console.error('Error downloading file:', error);
+                // console.error('Error downloading file:', error);
+                toast.error('Error downloading file. Please try again.');
             });
     };
 
@@ -117,7 +118,7 @@ const RfpEmailCheck = () => {
                 toast.success('File updated successfully!');
             } catch (error) {
                 toast.error('Error updating file. Please try again.');
-                console.error('Error updating file:', error);
+                // console.error('Error updating file:', error);
             }
         } else {
             toast.error('No file selected or empty data.');

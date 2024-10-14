@@ -25,10 +25,7 @@ const AgencyActiveCamp = () => {
 
   // Filter campaigns to show only active ones
   const activeCampaigns = campaigns.filter((campaign) => campaign.campaignStatus === 'Active');
-  // const handleViewCampaign = (campaignId) => {
-  //   navigate(`/campaigns/inhousecampaigns/campaigndetail/${campaignId}`);
 
-  // }
 
   // Memoize the columns definition
   const columns = useMemo(

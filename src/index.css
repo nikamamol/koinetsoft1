@@ -1,29 +1,26 @@
-/* CSS Reset */
-
-
-/* * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-
-
-html {
-    font-size: 14px;
-    line-height: 1.1;
-    font-family: 'Arial', sans-serif;
-}
-
-body {
-    color: #2f3645e5;
-    background-color: #F5F7F8;
-} */
-
 :root {
     --bg-clr: #ead376;
     --white: #fff;
     --secondary-clr: #5265a7;
+}
+
+.chatbot-wrapper {
+    position: fixed;
+    bottom: 20px;
+    /* Adjust as needed */
+    right: 20px;
+    /* Adjust as needed */
+    z-index: 1000;
+    margin-top: 0;
+    /* Ensure it's on top of other content */
+}
+
+@media (max-width: 768px) {
+    /* Change the breakpoint as needed */
+    .chatbot-wrapper {
+        display: none;
+        /* Hide the chatbot on small devices */
+    }
 }
 
 .invoice {

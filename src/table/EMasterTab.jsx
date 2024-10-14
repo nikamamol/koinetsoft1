@@ -22,6 +22,7 @@ const EMasterTab = () => {
         if (token) {
             dispatch(fetchCsvFilesbyEMMaster()); // Only dispatch if token is present
         } else {
+            toast.error('No token available')
             console.error('No token available');
         }
     }, [dispatch]);
@@ -112,6 +113,7 @@ const EMasterTab = () => {
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
         } catch (error) {
+            
             console.error("Error during file download:", error);
             toast.error("Failed to download file");
         }

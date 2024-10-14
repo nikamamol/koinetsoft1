@@ -58,7 +58,8 @@ const InHouseAllCamp = () => {
         await dispatch(updateCampaignStatus({ id: campaignId, status: newStatus }));
         toast.success('Campaign status updated successfully');
       } catch (error) {
-        console.error('Error updating campaign status:', error);
+        toast.error('Error updating campaign status:', error);
+        // console.error('Error updating campaign status:', error);
       }
     }
 

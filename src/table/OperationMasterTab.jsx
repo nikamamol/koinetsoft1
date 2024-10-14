@@ -23,10 +23,7 @@ const OperationMasterTab = () => {
         dispatch(fetchCsvFilesbyOPMaster()); // Dispatch the action to fetch files
     }, [dispatch]);
 
-    // Debugging: Check the csvFiles from the Redux store
-    useEffect(() => {
-        console.log("csvFiles from Redux:", csvFiles); // Log csvFiles to check if data is received
-    }, [csvFiles]);
+
 
     const formatDate = (dateString) => {
         const options = { day: 'numeric', month: 'short', year: 'numeric' };

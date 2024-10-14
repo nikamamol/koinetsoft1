@@ -16,7 +16,7 @@ const BillingViewInvoice = () => {
   const invoiceData = useSelector((state) => state.invoices.invoices);
   const invoiceStatus = useSelector((state) => state.invoices.status);
   const error = useSelector((state) => state.invoices.error);
-  console.log(invoiceData)
+  // console.log(invoiceData)
 
   useEffect(() => {
     if (invoiceStatus === 'idle') {

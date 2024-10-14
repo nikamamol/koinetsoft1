@@ -8,6 +8,7 @@ import { pink } from '@mui/material/colors';
 import { IconButton, Tooltip } from '@mui/material';
 import Hourglass from "../assets/Hourglass.gif";
 import Unauthorised from "../assets/401Unauthorised.png";
+import { toast } from 'react-toastify';
 
 const RfpReceivedAll = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,8 @@ const RfpReceivedAll = () => {
         console.log('File data fetched successfully');
       })
       .catch((fetchError) => {
-        console.error('Error fetching file data:', fetchError);
+        // console.error('Error fetching file data:', fetchError);
+        toast.error(fetchError);
       });
   }, [dispatch]);
 
@@ -34,10 +36,12 @@ const RfpReceivedAll = () => {
     dispatch(downloadFile({ fileId, filename }))
       .unwrap()
       .then(() => {
-        console.log('File downloaded successfully');
+        // console.log('File downloaded successfully');
+        toast.success('File downloaded successfully');
       })
       .catch((error) => {
-        console.error('Error downloading file:', error);
+        // console.error('Error downloading file:', error);
+        toast.error(error);
       });
   };
 

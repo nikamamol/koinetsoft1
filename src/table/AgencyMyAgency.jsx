@@ -44,7 +44,7 @@ const AgencyMyAgency = () => {
         toast.success("Agency Delete Succsessfully")
       })
       .catch((error) => {
-        console.error('Error deleting item:', error);
+        // console.error('Error deleting item:', error);
         toast.error("Getting Error Delete Agency")
       });
   };

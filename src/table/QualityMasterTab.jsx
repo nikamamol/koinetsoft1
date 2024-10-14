@@ -108,7 +108,7 @@ const QualityMasterTab = () => {
             window.URL.revokeObjectURL(url);
 
         } catch (error) {
-            console.error("Error during file download:", error);
+            // console.error("Error during file download:", error);
             toast.error("Failed to download file");
         }
     };
@@ -124,7 +124,7 @@ const QualityMasterTab = () => {
                 dispatch(fetchCsvFilesbyQualityMaster());
                 toast.success('File deleted successfully');
             } catch (error) {
-                console.error("Error deleting file:", error);
+                // console.error("Error deleting file:", error);
                 toast.error('Failed to delete file');
             }
         }

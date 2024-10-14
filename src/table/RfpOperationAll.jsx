@@ -23,6 +23,7 @@ import axios from 'axios';
 import * as XLSX from 'xlsx';
 import baseUrl from '../constant/ConstantApi';
 import Hourglass from "../assets/Hourglass.gif";
+import { toast } from 'react-toastify';
 
 
 // SpreadsheetViewer Component
@@ -103,8 +104,9 @@ const RfpOperationAll = () => {
             window.URL.revokeObjectURL(url);
 
         } catch (error) {
-            console.error("Error during file download:", error);
-            alert("Failed to download file");
+            // console.error("Error during file download:", error);
+            toast.error("Failed to download file");
+            // alert("Failed to download file");
         }
     };
 

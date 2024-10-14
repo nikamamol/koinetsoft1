@@ -7,6 +7,7 @@ import { fetchFileData, downloadFile, deleteFile } from '../redux/reducer/rpf/ge
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import Hourglass from "../assets/Hourglass.gif";
 import Unauthorised from "../assets/401Unauthorised.png"
+import { toast } from 'react-toastify';
 
 
 
@@ -46,7 +47,8 @@ const RfpReceived = () => {
     dispatch(downloadFile({ fileId, filename }))
       .unwrap()
       .catch((error) => {
-        console.error('Error downloading file:', error);
+        toast.error('Error downloading file:', error);
+        // console.error('Error downloading file:', error);
       });
   };
 

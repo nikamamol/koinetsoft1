@@ -7,6 +7,7 @@ import axios from 'axios';
 import baseUrl from '../constant/ConstantApi';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Unauthorised from "../assets/401Unauthorised.png"
+import { toast } from 'react-toastify';
 
 
 const AttendanceTable = () => {
@@ -113,7 +114,8 @@ const AttendanceTable = () => {
         setLoginData(sortedData); // Update state with sorted data
         setFilteredData(sortedData); // Initially, filtered data is the same as fetched data
       } catch (error) {
-        console.error('Error fetching login data', error);
+        // console.error('Error fetching login data', error);
+        toast.error("Error fetching login data")
       }
     };
 
