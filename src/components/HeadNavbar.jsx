@@ -163,7 +163,7 @@ function ResponsiveDrawer(props) {
     <div className='sidebar_bg'>
 
       {/* <Toolbar /> */}
-      <div className='text-center sticky-top '>
+      <div className='text-center bg-light sticky-top '>
         <img src={LogoImage} alt="logo" width={100} height={50} />
         <p>Koinet Media Ites Pvt Ltd.</p>
 
@@ -1067,13 +1067,10 @@ function ResponsiveDrawer(props) {
       <CssBaseline />
       <AppBar
         position="fixed"
-className='sidebar_bg'
+        className='sidebar_bg'
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-         
-
-
         }}
       >
         <Toolbar>
