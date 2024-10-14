@@ -152,6 +152,7 @@ function CreateCampaign() {
     // Update the formData state with the new selected values
     setFormData({ ...formData, seniorityLevel: newValue });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -442,14 +443,33 @@ function CreateCampaign() {
                             </div>
 
                             <div className="mb-3 col-md-6 mt-2">
-                              <label htmlFor="assets" className="form-label">Assets/Whitepaper</label> (.csv) <span className="text-danger" id="validation_assets"> *</span>
-                              <input className="form-control" type="file" id="assets" name="assets" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
+                              <label htmlFor="assets" className="form-label">Assets/Whitepaper</label> (.pdf)
+                              <span className="text-danger" id="validation_assets"> *</span>
+                              <input
+                                className="form-control"
+                                type="file"
+                                id="assets"
+                                name="assets"
+                                accept=".pdf"  // Accept only PDF files
+                                multiple
+                                onChange={handleChange}
+                              />
                             </div>
 
                             <div className="mb-3 col-md-6">
-                              <label htmlFor="script" className="form-label">Script</label> (.csv) <span className="text-danger" id="validation_script"> *</span>
-                              <input className="form-control" type="file" id="script" name="script" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
+                              <label htmlFor="script" className="form-label">Script</label> (.doc, .docx)
+                              <span className="text-danger" id="validation_script"> *</span>
+                              <input
+                                className="form-control"
+                                type="file"
+                                id="script"
+                                name="script"
+                                accept=".doc,.docx"  // Accept only DOC/DOCX files
+                                multiple
+                                onChange={handleChange}
+                              />
                             </div>
+
 
                             <div className="mb-3 col-md-6">
                               <label htmlFor="suppression" className="form-label">Suppression</label> (.csv) <span className="text-danger" id="validation_suppression"> *</span>
@@ -784,11 +804,11 @@ function CreateCampaign() {
                     </div>
                   </div>
                 </form>
-              </> : 
-                <div className='text-center mt-2 '>
-                    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-                    <p className='text-danger'>You do not have permission to view this content.</p>
-                </div>
+              </> :
+              <div className='text-center mt-2 '>
+                <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                <p className='text-danger'>You do not have permission to view this content.</p>
+              </div>
             }
 
           </Col>

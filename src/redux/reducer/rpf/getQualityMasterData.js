@@ -2,21 +2,23 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../constant/ConstantApi";
 
-const token = localStorage.getItem("authToken");
+// Function to get the token dynamically in case it updates
+const getToken = () => localStorage.getItem("authToken");
 
 export const fetchCsvFilesbyQualityMaster = createAsyncThunk(
     "csvFileCheckedbyQualityMaster/fetchCsvFilesbyQualityMaster",
-    async() => {
-        const response = await axios.get(
-            `${baseUrl}user/qualityMasterCsvFile`, {
+    async(_, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(`${baseUrl}user/qualityMasterCsvFile`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    "authorization": `Bearer ${getToken()}`,
                     "Content-Type": "application/json",
                 },
-            }
-        );
-        console.log(response.data.files);
-        return response.data.files;
+            });
+            return response.data.files;
+        } catch (error) {
+            return rejectWithValue(error.response || "Error fetching files");
+        }
     }
 );
 
@@ -40,7 +42,7 @@ const CsvsliceByQualityMaster = createSlice({
             })
             .addCase(fetchCsvFilesbyQualityMaster.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message;
+                state.error = action.payload || action.error.message;
             });
     },
 });

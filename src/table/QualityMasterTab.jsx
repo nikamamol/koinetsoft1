@@ -9,16 +9,13 @@ import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import { fetchCsvFilesbyQualityMaster } from '../redux/reducer/rpf/getQualityMasterData';
 import Hourglass from "../assets/Hourglass.gif";
-import Unauthorised from "../assets/401Unauthorised.png"
-
-
+import Unauthorised from "../assets/401Unauthorised.png";
 
 const QualityMasterTab = () => {
     const dispatch = useDispatch();
     const { csvFiles = [], loading, error } = useSelector((state) => state.csvFileCheckedbyQualityMaster || {});
     const token = localStorage.getItem('authToken');
-    const userRole = localStorage.getItem('role'); // Assuming you store user role in local storage
-
+    const userRole = localStorage.getItem('role');
 
     useEffect(() => {
         dispatch(fetchCsvFilesbyQualityMaster());
@@ -74,16 +71,12 @@ const QualityMasterTab = () => {
                 <div className="d-flex gap-3">
                     <Tooltip title="Download File">
                         <IconButton onClick={() => handleDownload(row.original)}>
-                            <DownloadIcon
-                                style={{ cursor: 'pointer', color: 'blue', width: '30px', height: '30px' }}
-                            />
+                            <DownloadIcon style={{ cursor: 'pointer', color: 'blue', width: '30px', height: '30px' }} />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete File">
                         <IconButton onClick={() => handleDelete(row.original._id)}>
-                            <DeleteIcon
-                                style={{ cursor: 'pointer', color: 'red', width: '30px', height: '30px' }}
-                            />
+                            <DeleteIcon style={{ cursor: 'pointer', color: 'red', width: '30px', height: '30px' }} />
                         </IconButton>
                     </Tooltip>
                 </div>
@@ -91,35 +84,26 @@ const QualityMasterTab = () => {
         },
     ], []);
 
-
     const handleDownload = async (file) => {
         const { _id, originalname } = file;
         try {
             const response = await axios.get(`${baseUrl}user/getQualityMasterCsvFileById/${_id}`, {
-                responseType: "blob", // Receive the file as a Blob
+                responseType: "blob",
                 headers: {
-                    Authorization: `Bearer ${token}`, // Send the token in the header
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
-            // Create a Blob from the response data
             const blob = new Blob([response.data], {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             });
 
-            // Create a URL for the Blob
             const url = window.URL.createObjectURL(blob);
-
-            // Create a temporary link element
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", originalname); // Set the filename for download
-
-            // Append the link to the document body and trigger the download
+            link.setAttribute("download", originalname);
             document.body.appendChild(link);
             link.click();
-
-            // Clean up by removing the link and revoking the Object URL
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
 
@@ -137,7 +121,7 @@ const QualityMasterTab = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                dispatch(fetchCsvFilesbyQualityMaster()); // Correct action dispatched here
+                dispatch(fetchCsvFilesbyQualityMaster());
                 toast.success('File deleted successfully');
             } catch (error) {
                 console.error("Error deleting file:", error);
@@ -146,19 +130,21 @@ const QualityMasterTab = () => {
         }
     };
 
-    if (loading) return (
-        <>
-            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
-        </>
-    )
-    if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
-   
-    // Check if user role is one of the allowed roles
+    if (loading) {
+        return <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>;
+    }
+
+    if (error) {
+        return <p style={{ color: 'red' }}>Error: {error}</p>;
+    }
+
     if (userRole !== 'quality' && userRole !== 'oxmanager' && userRole !== 'admin') {
-        return <div className='text-center mt-2 '>
-        <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-        <p className='text-danger'>You do not have permission to view this content.</p>
-      </div>;
+        return (
+            <div className='text-center mt-2 '>
+                <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                <p className='text-danger'>You do not have permission to view this content.</p>
+            </div>
+        );
     }
 
     return (

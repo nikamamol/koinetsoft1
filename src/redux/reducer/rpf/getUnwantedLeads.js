@@ -2,33 +2,45 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../constant/ConstantApi";
 
-const token = localStorage.getItem("authToken");
-
 // Async thunk for fetching CSV files
 export const fetchCsvFilesbyUnwantedLeads = createAsyncThunk(
     "csvFileCheckedbyUnwantedLeads/fetchCsvFilesbyUnwantedLeads",
-    async() => {
-        const response = await axios.get(
-            `${baseUrl}user/getCsvFilesByUnwantedLeadsAll`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
+    async(_, { rejectWithValue }) => {
+        const token = localStorage.getItem("authToken");
 
-                },
-            }
-        );
-        return response.data.files;
+        // Check if the token is available
+        if (!token) {
+            return rejectWithValue("Token is not available");
+        }
+
+        try {
+            const response = await axios.get(
+                `${baseUrl}user/getCsvFilesByUnwantedLeadsAll`, {
+                    headers: {
+                        "authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            return response.data.files;
+        } catch (error) {
+            // Log the error for debugging
+            console.error("Error fetching CSV files:", error);
+
+            // Handle specific axios error response if needed
+            return rejectWithValue(error.response || "Error fetching CSV files");
+        }
     }
 );
 
 // CSV slice
-// Add field for rejected leads in the initialState
 const CsvsliceByUnwantedLeads = createSlice({
     name: "csvFileCheckedbyUnwantedLeads",
     initialState: {
         csvFiles: [],
         loading: false,
         error: null,
+        totalRejectedLeads: 0, // Ensure we initialize totalRejectedLeads
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -41,20 +53,18 @@ const CsvsliceByUnwantedLeads = createSlice({
                 state.loading = false;
                 state.csvFiles = action.payload;
 
-                // Calculate total rejected leads based on file content
                 let rejectedLeadsCount = 0;
                 action.payload.forEach((file) => {
-                    // Assuming that the file.content includes rejected leads info
                     if (file.rejectedLeads && file.rejectedLeads.length > 0) {
-                        rejectedLeadsCount += file.rejectedLeads.length; // Adjust as per your file structure
+                        rejectedLeadsCount += file.rejectedLeads.length;
                     }
                 });
 
-                state.totalRejectedLeads = rejectedLeadsCount; // Update the total rejected leads
+                state.totalRejectedLeads = rejectedLeadsCount;
             })
             .addCase(fetchCsvFilesbyUnwantedLeads.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message;
+                state.error = action.payload || "Failed to fetch CSV files"; // Use payload for detailed error
             });
     },
 });

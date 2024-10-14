@@ -2,28 +2,34 @@ import React, { useState, useEffect } from 'react';
 
 const Counter = () => {
     const [time, setTime] = useState(() => {
-        // Retrieve the time from localStorage or initialize to 0
         const savedTime = localStorage.getItem('timer');
         return savedTime ? parseInt(savedTime, 10) : 0;
     });
-    const [isCounting, setIsCounting] = useState(true); // Start counting when the component mounts
+    const [startTime, setStartTime] = useState(() => {
+        const savedStartTime = localStorage.getItem('startTime');
+        return savedStartTime ? parseInt(savedStartTime, 10) : Date.now();
+    });
+    const [isCounting, setIsCounting] = useState(true);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (isCounting) {
-                setTime((prevTime) => {
-                    const newTime = prevTime + 1; // Increment total time in seconds
-                    localStorage.setItem('timer', newTime); // Save the new time in localStorage
-                    return newTime;
-                });
-            }
-        }, 1000); // Increment count every second
+        if (isCounting) {
+            const interval = setInterval(() => {
+                const currentTime = Date.now();
+                const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+                const totalTime = time + elapsedTime;
 
-        // Cleanup function to clear interval
-        return () => {
-            clearInterval(interval);
-        };
-    }, [isCounting]);
+                // setTime(totalTime);
+                // localStorage.setItem('timer', totalTime);
+            }, 1000);
+
+            // Store the start time in localStorage so it persists
+            localStorage.setItem('startTime', startTime);
+
+            return () => {
+                clearInterval(interval);
+            };
+        }
+    }, [isCounting, startTime]);
 
     // Function to format time in hh:mm:ss
     const formatTime = (totalSeconds) => {
@@ -34,14 +40,13 @@ const Counter = () => {
         return `${hours} hours ${minutes} min ${seconds} sec`;
     };
 
-    // Optional: Stop counting function
     const stopCounting = () => {
         setIsCounting(false);
     };
 
     return (
         <div>
-            <h6 className='text-white mt-3 bg-info p-1 rounded'>{formatTime(time)}</h6>
+            {/* <h6 className='text-white mt-3 bg-info p-1 rounded'>{formatTime(time)}</h6> */}
             {/* <button onClick={stopCounting}>Stop Counting</button> */}
         </div>
     );

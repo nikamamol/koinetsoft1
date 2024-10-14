@@ -153,7 +153,7 @@ const EMCheckedTab = () => {
 
     return (
         <div>
-            {userRole === 'email_marketing' ? <MaterialReactTable
+            {userRole === 'email_marketing' || userRole === "oxmanager" || userRole === "admin"  ? <MaterialReactTable
                 columns={columns}
                 data={csvFiles}
                 enableColumnResizing

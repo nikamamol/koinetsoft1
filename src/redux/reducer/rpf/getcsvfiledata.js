@@ -10,51 +10,39 @@ export const fetchFileData = createAsyncThunk(
     "fileData/fetchFileData",
     async(_, { rejectWithValue }) => {
         try {
-            const token = getToken();
+            const token = getToken(); // Ensure you have this function implemented correctly
             const response = await axios.get(`${baseUrl}user/csvFileData`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    "authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
                 },
             });
-            return response.data;
+            return response.data; // Return the data directly from the response
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            console.error("Error fetching file data:", error); // Log the error for debugging
+            return rejectWithValue(error.response ? error.response.data : { message: "An unexpected error occurred." });
         }
     }
 );
 
 export const fetchFileDataAll = createAsyncThunk(
-    "fileData/fetchFileDataAll",
+    'fileData/fetchFileDataAll',
     async(_, { rejectWithValue }) => {
         try {
-            const token = getToken();
+            const token = getToken(); // Ensure you have this function implemented correctly
             const response = await axios.get(`${baseUrl}user/csvFileAllData`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
                 },
             });
-            return response.data;
+            return response.data; // Return the data directly from the response
         } catch (error) {
-            // Handle cases where error.response might not exist
-            if (error.response) {
-                // If the server responded with an error (e.g., 4xx or 5xx)
-                return rejectWithValue(error.response.data);
-            } else if (error.request) {
-                // If the request was made but no response was received
-                return rejectWithValue({
-                    message: "No response received from server. Please check your connection.",
-                });
-            } else {
-                // If something else happened while setting up the request
-                return rejectWithValue({
-                    message: "An error occurred while fetching the data.",
-                });
-            }
+            console.error('Error fetching all file data:', error); // Log the error for debugging
+            return rejectWithValue(error.response ? error.response.data : { message: 'An unexpected error occurred.' });
         }
     }
 );
-
-
 // Thunk for downloading a file
 export const downloadFile = createAsyncThunk(
     "fileData/downloadExcelFile",

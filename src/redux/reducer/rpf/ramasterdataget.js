@@ -11,7 +11,10 @@ export const fetchAllraMasterFile = createAsyncThunk(
         try {
             const token = localStorage.getItem('authToken');
             const response = await axios.get(`${baseUrl}user/getramasterCsvFileData`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {
+                    "authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
             });
             return response.data.files; // Ensure 'files' matches backend response
         } catch (error) {

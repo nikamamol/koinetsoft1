@@ -10,8 +10,8 @@ export const qualitycheckedupload = createAsyncThunk(
             const token = localStorage.getItem('authToken');
             const config = {
                 headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
+                    "authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 },
             };
             const response = await axios.post(`${baseUrl}user/uploadQualityCheckedCsvFile`, formData, config);

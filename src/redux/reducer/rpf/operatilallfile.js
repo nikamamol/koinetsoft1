@@ -8,7 +8,10 @@ export const fetchFiles = createAsyncThunk('rfp/fetchFiles', async(_, { rejectWi
     try {
         const token = localStorage.getItem('authToken');
         const response = await axios.get(`${baseUrl}user/getCsvDatabyOperationAll`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+                "authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
         });
         return response.data.files;
     } catch (error) {

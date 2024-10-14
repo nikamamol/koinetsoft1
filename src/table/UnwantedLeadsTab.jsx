@@ -8,21 +8,20 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import { fetchCsvFilesbyUnwantedLeads } from '../redux/reducer/rpf/getUnwantedLeads';
- // Ensure correct import
- import Hourglass from "../assets/Hourglass.gif";
- import Unauthorised from "../assets/401Unauthorised.png"
-
-
+import Hourglass from "../assets/Hourglass.gif";
+import Unauthorised from "../assets/401Unauthorised.png";
 
 const UnwantedLeadsTab = () => {
     const dispatch = useDispatch();
-    const { csvFiles = [], loading, error } = useSelector((state) => state.csvFileCheckedbyUnwantedLeads || {}); // Ensure correct slice name
+    const { csvFiles = [], loading, error } = useSelector((state) => state.csvFileCheckedbyUnwantedLeads || {});
     const userType = localStorage.getItem('role');
     const allowedRoles = ['oxmanager', 'admin'];
 
     useEffect(() => {
-        dispatch(fetchCsvFilesbyUnwantedLeads()); // Dispatch the action to fetch files
+        // Fetch the CSV files on component mount
+        dispatch(fetchCsvFilesbyUnwantedLeads());
     }, [dispatch]);
+
     const token = localStorage.getItem('authToken');
 
     const formatDate = (dateString) => {
@@ -90,35 +89,34 @@ const UnwantedLeadsTab = () => {
 
     const handleDownload = async (file) => {
         const { _id, originalname } = file;
+
+        if (!token) {
+            toast.error("Authorization token is missing");
+            return;
+        }
+
         try {
             const response = await axios.get(`${baseUrl}user/getUnwantedCsvFileById/${_id}`, {
-                responseType: "blob", // Receive the file as a Blob
+                responseType: "blob",
                 headers: {
-                    Authorization: `Bearer ${token}`, // Send the token in the header
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
-            // Create a Blob from the response data
             const blob = new Blob([response.data], {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             });
 
-            // Create a URL for the Blob
             const url = window.URL.createObjectURL(blob);
-
-            // Create a temporary link element
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", originalname); // Set the filename for download
+            link.setAttribute("download", originalname);
 
-            // Append the link to the document body and trigger the download
             document.body.appendChild(link);
             link.click();
 
-            // Clean up by removing the link and revoking the Object URL
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
-
         } catch (error) {
             console.error("Error during file download:", error);
             toast.error("Failed to download file");
@@ -126,6 +124,10 @@ const UnwantedLeadsTab = () => {
     };
 
     const handleDelete = async (fileId) => {
+        if (!token) {
+            toast.error("Authorization token is missing");
+            return;
+        }
 
         if (window.confirm('Are you sure you want to delete this file?')) {
             try {
@@ -134,7 +136,7 @@ const UnwantedLeadsTab = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                dispatch(fetchCsvFilesbyUnwantedLeads()); // Refresh list after delete
+                dispatch(fetchCsvFilesbyUnwantedLeads());
                 toast.success('File deleted successfully');
             } catch (error) {
                 console.error("Error deleting file:", error);
@@ -143,24 +145,32 @@ const UnwantedLeadsTab = () => {
         }
     };
 
-    if (loading) return (
-        <>
-            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
-        </>
-    )
-    if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+    if (loading) {
+        return (
+            <div className='text-center mt-5'>
+                <img src={Hourglass} alt="Loading" height={40} width={40} />
+            </div>
+        );
+    }
+    
+    if (error) {
+        return <p style={{ color: 'red' }}>Error: {error}</p>;
+    }
+
     if (!allowedRoles.includes(userType)) {
-        return <div className='text-center mt-2 '>
-        <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-        <p className='text-danger'>You do not have permission to view this content.</p>
-      </div>;
+        return (
+            <div className='text-center mt-2'>
+                <img src={Unauthorised} alt="Unauthorized" width={400} height={300} />
+                <p className='text-danger'>You do not have permission to view this content.</p>
+            </div>
+        );
     }
 
     return (
         <div>
             <MaterialReactTable
                 columns={columns}
-                data={csvFiles.length > 0 ? csvFiles : []} // Ensure data is not null or undefined
+                data={csvFiles.length > 0 ? csvFiles : []}
                 enableColumnResizing
                 enableStickyHeader
             />

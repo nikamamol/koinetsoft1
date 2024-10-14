@@ -4,29 +4,31 @@ import { IconButton, Tooltip, Checkbox } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCsvFilesbyQualityChecked } from '../redux/reducer/rpf/getQualitycheckedData'; // Adjust the path based on your structure
+import { fetchCsvFilesbyQualityChecked } from '../redux/reducer/rpf/getQualitycheckedData';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import Hourglass from "../assets/Hourglass.gif";
-import Unauthorised from "../assets/401Unauthorised.png"
-
-
+import Unauthorised from "../assets/401Unauthorised.png";
 
 const QualityCheckedTab = () => {
     const dispatch = useDispatch();
     const { csvFiles, loading, error } = useSelector((state) => state.csvFileCheckedbyQualityChecked);
     const token = localStorage.getItem('authToken');
-    const userRole = localStorage.getItem('role'); // Assuming you store user role in local storage
-
-    useEffect(() => {
-        dispatch(fetchCsvFilesbyQualityChecked());
-    }, [dispatch]);
+    const userRole = localStorage.getItem('role');
 
     const formatDate = (dateString) => {
         const options = { day: 'numeric', month: 'short', year: 'numeric' };
         return new Date(dateString).toLocaleDateString('en-GB', options);
     };
+    useEffect(() => {
+        if (token) {
+            dispatch(fetchCsvFilesbyQualityChecked());
+        } else {
+            toast.error("No token found, unable to fetch CSV files.");
+            console.error("No token found, unable to fetch CSV files.");
+        }
+    }, [dispatch, token]);
 
     const columns = useMemo(() => [
         {
@@ -94,33 +96,26 @@ const QualityCheckedTab = () => {
         const { _id, originalname } = file;
         try {
             const response = await axios.get(`${baseUrl}user/getQualityCheckedCsvFileById/${_id}`, {
-                responseType: "blob", // Receive the file as a Blob
+                responseType: "blob",
                 headers: {
-                    Authorization: `Bearer ${token}`, // Send the token in the header
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
-            // Create a Blob from the response data
             const blob = new Blob([response.data], {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             });
 
-            // Create a URL for the Blob
             const url = window.URL.createObjectURL(blob);
-
-            // Create a temporary link element
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", originalname); // Set the filename for download
+            link.setAttribute("download", originalname);
 
-            // Append the link to the document body and trigger the download
             document.body.appendChild(link);
             link.click();
 
-            // Clean up by removing the link and revoking the Object URL
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
-
         } catch (error) {
             console.error("Error during file download:", error);
             toast.error("Failed to download file");
@@ -135,7 +130,7 @@ const QualityCheckedTab = () => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                dispatch(fetchCsvFilesbyQualityChecked()); // Refresh the file list after deletion
+                dispatch(fetchCsvFilesbyQualityChecked());
                 toast.success('File deleted successfully');
             } catch (error) {
                 alert(`Failed to delete file: ${error.message}`);
@@ -144,18 +139,17 @@ const QualityCheckedTab = () => {
     };
 
     if (loading) return (
-        <>
-            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
-        </>
-    )
+        <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
+    );
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
 
-    // Check if user role is one of the allowed roles
     if (userRole !== 'quality' && userRole !== 'oxmanager' && userRole !== 'admin') {
-        return <div className='text-center mt-2 '>
-        <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-        <p className='text-danger'>You do not have permission to view this content.</p>
-      </div>;
+        return (
+            <div className='text-center mt-2 '>
+                <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                <p className='text-danger'>You do not have permission to view this content.</p>
+            </div>
+        );
     }
 
     return (

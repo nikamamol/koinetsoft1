@@ -52,14 +52,14 @@ function ViewCampaignDetails() {
     const downloadFile = (fileData, fileName, fileType) => {
         // Convert fileData to a Uint8Array
         const arrayBuffer = new Uint8Array(fileData).buffer;
-    
+
         switch (fileType) {
             case 'csv':
                 // Handle CSV files
                 const csvText = new TextDecoder().decode(new Uint8Array(arrayBuffer));
                 saveAs(new Blob([csvText], { type: 'text/csv' }), fileName);
                 break;
-    
+
             case 'excel':
                 // Handle Excel files
                 try {
@@ -70,41 +70,27 @@ function ViewCampaignDetails() {
                     console.error('Error processing Excel file:', error);
                 }
                 break;
-    
+
             case 'pdf':
                 // Handle PDF files
-                const pdf = new jsPDF();
-                pdf.text(new TextDecoder().decode(new Uint8Array(arrayBuffer)), 10, 10);
-                pdf.save(fileName);
+                const pdfBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
+                saveAs(pdfBlob, fileName);
                 break;
-    
+
             case 'doc':
-                // Handle DOC files
-                const docText = new TextDecoder().decode(new Uint8Array(arrayBuffer));
-                const doc = new Document({
-                    sections: [
-                        {
-                            properties: {},
-                            children: [
-                                new Paragraph({
-                                    children: [new TextRun(docText)],
-                                }),
-                            ],
-                        },
-                    ],
-                });
-                Packer.toBlob(doc).then(blob => {
-                    saveAs(blob, fileName);
-                });
+            case 'docx':
+                // Handle DOC/DOCX files
+                const docBlob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+                saveAs(docBlob, fileName);
                 break;
-    
+
             default:
                 console.error('Unsupported file type');
                 break;
         }
     };
-    
-    
+
+
     const asset = currentCampaign.assets[0]?.content?.data;
     const fileName = currentCampaign.assets[0]?.originalname || 'file.xlsx'; // Default filename
     const fileType = 'excel'; // Adjust based on file type
@@ -272,17 +258,18 @@ function ViewCampaignDetails() {
                                         </Nav.Item>
                                     </Nav>
                                     <Tab.Content>
-                                        <Tab.Pane eventKey="active" >
-                                        {asset && (
-                                                <Button className='mt-3' onClick={() => downloadFile(asset, fileName, fileType)}>
+                                        <Tab.Pane eventKey="active">
+                                            {asset && (
+                                                <Button className="mt-3" onClick={() => downloadFile(asset, fileName, 'pdf')}>
                                                     Download {fileName}
                                                 </Button>
                                             )}
                                         </Tab.Pane>
+
                                         <Tab.Pane eventKey="script">
                                             {script2 && (
-                                                <Button className='mt-3' onClick={() => downloadFile(script2, fileName2, fileType)}>
-                                                    Download :  ({fileName2})
+                                                <Button className="mt-3" onClick={() => downloadFile(script2, fileName2, 'doc')}>
+                                                    Download: ({fileName2})
                                                 </Button>
                                             )}
                                         </Tab.Pane>

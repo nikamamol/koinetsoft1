@@ -13,7 +13,7 @@ export const fetchCsvFilesbyEMChecked = createAsyncThunk(
             const response = await axios.get(
                 `${baseUrl}user/getCsvFilesByEMCheckedAll`, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        "authorization": `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 }

@@ -2,21 +2,24 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import baseUrl from "../../../constant/ConstantApi";
 
-const token = localStorage.getItem("authToken");
-
 // Async thunk for fetching CSV files
 export const fetchCsvFilesbyEMMaster = createAsyncThunk(
     "csvFileCheckedbyEMMaster/fetchCsvFilesbyEMMaster",
-    async() => {
-        const response = await axios.get(
-            `${baseUrl}user/getCsvFilesByEMMasterAll`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            }
-        );
-        return response.data.files;
+    async(_, { rejectWithValue }) => {
+        const token = localStorage.getItem("authToken"); // Move token retrieval here
+        try {
+            const response = await axios.get(
+                `${baseUrl}user/getCsvFilesByEMMasterAll`, {
+                    headers: {
+                        "authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            return response.data.files;
+        } catch (error) {
+            return rejectWithValue(error.response || "Something went wrong");
+        }
     }
 );
 
@@ -31,20 +34,19 @@ const CsvsliceByEMMaster = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCsvFilesbyEMMaster.pending, (state) => { // Reference the thunk correctly
+            .addCase(fetchCsvFilesbyEMMaster.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchCsvFilesbyEMMaster.fulfilled, (state, action) => { // Reference the thunk correctly
+            .addCase(fetchCsvFilesbyEMMaster.fulfilled, (state, action) => {
                 state.loading = false;
                 state.csvFiles = action.payload;
             })
-            .addCase(fetchCsvFilesbyEMMaster.rejected, (state, action) => { // Reference the thunk correctly
+            .addCase(fetchCsvFilesbyEMMaster.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message;
+                state.error = action.payload || "Failed to fetch data";
             });
     },
 });
 
-// Export the reducer
 export default CsvsliceByEMMaster.reducer;

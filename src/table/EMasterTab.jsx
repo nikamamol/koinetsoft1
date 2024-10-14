@@ -9,21 +9,21 @@ import { toast } from 'react-toastify';
 import baseUrl from '../constant/ConstantApi';
 import { fetchCsvFilesbyEMMaster } from '../redux/reducer/rpf/getEmMasterFileData';
 import Hourglass from "../assets/Hourglass.gif";
-import Unauthorised from "../assets/401Unauthorised.png"
-
-
+import Unauthorised from "../assets/401Unauthorised.png";
 
 const EMasterTab = () => {
     const dispatch = useDispatch();
     const { csvFiles, loading, error } = useSelector((state) => state.csvFileCheckedbyEMMaster);
-    const token = localStorage.getItem('authToken');
-
-    
     const userRole = localStorage.getItem('role'); // Assuming user role is stored in local storage
     const allowedRoles = ['oxmanager', 'admin', 'email_marketing'];
 
     useEffect(() => {
-        dispatch(fetchCsvFilesbyEMMaster());
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            dispatch(fetchCsvFilesbyEMMaster()); // Only dispatch if token is present
+        } else {
+            console.error('No token available');
+        }
     }, [dispatch]);
 
     const formatDate = (dateString) => {
@@ -89,38 +89,28 @@ const EMasterTab = () => {
         },
     ], []);
 
-
     const handleDownload = async (file) => {
+        const token = localStorage.getItem('authToken');
         const { _id, originalname } = file;
         try {
             const response = await axios.get(`${baseUrl}user/getEMMasterCsvFileById/${_id}`, {
-                responseType: "blob", // Receive the file as a Blob
+                responseType: "blob",
                 headers: {
-                    Authorization: `Bearer ${token}`, // Send the token in the header
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
-            // Create a Blob from the response data
             const blob = new Blob([response.data], {
                 type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             });
-
-            // Create a URL for the Blob
             const url = window.URL.createObjectURL(blob);
-
-            // Create a temporary link element
             const link = document.createElement("a");
             link.href = url;
-            link.setAttribute("download", originalname); // Set the filename for download
-
-            // Append the link to the document body and trigger the download
+            link.setAttribute("download", originalname);
             document.body.appendChild(link);
             link.click();
-
-            // Clean up by removing the link and revoking the Object URL
             link.parentNode.removeChild(link);
             window.URL.revokeObjectURL(url);
-
         } catch (error) {
             console.error("Error during file download:", error);
             toast.error("Failed to download file");
@@ -128,6 +118,7 @@ const EMasterTab = () => {
     };
 
     const handleDelete = async (fileId) => {
+        const token = localStorage.getItem('authToken');
         if (window.confirm('Are you sure you want to delete this file?')) {
             try {
                 await axios.delete(`${baseUrl}user/deleteEMMasterCsvFileById/${fileId}`, {
@@ -148,16 +139,17 @@ const EMasterTab = () => {
         <>
             <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
         </>
-    )
+    );
     if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
-        // Conditionally render the table based on user role
-        if (!allowedRoles.includes(userRole)) {
-            return <div className='text-center mt-2 '>
-            <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-            <p className='text-danger'>You do not have permission to view this content.</p>
-          </div>;
-        }
-    
+
+    if (!allowedRoles.includes(userRole)) {
+        return (
+            <div className='text-center mt-2 '>
+                <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+                <p className='text-danger'>You do not have permission to view this content.</p>
+            </div>
+        );
+    }
 
     return (
         <div>

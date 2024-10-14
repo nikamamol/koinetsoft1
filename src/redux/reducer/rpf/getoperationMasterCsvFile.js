@@ -11,7 +11,7 @@ export const fetchCsvFilesbyOPMaster = createAsyncThunk(
         try {
             const response = await axios.get(`${baseUrl}user/getCsvFilesByOpMasterAll`, {
                 headers: {
-                    Authorization: token ? `Bearer ${token}` : "", // Ensure token is added only if it exists
+                    "authorization": `Bearer ${token}`, // Ensure token is added only if it exists
                     "Content-Type": "application/json",
                 },
             });

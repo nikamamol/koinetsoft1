@@ -10,8 +10,8 @@ export const emailCheckedUpload = createAsyncThunk(
             const token = localStorage.getItem('authToken');
             const config = {
                 headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
+                    "authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 },
             };
             const response = await axios.post(`${baseUrl}user/uploadEMCheckedCsvFile`, formData, config);
