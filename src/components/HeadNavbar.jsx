@@ -36,6 +36,8 @@ import { Collapse } from '@mui/material';
 import LogoImage from "../assets/koinetlogo.png"
 import UserProfile from './UserProfile';
 import Counter from '../views/counter/Counter';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+
 
 const drawerWidth = 240;
 
@@ -398,7 +400,7 @@ function ResponsiveDrawer(props) {
                 justifyContent: "center",
               }}
             >
-              <VerifiedUserIcon />
+              <FileCopyIcon />
             </ListItemIcon>
             <ListItemText primary="RPF Files" sx={{ opacity: open ? 1 : 0 }} />
             {isCollapseRFP ? <ExpandLessIcon /> : <ExpandMoreIcon />}
