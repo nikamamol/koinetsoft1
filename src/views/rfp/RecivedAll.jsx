@@ -5,6 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
 import RfpReceived from '../../table/RfpReceived';
 import RfpReceivedAll from '../../table/RpfRecivedAll';
+import baseUrl from '../../constant/ConstantApi';
 
 function RecivedAll() {
   const [show, setShow] = useState(false);
@@ -27,7 +28,7 @@ function RecivedAll() {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:4000/user/uplaodcsv', formData, {
+      const response = await axios.post(`${baseUrl}user/uplaodcsv`, formData, {
       });
 
       if (response.data.message) {

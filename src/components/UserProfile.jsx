@@ -134,7 +134,7 @@ export default function UserProfile() {
           <span className='text-dark'>Log-Out</span>
         </MenuItem>
       </Menu>
-      {loading && <div>Loading...</div>}
+      {/* {loading && <div>Loading...</div>} */}
       {error && <div className="error">{error}</div>}
     </>
   );
