@@ -7,3 +7,6 @@ const baseUrl = 'https://koinetsoft-backend.onrender.com/'
 export default baseUrl;
 
 
+
+// npm run build
+// npm run preview

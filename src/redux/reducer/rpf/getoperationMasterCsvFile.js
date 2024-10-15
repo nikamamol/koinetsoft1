@@ -8,21 +8,24 @@ const token = localStorage.getItem("authToken");
 export const fetchCsvFilesbyOPMaster = createAsyncThunk(
     "csvFileCheckedbyOPMaster/fetchCsvFilesbyOPMaster",
     async(_, { rejectWithValue }) => {
+        const token = localStorage.getItem("authToken");
+        if (!token) {
+            return rejectWithValue("No authentication token found. Please log in.");
+        }
         try {
             const response = await axios.get(`${baseUrl}user/getCsvFilesByOpMasterAll`, {
                 headers: {
-                    "authorization": `Bearer ${token}`, // Ensure token is added only if it exists
+                    "authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
             });
-            console.log("API response: ", response.data); // Log API response
-            return response.data.files; // Adjust based on the actual structure of your API response
+            return response.data.files;
         } catch (error) {
-            console.error("API Error:", error); // Log API errors
             return rejectWithValue(error.response ? error.response.data : error.message);
         }
     }
 );
+
 
 const CsvsliceByOPMaster = createSlice({
     name: "csvFileCheckedbyOPMaster",

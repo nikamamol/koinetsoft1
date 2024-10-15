@@ -6,6 +6,8 @@ import LogoImge from "../assets/koinetlogo.png";
 import Hourglass from "../assets/Hourglass.gif";
 import GiftImage from "../assets/robot.gif";  // Add this line to import the gift image
 import { toast } from 'react-toastify';
+import BetaImg from "../assets/beta.png"
+
 
 function Login() {
     const dispatch = useDispatch();
@@ -35,6 +37,7 @@ function Login() {
     };
 
     return (
+       <>
         <div className="container-fluid bgGradinet">
             <div className="row">
                 <div className="col-lg-12 d-flex justify-content-center align-items-center vh-100">
@@ -107,6 +110,10 @@ function Login() {
                 }}
             />
         </div>
+        <div>
+            <img src={BetaImg} alt="" className='beta-banner' />
+        </div>
+       </>
     );
 }
 
