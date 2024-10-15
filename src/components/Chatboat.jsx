@@ -64,7 +64,7 @@ function Chatbot() {
         },
         {
             id: '7',
-            message: 'Would you like to know anything else?',
+            message: 'Please confirm with your manager or team lead before uploading the file.',
             trigger: () => {
                 const updatedAnsweredQuestions = [...answeredQuestions];
                 if (!updatedAnsweredQuestions.includes('uploadFile') && steps[5].trigger === '6') {
