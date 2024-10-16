@@ -4,20 +4,20 @@ import baseUrl from '../../../constant/ConstantApi';
 
 // Async thunk to upload a file
 export const uploadEMMaster = createAsyncThunk(
-    'emmasterFileUpload/uploadEMMaster', // Update the thunk type to match the new naming convention
+    'emmasterFileUpload/uploadEMMaster',
     async(formData, thunkAPI) => {
         try {
             const token = localStorage.getItem('authToken');
             const config = {
                 headers: {
                     "authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    // Do not set "Content-Type" manually, Axios will handle it.
                 },
             };
             const response = await axios.post(`${baseUrl}user/uploadEMMasterCsvFile`, formData, config);
-            return response.data; // Return the response data
+            return response.data;
         } catch (error) {
-            return thunkAPI.rejectWithValue(error.response || error.message); // Use optional chaining to avoid errors if response is undefined
+            return thunkAPI.rejectWithValue(error.response || error.message);
         }
     }
 );

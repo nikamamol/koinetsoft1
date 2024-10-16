@@ -8,6 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
 import { uploadEMMaster } from '../../redux/reducer/rpf/uploadEmailmasterfile'; // Adjust the import path as needed
 import EMasterTab from '../../table/EMasterTab';
+import { fetchCsvFilesbyEMMaster } from '../../redux/reducer/rpf/getEmMasterFileData';
 
 function EMMasterFile() {
   const [show, setShow] = useState(false);
@@ -17,7 +18,8 @@ function EMMasterFile() {
 
   // Fetch data from Redux store
   const { campaigns, status } = useSelector((state) => state.campaigns);
-  const { loading, error } = useSelector((state) => state.emmasterFileUpload || {}); // Ensure this matches your slice
+  const { loading, error } = useSelector((state) => state.emmasterFileUpload || {});
+  const { csvFiles, loading: csvLoading, error: csvError } = useSelector((state) => state.csvFileCheckedbyEMMaster);
 
   const userRole = localStorage.getItem('role');
 
@@ -26,6 +28,11 @@ function EMMasterFile() {
       dispatch(fetchCampaigns());
     }
   }, [dispatch, status]);
+
+  // Fetch CSV files on component load
+  useEffect(() => {
+    dispatch(fetchCsvFilesbyEMMaster());
+  }, [dispatch]);
 
   const handleShow = () => {
     if (userRole !== 'oxmanager' && userRole !== 'admin' && userRole !== 'email_marketing') {
@@ -59,7 +66,7 @@ function EMMasterFile() {
     }
 
     const formData = new FormData();
-    const selectedCampaignData = campaigns.find(c => c._id === selectedCampaign);
+    const selectedCampaignData = campaigns.find((c) => c._id === selectedCampaign);
 
     formData.append('campaignName', selectedCampaignData?.campaignName || '');
     formData.append('campaignCode', selectedCampaignData?.campaignCode || '');
@@ -70,6 +77,8 @@ function EMMasterFile() {
       .then(() => {
         alert('File uploaded successfully!');
         handleClose();
+        // Fetch the updated file list after successful upload
+        dispatch(fetchCsvFilesbyEMMaster());
       })
       .catch((err) => {
         alert(`File upload failed: ${err}`);
@@ -101,15 +110,14 @@ function EMMasterFile() {
                         <option value="">Select Campaign</option>
                         {status === 'loading' && <option>Loading campaigns...</option>}
                         {status === 'failed' && <option>Error loading campaigns</option>}
-                        {status === 'succeeded' && campaigns.length > 0 ? (
-                          campaigns.map((campaign) => (
+                        {status === 'succeeded' &&
+                          campaigns.length > 0 ? campaigns.map((campaign) => (
                             <option key={campaign._id} value={campaign._id}>
                               {campaign.campaignName}
                             </option>
-                          ))
-                        ) : (
-                          status === 'succeeded' && <option>No campaigns found</option>
-                        )}
+                          )) : (
+                            status === 'succeeded' && <option>No campaigns found</option>
+                          )}
                       </Form.Control>
                     </Form.Group>
 
@@ -151,11 +159,11 @@ function EMMasterFile() {
                       </Button>
                     </div>
                   </Form>
-                  {error && <div className="text-danger mt-3">Error: {error}</div>} {/* Display error message */}
+                  {error && <div className="text-danger mt-3">Error: {error}</div>}
                 </Modal.Body>
               </Modal>
             </div>
-            <EMasterTab />
+            <EMasterTab files={csvFiles} loading={csvLoading} error={csvError} /> {/* Pass the fetched files to EMasterTab */}
           </Col>
         </Row>
       </Container>
