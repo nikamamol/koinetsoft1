@@ -6,9 +6,10 @@ import SendIcon from '@mui/icons-material/Send';
 import BackupIcon from '@mui/icons-material/Backup';
 import { useDropzone } from 'react-dropzone';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
-import { emailCheckedUpload, resetUploadState } from '../../redux/reducer/rpf/uploadEmailChecked'; // Adjust the import path as needed
-import QualityCheckedTab from '../../table/QualityCheckedTab';
+import { emailCheckedUpload, resetUploadState } from '../../redux/reducer/rpf/uploadEmailChecked';
+// import { fetchCsvFilesbyEMChecked } from '../../redux/reducer/rpf/fetchCsvFilesbyEMChecked';
 import EMCheckedTab from '../../table/EMCheckedTab';
+import { fetchCsvFilesbyEMChecked } from '../../redux/reducer/rpf/getEmCheckData';
 
 function EMChecked() {
     const [show, setShow] = useState(false);
@@ -18,7 +19,8 @@ function EMChecked() {
 
     // Fetch data from Redux store
     const { campaigns, status } = useSelector((state) => state.campaigns);
-    const { loading, success, error } = useSelector((state) => state.emailCheckedUpload || {}); // Update the slice name accordingly
+    const { loading, success, error } = useSelector((state) => state.emailCheckedUpload || {});
+    const { csvFiles } = useSelector((state) => state.csvFileCheckedbyEMChecked || {});
 
     const userRole = localStorage.getItem('role');
 
@@ -27,6 +29,11 @@ function EMChecked() {
             dispatch(fetchCampaigns());
         }
     }, [dispatch, status]);
+
+    useEffect(() => {
+        // Fetch CSV files when the component is mounted
+        dispatch(fetchCsvFilesbyEMChecked());
+    }, [dispatch]);
 
     useEffect(() => {
         // Reset upload state when closing the modal
@@ -79,6 +86,8 @@ function EMChecked() {
             .unwrap()
             .then(() => {
                 alert('File uploaded successfully!');
+                // Fetch updated list of CSV files
+                dispatch(fetchCsvFilesbyEMChecked());
                 handleClose();
             })
             .catch((err) => {
@@ -151,14 +160,14 @@ function EMChecked() {
                                             </Button>
                                         </div>
 
-                                        {/* Show success or error message */}
                                         {success && <div className="alert alert-success mt-3">File uploaded successfully!</div>}
                                         {error && <div className="alert alert-danger mt-3">Upload failed: {error.message || error}</div>}
                                     </Form>
                                 </Modal.Body>
                             </Modal>
                         </div>
-                        <EMCheckedTab />
+                        {/* Render the updated list of CSV files */}
+                        <EMCheckedTab csvFiles={csvFiles} />
                     </Col>
                 </Row>
             </Container>
