@@ -23,7 +23,7 @@ export const qualitycheckedupload = createAsyncThunk(
 );
 
 // Slice to handle upload states
-const qualityceckedFileUploadSlice = createSlice({
+const qualitycheckedFileUploadSlice = createSlice({
     name: 'qualitycheckedfileUpload',
     initialState: {
         loading: false,
@@ -57,5 +57,5 @@ const qualityceckedFileUploadSlice = createSlice({
     },
 });
 
-export const { resetUploadState } = qualityceckedFileUploadSlice.actions;
-export default qualityceckedFileUploadSlice.reducer;
+export const { resetUploadState } = qualitycheckedFileUploadSlice.actions;
+export default qualitycheckedFileUploadSlice.reducer;

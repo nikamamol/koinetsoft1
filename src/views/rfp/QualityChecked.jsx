@@ -8,6 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
 import { qualitycheckedupload, resetUploadState } from '../../redux/reducer/rpf/qualitychecked';
 import QualityCheckedTab from '../../table/QualityCheckedTab';
+import { fetchCsvFilesbyQualityChecked } from '../../redux/reducer/rpf/getQualitycheckedData';
 
 function QualityChecked() {
   const [show, setShow] = useState(false);
@@ -19,6 +20,7 @@ function QualityChecked() {
   const { campaigns, status } = useSelector((state) => state.campaigns);
   const { loading, success, error } = useSelector((state) => state.qualitycheckedfileUpload);
 
+  const { csvFiles, loading: loadingCsvFiles } = useSelector((state) => state.csvFileCheckedbyQualityChecked);
   const userRole = localStorage.getItem('role');
 
   useEffect(() => {
@@ -28,8 +30,14 @@ function QualityChecked() {
   }, [dispatch, status]);
 
   useEffect(() => {
+    dispatch(fetchCsvFilesbyQualityChecked()); // Fetch files on component mount
+  }, [dispatch]);
+
+  useEffect(() => {
     if (success) {
       alert('File uploaded successfully!');
+      dispatch(fetchCsvFilesbyQualityChecked()); // Refresh the list of files after upload
+      setSelectedFile(null); // Reset the file selection after upload
       handleClose();
     }
     if (error) {
@@ -41,6 +49,7 @@ function QualityChecked() {
       dispatch(resetUploadState());
     };
   }, [success, error, dispatch]);
+
 
   const handleShow = () => {
     if (userRole !== 'oxmanager' && userRole !== 'admin' && userRole !== 'quality') {
