@@ -6,8 +6,9 @@ import SendIcon from '@mui/icons-material/Send';
 import BackupIcon from '@mui/icons-material/Backup';
 import { useDropzone } from 'react-dropzone';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
-import { uploadqualitymaster } from '../../redux/reducer/rpf/uploadqualitymaster'; // Adjust the import path as needed
+import { uploadqualitymaster } from '../../redux/reducer/rpf/uploadqualitymaster';
 import QualityMasterTab from '../../table/QualityMasterTab';
+import { fetchCsvFilesbyQualityMaster } from '../../redux/reducer/rpf/getQualityMasterData';
 
 function QualityMaster() {
   const [show, setShow] = useState(false);
@@ -17,7 +18,8 @@ function QualityMaster() {
 
   // Fetch data from Redux store
   const { campaigns, status } = useSelector((state) => state.campaigns);
-  const { loading } = useSelector((state) => state.qualitymasterfileUpload || {}); // Ensure this matches your slice
+  const { loading } = useSelector((state) => state.qualitymasterfileUpload || {});
+  const { csvFiles } = useSelector((state) => state.csvFileCheckedbyQualityMaster); // Fetch CSV file list
 
   const userRole = localStorage.getItem('role');
 
@@ -26,6 +28,10 @@ function QualityMaster() {
       dispatch(fetchCampaigns());
     }
   }, [dispatch, status]);
+
+  useEffect(() => {
+    dispatch(fetchCsvFilesbyQualityMaster()); // Fetch files on component load
+  }, [dispatch]);
 
   const handleShow = () => {
     if (userRole !== 'oxmanager' && userRole !== 'admin' && userRole !== 'quality') {
@@ -69,6 +75,7 @@ function QualityMaster() {
       .unwrap()
       .then(() => {
         alert('File uploaded successfully!');
+        dispatch(fetchCsvFilesbyQualityMaster()); // Fetch updated files after upload
         handleClose();
       })
       .catch((err) => {
@@ -154,7 +161,7 @@ function QualityMaster() {
                 </Modal.Body>
               </Modal>
             </div>
-            <QualityMasterTab />
+            <QualityMasterTab files={csvFiles} /> {/* Pass the files to the table */}
           </Col>
         </Row>
       </Container>

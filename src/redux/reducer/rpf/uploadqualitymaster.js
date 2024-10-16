@@ -3,6 +3,7 @@ import axios from 'axios';
 import baseUrl from '../../../constant/ConstantApi';
 
 // Async thunk to upload a file
+// Async thunk to upload a file
 export const uploadqualitymaster = createAsyncThunk(
     'qualitymasterfileUpload/uploadqualitymaster',
     async(formData, thunkAPI) => {
@@ -11,16 +12,17 @@ export const uploadqualitymaster = createAsyncThunk(
             const config = {
                 headers: {
                     "authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    // No need for "Content-Type" here, Axios will handle it
                 },
             };
             const response = await axios.post(`${baseUrl}user/uploadQualityMasterCsvFile`, formData, config);
             return response.data;
         } catch (error) {
-            return thunkAPI.rejectWithValue(error.response.data || error.message);
+            return thunkAPI.rejectWithValue(error.response || error.message);
         }
     }
 );
+
 
 // Slice to handle upload states
 const qualitymasterFileUploadSlice = createSlice({
