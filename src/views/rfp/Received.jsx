@@ -44,24 +44,25 @@ function Received() {
 
   const handleFileUpload = async () => {
     if (!file || !selectedCampaign || !selectedCampaignCode) {
-      alert('Please select a file and a campaign!');
-      return;
+        alert('Please select a file and a campaign!');
+        return;
     }
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', file);  // Important: 'file' matches the backend field name
     formData.append('campaignName', selectedCampaign);
     formData.append('campaignCode', selectedCampaignCode);
 
     try {
-      await dispatch(uploadFile(formData)).unwrap();
-      alert(uploadMessage || 'File uploaded successfully!');
-      setShow(false);
+        await dispatch(uploadFile(formData)).unwrap();
+        alert(uploadMessage || 'File uploaded successfully!');
+        setShow(false);
     } catch (error) {
-      console.error('There was an error uploading the file!', error);
-      alert('Failed to upload the file.');
+        console.error('There was an error uploading the file!', error);
+        alert('Failed to upload the file.');
     }
-  };
+};
+
 
   // Dropzone configuration
   const onDrop = useCallback((acceptedFiles) => {

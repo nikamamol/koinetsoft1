@@ -10,7 +10,7 @@ export const uploadFile = createAsyncThunk(
             const config = {
                 headers: {
                     "authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    // Do NOT set Content-Type here, let the browser handle it
                 },
             };
 
@@ -21,6 +21,7 @@ export const uploadFile = createAsyncThunk(
         }
     }
 );
+
 
 const fileUploadSlice = createSlice({
     name: 'fileUpload',
