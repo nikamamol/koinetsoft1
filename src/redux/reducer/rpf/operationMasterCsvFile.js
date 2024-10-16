@@ -11,8 +11,8 @@ export const uploadOpMaster = createAsyncThunk(
             const token = localStorage.getItem('authToken');
             const config = {
                 headers: {
-                    "authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    "authorization": `Bearer ${token}`
+
                 },
             };
             const response = await axios.post(`${baseUrl}user/operationMasterCsvFile`, formData, config);

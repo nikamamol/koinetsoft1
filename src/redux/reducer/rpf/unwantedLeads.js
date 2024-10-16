@@ -10,8 +10,8 @@ export const uploadUnwantedLeads = createAsyncThunk(
             const token = localStorage.getItem('authToken');
             const config = {
                 headers: {
-                    "authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    "authorization": `Bearer ${token}`
+
                 },
             };
             const response = await axios.post(`${baseUrl}user/unwantedLeadsCsvFile`, formData, config);

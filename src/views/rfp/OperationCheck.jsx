@@ -5,7 +5,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SendIcon from '@mui/icons-material/Send';
 import BackupIcon from '@mui/icons-material/Backup';
 import RfpOperation from '../../table/RfpOperation';
-import { uploadOperationFile } from '../../redux/reducer/rpf/operationcsvupload';
+import { fetchFiles, uploadOperationFile } from '../../redux/reducer/rpf/operationcsvupload';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData'; // Import fetchCampaigns action
 import { useDropzone } from 'react-dropzone'; // Import react-dropzone
 
@@ -16,12 +16,14 @@ function OperationCheck() {
   const dispatch = useDispatch();
   const uploadStatus = useSelector((state) => state.operationfileUpload);
   const { campaigns, status, error } = useSelector((state) => state.campaigns);
-  
+  const { files } = useSelector((state) => state.rfp); // Get uploaded files from Redux state
+
   // Fetch the user role from localStorage
   const userRole = localStorage.getItem('role'); // assuming 'userRole' is stored in localStorage
 
   useEffect(() => {
     dispatch(fetchCampaigns());
+    dispatch(fetchFiles()); // Fetch existing files on component mount
   }, [dispatch]);
 
   const handleShow = () => {
@@ -66,8 +68,8 @@ function OperationCheck() {
       .unwrap()
       .then(() => {
         alert('File uploaded successfully!');
+        dispatch(fetchFiles()); // Fetch files after upload to update the state
         handleClose();
-        s
       })
       .catch(() => {
         alert('File upload failed. Please try again.');
@@ -158,7 +160,7 @@ function OperationCheck() {
               </Modal>
             </div>
 
-            <RfpOperation />
+            <RfpOperation files={files} /> {/* Pass the fetched files to RfpOperation */}
           </Col>
         </Row>
       </Container>

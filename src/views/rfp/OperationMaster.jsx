@@ -6,8 +6,10 @@ import SendIcon from '@mui/icons-material/Send';
 import BackupIcon from '@mui/icons-material/Backup';
 import { useDropzone } from 'react-dropzone';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
-import { uploadOpMaster } from '../../redux/reducer/rpf/operationMasterCsvFile'; // Adjust the import path as needed
+import { uploadOpMaster } from '../../redux/reducer/rpf/operationMasterCsvFile'; 
+
 import OperationMasterTab from '../../table/OperationMasterTab';
+import { fetchCsvFilesbyOPMaster } from '../../redux/reducer/rpf/getoperationMasterCsvFile';
 
 function OperationMaster() {
   const [show, setShow] = useState(false);
@@ -17,7 +19,7 @@ function OperationMaster() {
 
   // Fetch data from Redux store
   const { campaigns, status } = useSelector((state) => state.campaigns);
-  const { loading } = useSelector((state) => state.opmasterFileUpload || {}); // Ensure this matches your slice
+  const { loading, csvFiles } = useSelector((state) => state.opmasterFileUpload || {}); // Ensure this matches your slice
 
   const userRole = localStorage.getItem('role');
 
@@ -25,6 +27,7 @@ function OperationMaster() {
     if (status === 'idle') {
       dispatch(fetchCampaigns());
     }
+    dispatch(fetchCsvFilesbyOPMaster()); // Fetch the CSV files when the component mounts
   }, [dispatch, status]);
 
   const handleShow = () => {
@@ -70,6 +73,7 @@ function OperationMaster() {
       .then(() => {
         alert('File uploaded successfully!');
         handleClose();
+        dispatch(fetchCsvFilesbyOPMaster()); // Fetch updated list of CSV files after upload
       })
       .catch((err) => {
         alert(`File upload failed: ${err}`);
@@ -154,7 +158,7 @@ function OperationMaster() {
                 </Modal.Body>
               </Modal>
             </div>
-            <OperationMasterTab />
+            <OperationMasterTab csvFiles={csvFiles} /> {/* Pass the CSV files to the tab component */}
           </Col>
         </Row>
       </Container>

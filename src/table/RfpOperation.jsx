@@ -17,7 +17,7 @@ const RfpActive = () => {
 
   const [checkboxes, setCheckboxes] = useState({});
   const userType = localStorage.getItem('role');
-  const allowedRoles = ['oxmanager']; // Specify allowed roles
+  const allowedRoles = ['oxmanager','admin']; // Specify allowed roles
 
 
   useEffect(() => {
