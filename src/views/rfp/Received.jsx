@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import RfpReceived from '../../table/RfpReceived';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
 import { uploadFile } from '../../redux/reducer/rpf/uploadcsvbyemploy';
+import { fetchFileData } from '../../redux/reducer/rpf/getcsvfiledata';  // Import fetchFileData action
 
 function Received() {
   const [show, setShow] = useState(false);
@@ -19,9 +20,12 @@ function Received() {
   const campaigns = useSelector((state) => state.campaigns.campaigns);
   const uploadStatus = useSelector((state) => state.fileUpload.status);
   const uploadMessage = useSelector((state) => state.fileUpload.message);
+  const fileData = useSelector((state) => state.fileData.files);  // Fetch file data from Redux store
 
+  // Fetch campaigns and file data on component mount
   useEffect(() => {
     dispatch(fetchCampaigns());
+    dispatch(fetchFileData());  // Fetch the file data when component mounts
   }, [dispatch]);
 
   const handleClose = () => setShow(false);
@@ -44,29 +48,29 @@ function Received() {
 
   const handleFileUpload = async () => {
     if (!file || !selectedCampaign || !selectedCampaignCode) {
-        alert('Please select a file and a campaign!');
-        return;
+      alert('Please select a file and a campaign!');
+      return;
     }
 
     const formData = new FormData();
-    formData.append('file', file);  // Important: 'file' matches the backend field name
+    formData.append('file', file);
     formData.append('campaignName', selectedCampaign);
     formData.append('campaignCode', selectedCampaignCode);
 
     try {
-        await dispatch(uploadFile(formData)).unwrap();
-        alert(uploadMessage || 'File uploaded successfully!');
-        setShow(false);
+      await dispatch(uploadFile(formData)).unwrap();
+      alert(uploadMessage || 'File uploaded successfully!');
+      dispatch(fetchFileData());  // Fetch the updated file data after upload
+      setShow(false);
     } catch (error) {
-        console.error('There was an error uploading the file!', error);
-        alert('Failed to upload the file.');
+      console.error('There was an error uploading the file!', error);
+      alert('Failed to upload the file.');
     }
-};
-
+  };
 
   // Dropzone configuration
   const onDrop = useCallback((acceptedFiles) => {
-    setFile(acceptedFiles[0]); // Set the first dropped file
+    setFile(acceptedFiles[0]);  // Set the first dropped file
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -85,7 +89,7 @@ function Received() {
                 <Button variant="primary" className='p-2' onClick={handleShow}>
                   <CloudUploadIcon /> Upload  or Drag 'n' drop RPF File
                 </Button>
-                <Modal show={show} onHide={handleClose}  centered>
+                <Modal show={show} onHide={handleClose} centered>
                   <Modal.Header closeButton>
                     <Modal.Title>Upload Your RPF File (.csv format)</Modal.Title>
                   </Modal.Header>
@@ -106,7 +110,7 @@ function Received() {
                       {/* Drag and Drop Area */}
                       <div
                         {...getRootProps()}
-                        className={`dropzone mt-3 p-3 border border-dashed rounded-3  ${isDragActive ? 'active' : ''}`}
+                        className={`dropzone mt-3 p-3 border border-dashed rounded-3 ${isDragActive ? 'active' : ''}`}
                         style={{ textAlign: 'center' }}
                       >
                         <input {...getInputProps()} />
@@ -149,7 +153,8 @@ function Received() {
               </div>
             )}
 
-            <RfpReceived />
+            {/* Pass the updated file data to RfpReceived component */}
+            <RfpReceived fileData={fileData} />
           </Col>
         </Row>
       </Container>

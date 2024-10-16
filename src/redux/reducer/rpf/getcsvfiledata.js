@@ -10,16 +10,16 @@ export const fetchFileData = createAsyncThunk(
     "fileData/fetchFileData",
     async(_, { rejectWithValue }) => {
         try {
-            const token = getToken(); // Ensure you have this function implemented correctly
+            const token = localStorage.getItem('authToken');
             const response = await axios.get(`${baseUrl}user/csvFileData`, {
                 headers: {
                     "authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
             });
-            return response.data; // Return the data directly from the response
+            return response.data;
         } catch (error) {
-            console.error("Error fetching file data:", error); // Log the error for debugging
+            console.error("Error fetching file data:", error);
             return rejectWithValue(error.response ? error.response.data : { message: "An unexpected error occurred." });
         }
     }
