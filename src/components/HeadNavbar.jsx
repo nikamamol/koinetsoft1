@@ -162,7 +162,7 @@ function ResponsiveDrawer(props) {
 
   const userType = localStorage.getItem('role');
   const drawer = (
-    <div className='sidebar_bg h-auto '>
+    <div className='sidebar_bg '>
 
       {/* <Toolbar /> */}
       <div className='text-center bg-light sticky-top '>
