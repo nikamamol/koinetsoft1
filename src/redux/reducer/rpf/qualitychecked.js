@@ -10,8 +10,8 @@ export const qualitycheckedupload = createAsyncThunk(
             const token = localStorage.getItem('authToken');
             const config = {
                 headers: {
-                    "authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data', // Ensure multipart for FormData
                 },
             };
             const response = await axios.post(`${baseUrl}user/uploadQualityCheckedCsvFile`, formData, config);
@@ -39,17 +39,17 @@ const qualityceckedFileUploadSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(qualitycheckedupload.pending, (state) => { // Correct action reference
+            .addCase(qualitycheckedupload.pending, (state) => {
                 state.loading = true;
                 state.success = false;
                 state.error = null;
             })
-            .addCase(qualitycheckedupload.fulfilled, (state, action) => { // Correct action reference
+            .addCase(qualitycheckedupload.fulfilled, (state) => {
                 state.loading = false;
                 state.success = true;
                 state.error = null;
             })
-            .addCase(qualitycheckedupload.rejected, (state, action) => { // Correct action reference
+            .addCase(qualitycheckedupload.rejected, (state, action) => {
                 state.loading = false;
                 state.success = false;
                 state.error = action.payload;

@@ -6,7 +6,7 @@ import SendIcon from '@mui/icons-material/Send';
 import BackupIcon from '@mui/icons-material/Backup';
 import { useDropzone } from 'react-dropzone';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
-import { qualitycheckedupload } from '../../redux/reducer/rpf/qualitychecked'; // Adjust the import path as needed
+import { qualitycheckedupload, resetUploadState } from '../../redux/reducer/rpf/qualitychecked';
 import QualityCheckedTab from '../../table/QualityCheckedTab';
 
 function QualityChecked() {
@@ -15,9 +15,9 @@ function QualityChecked() {
   const [selectedFile, setSelectedFile] = useState(null);
   const dispatch = useDispatch();
 
-  // Fetch data from Redux store
+  // Fetching campaigns and upload state from Redux store
   const { campaigns, status } = useSelector((state) => state.campaigns);
-  const { loading } = useSelector((state) => state.qualitycheckedfileUpload); // Update the slice name accordingly
+  const { loading, success, error } = useSelector((state) => state.qualitycheckedfileUpload);
 
   const userRole = localStorage.getItem('role');
 
@@ -26,6 +26,21 @@ function QualityChecked() {
       dispatch(fetchCampaigns());
     }
   }, [dispatch, status]);
+
+  useEffect(() => {
+    if (success) {
+      alert('File uploaded successfully!');
+      handleClose();
+    }
+    if (error) {
+      alert(`File upload failed: ${error}`);
+    }
+
+    // Reset upload state on component unmount
+    return () => {
+      dispatch(resetUploadState());
+    };
+  }, [success, error, dispatch]);
 
   const handleShow = () => {
     if (userRole !== 'oxmanager' && userRole !== 'admin' && userRole !== 'quality') {
@@ -65,15 +80,7 @@ function QualityChecked() {
     formData.append('campaignCode', selectedCampaignData?.campaignCode || '');
     formData.append('file', selectedFile);
 
-    dispatch(qualitycheckedupload(formData))
-      .unwrap()
-      .then(() => {
-        alert('File uploaded successfully!');
-        handleClose();
-      })
-      .catch((err) => {
-        alert(`File upload failed: ${err}`);
-      });
+    dispatch(qualitycheckedupload(formData));
   };
 
   return (
