@@ -7,8 +7,8 @@ import BackupIcon from '@mui/icons-material/Backup';
 import { useDropzone } from 'react-dropzone';
 import RAMasterTab from '../../table/RAMasterTab';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
-import {ramasterupload} from '../../redux/reducer/rpf/ramasterupload';
-
+import { ramasterupload } from '../../redux/reducer/rpf/ramasterupload';
+import { fetchAllraMasterFile } from '../../redux/reducer/rpf/ramasterdataget';
 
 function RAMaster() {
   const [show, setShow] = useState(false);
@@ -17,12 +17,8 @@ function RAMaster() {
   const dispatch = useDispatch();
   
   // Fetch data from Redux store
-  const { campaigns, status, error } = useSelector((state) => state.campaigns);
+  const { campaigns, status } = useSelector((state) => state.campaigns);
   const qualityCheckedState = useSelector((state) => state.ramasterfileUpload);
-
-  // Debugging log
-  console.log('Quality Checked State:', qualityCheckedState);
-
   const { loading } = qualityCheckedState || { loading: false }; // Fallback to prevent destructuring error
 
   const userRole = localStorage.getItem('role');
@@ -34,7 +30,7 @@ function RAMaster() {
   }, [dispatch, status]);
 
   const handleShow = () => {
-    if (userRole !== 'oxmanager' && userRole !== 'admin'&& userRole !== 'reasercher') {
+    if (userRole !== 'oxmanager' && userRole !== 'admin' && userRole !== 'researcher') {
       alert('You do not have permission to upload files.');
       return;
     }
@@ -51,7 +47,7 @@ function RAMaster() {
     setSelectedFile(e.target.files[0]);
   };
 
-  // Drag and drop
+  // Drag and drop functionality
   const onDrop = useCallback((acceptedFiles) => {
     setSelectedFile(acceptedFiles[0]);
   }, []);
@@ -75,6 +71,7 @@ function RAMaster() {
       .unwrap()
       .then(() => {
         alert('File uploaded successfully!');
+        dispatch(fetchAllraMasterFile()); // Fetch files after successful upload
         handleClose();
       })
       .catch((err) => {

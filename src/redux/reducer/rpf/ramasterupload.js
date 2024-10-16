@@ -11,12 +11,13 @@ export const ramasterupload = createAsyncThunk(
             const config = {
                 headers: {
                     "authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    // Removed Content-Type header for FormData
                 },
             };
             const response = await axios.post(`${baseUrl}user/uploadramastercsv`, formData, config);
             return response.data;
         } catch (error) {
+            console.error('File upload error:', error); // Log error
             return thunkAPI.rejectWithValue(error.response.data || error.message);
         }
     }
