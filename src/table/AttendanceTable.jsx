@@ -20,6 +20,7 @@ const AttendanceTable = () => {
     userId: ''
   });
 
+  const userType = localStorage.getItem('role');
   useEffect(() => {
     const fetchLoginData = async () => {
       try {
