@@ -8,42 +8,85 @@ import baseUrl from '../constant/ConstantApi';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Unauthorised from "../assets/401Unauthorised.png"
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserDetails } from '../redux/reducer/registeruser/UserDetails';
+
 
 const AttendanceTable = () => {
-  const navigate = useNavigate(); // Use navigate for redirecting after logout
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector((state) => state.user);
+
+  // Fetch user details on component mount
+  useEffect(() => {
+    dispatch(fetchUserDetails());
+  }, [dispatch]);
+  // State to hold the login data
   const [loginData, setLoginData] = useState([]);
+  // State to hold the filtered data
   const [filteredData, setFilteredData] = useState([]);
+  // State to manage filters
   const [filters, setFilters] = useState({
     fromDate: '',
     toDate: '',
     userId: ''
   });
 
-  const userType = localStorage.getItem('role');
+
+  const handleLogout = async () => {
+    const userId = user?._id; // Get the user ID from the user object
+
+    if (!userId) {
+      alert('User ID is not available.'); // Handle case where user ID is not found
+      return;
+    }
+
+    try {
+      // Make the logout API request
+      await axios.post(`${baseUrl}user/logout`, { userId });
+
+      // Clear local storage
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('username');
+      localStorage.removeItem('role');
+      localStorage.removeItem('timer');
+
+      // Optionally, reset user state in Redux store if you have a slice for it
+      // dispatch(logoutUser()); // Uncomment this if you have a logout action
+
+      // Navigate to login page
+      navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+      alert('Error logging out. Please try again.');
+    }
+  };
+  // Fetch data from the login API on component mount
   useEffect(() => {
     const fetchLoginData = async () => {
       try {
         const response = await axios.get(`${baseUrl}user/getdailylogins`);
-        const flattenedLoginData = [];
-        let serialNumber = 1;
+        const flattenedLoginData = []; // Array to hold flattened data
+        let serialNumber = 1; // Initialize the serial number
 
+        // Flatten the login data
         response.data.users.forEach((user) => {
           const loginTimes = user.loginTimes;
           const logoutTimes = user.logoutTimes;
 
           if (loginTimes.length > 0) {
+            // Iterate through each login time
             for (let i = 0; i < loginTimes.length; i++) {
               const loginTime = new Date(loginTimes[i].timestamp);
-              const logoutTime = i < logoutTimes.length ? new Date(logoutTimes[i]?.timestamp) : null;
+              const logoutTime = i < logoutTimes.length ? new Date(logoutTimes[i]?.timestamp) : null; // Added optional chaining
 
               const inTime = loginTime.toLocaleTimeString();
 
+              // Check if logoutTime is defined
               let totalWorkHours = 'N/A';
               let totalWorkHoursNum = 0;
 
               if (logoutTime && logoutTime > loginTime) {
-                const hoursDiff = logoutTime - loginTime;
+                const hoursDiff = logoutTime - loginTime; // Difference in milliseconds
                 const totalSeconds = Math.floor(hoursDiff / 1000);
                 const hours = Math.floor(totalSeconds / 3600);
                 const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -52,6 +95,7 @@ const AttendanceTable = () => {
                 totalWorkHours = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
               }
 
+              // Determine status based on total work hours
               let status = 'Absent ❌';
               let statusColor = '#FFCCCB';
               if (totalWorkHoursNum >= 10) {
@@ -65,74 +109,74 @@ const AttendanceTable = () => {
                 statusColor = '#FFD700';
               }
 
+              // Add flattened data for this login entry
               flattenedLoginData.push({
                 serialNumber,
                 username: user.username,
                 date: loginTime.toLocaleDateString(),
                 inTime,
-                logoutDate: logoutTime ? logoutTime.toLocaleDateString() : 'N/A',
+                logoutDate: logoutTime ? logoutTime.toLocaleDateString() : 'N/A', // Added logout date
                 outTime: logoutTime ? logoutTime.toLocaleTimeString() : 'N/A',
                 totalWorkHours,
                 status,
                 statusColor,
-                comments: '',
-                loginTime,
-                userId: user._id // Capture user ID for automatic logout
+                comments: '', // Placeholder for comments
+                loginTime // Store the original login time for sorting
               });
 
               serialNumber++;
             }
+          } else {
+            // If no login data, push an inactive entry
+            flattenedLoginData.push({
+              serialNumber,
+              username: user.username,
+              date: 'N/A',
+              inTime: 'N/A',
+              logoutDate: 'N/A', // Set logout date to 'N/A'
+              outTime: 'N/A',
+              totalWorkHours: 'N/A',
+              status: 'Inactive',
+              statusColor: '#D3D3D3',
+              comments: 'No login data available',
+            });
+            serialNumber++;
           }
         });
 
+        // Sort data by date in descending order (most recent first)
         const sortedData = flattenedLoginData.sort((a, b) => {
           return new Date(b.loginTime) - new Date(a.loginTime);
         });
 
-        setLoginData(sortedData);
-        setFilteredData(sortedData);
+        setLoginData(sortedData); // Update state with sorted data
+        setFilteredData(sortedData); // Initially, filtered data is the same as fetched data
       } catch (error) {
-        toast.error("Error fetching login data");
+        // console.error('Error fetching login data', error);
+        toast.error("Error fetching login data")
       }
     };
 
-    fetchLoginData();
+    
+
+
+    fetchLoginData(); // Call the function to fetch login data
   }, []);
+  const userType = localStorage.getItem("role");
 
-  // Set up automatic logout after 12 hours
-  useEffect(() => {
-    const checkForAutoLogout = () => {
-      loginData.forEach((entry) => {
-        const loginTime = new Date(entry.loginTime);
-        const currentTime = new Date();
-        const timeDifference = currentTime - loginTime;
-
-        // If the user hasn't logged out and 12 hours have passed
-        if (!entry.outTime && timeDifference >= 12 * 60 * 60 * 1000) {
-          handleLogout(entry.userId); // Auto logout the user
-        }
-      });
-    };
-
-    const interval = setInterval(checkForAutoLogout, 60000); // Check every minute
-    return () => clearInterval(interval); // Clear interval on component unmount
-  }, [loginData]);
-
-  const handleLogout = async (userId) => {
-    try {
-      await axios.post(`${baseUrl}user/logout`, { userId });
-
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('username');
-      localStorage.removeItem('role');
-      localStorage.removeItem('timer');
-
-      navigate('/'); // Navigate to the login page
-    } catch (error) {
-      console.error('Logout error:', error);
-      alert('Error logging out. Please try again.');
-    }
+  // Handle comment change for each row
+  const handleCommentChange = (index, newComment) => {
+    const updatedData = [...loginData];
+    updatedData[index].comments = newComment;
+    setLoginData(updatedData);
   };
+
+  // Handle saving comments (example logic)
+  const handleSaveComments = async (index) => {
+    const updatedComment = loginData[index].comments;
+    console.log(`Saving comment for ${loginData[index].username}: ${updatedComment}`);
+  };
+
   // Define columns for the MaterialReactTable
   const columns = useMemo(
     () => [

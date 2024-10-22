@@ -29,7 +29,8 @@ import CsvsliceByEMMaster from "../reducer/rpf/getEmMasterFileData";
 import opmasterFileUploadReducer from "../reducer/rpf/operationMasterCsvFile";
 import CsvsliceByOPMaster from "../reducer/rpf/getoperationMasterCsvFile";
 import unwantedLeadsFileUploadReducer from "../reducer/rpf/unwantedLeads";
-import CsvsliceByUnwantedLeads from "../reducer/rpf/getUnwantedLeads"
+import CsvsliceByUnwantedLeads from "../reducer/rpf/getUnwantedLeads";
+import userSessionReducer from "../reducer/registeruser/Logout";
 import userReducer from "../reducer/registeruser/UserDetails"
 
 const store = configureStore({
@@ -67,6 +68,7 @@ const store = configureStore({
         unwantedLeadsFileUpload: unwantedLeadsFileUploadReducer,
         csvFileCheckedbyUnwantedLeads: CsvsliceByUnwantedLeads,
         user: userReducer,
+        userSession: userSessionReducer,
     },
 });
 

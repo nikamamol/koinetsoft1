@@ -85,7 +85,7 @@ import EmailCheckedShowDelivery from './views/rfp/EmailCheckedShowDelivery';
 import QualitycheckedShowDelivery from './views/rfp/QualitycheckedShowDelivery';
 import UpdateCampaign from './views/leads/inhousecampaign/UpdateCampaign';
 import Chatbot from './components/Chatboat';
-// import QualityMasterTab from './table/QualityMasterTab';
+
 
 
 const Layout = ({ children }) => {

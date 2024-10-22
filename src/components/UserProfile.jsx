@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { fetchUserDetails } from '../redux/reducer/registeruser/UserDetails';
 import axios from 'axios';
 import baseUrl from '../constant/ConstantApi';
+import { jwtDecode } from 'jwt-decode';
 
 export default function UserProfile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -26,6 +27,28 @@ export default function UserProfile() {
     dispatch(fetchUserDetails());
   }, [dispatch]);
 
+  // Check token expiration and logout if expired
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000; // Current time in seconds
+
+      // Check if token is expired
+      if (decodedToken.exp < currentTime) {
+        handleLogout(); // Token expired, perform logout
+      } else {
+        // Set timeout to log the user out exactly 2 seconds before the token expires
+        const timeUntilExpiration = (decodedToken.exp - currentTime) * 1000 - 2000; // 2 seconds before expiration
+        const timeoutId = setTimeout(handleLogout, timeUntilExpiration);
+
+        // Cleanup the timeout on component unmount
+        return () => clearTimeout(timeoutId);
+      }
+    }
+  }, [dispatch, user]); // Added user as a dependency to re-run if user data changes
+
   const username = user?.username || 'User';
 
   const handleClick = (event) => {
@@ -37,55 +60,70 @@ export default function UserProfile() {
   };
 
   const handleLogout = async () => {
-    const userId = user?._id; // Get the user ID from the user object
+    let currentUserId = user?._id; // Get userId from user state
 
-    if (!userId) {
-      alert('User ID is not available.'); // Handle case where user ID is not found
-      return;
+    // If userId is not present, log out without making the API call
+    if (!currentUserId) {
+      console.warn("User ID not found. Fetching user details.");
+      await dispatch(fetchUserDetails()); // Fetch user details again
+      currentUserId = user?._id; // Update userId after fetching
+
+      // Check again if userId is available
+      if (!currentUserId) {
+        console.warn("User ID still not found after fetching. Logging out without API call.");
+        clearLocalStorage();
+        navigate('/');
+        return;
+      }
     }
 
     try {
       // Make the logout API request
-      await axios.post(`${baseUrl}user/logout`, { userId });
+      await axios.post(`${baseUrl}user/logout`, { userId: currentUserId });
 
       // Clear local storage
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('username');
-      localStorage.removeItem('role');
-      localStorage.removeItem('timer');
-
-      // Optionally, reset user state in Redux store if you have a slice for it
-      // dispatch(logoutUser()); // Uncomment this if you have a logout action
+      clearLocalStorage();
 
       // Navigate to login page
       navigate('/');
     } catch (error) {
-      console.error('Logout error:', error);
-      alert('Error logging out. Please try again.');
+      console.error('Logout error:', error.message);
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+      }
     }
   };
 
-
+  const clearLocalStorage = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
+  };
 
   return (
     <>
-      {!loading ? <Box>
-        <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
-            <span className='me-2 text-dark'>{username}</span>
-            <Avatar sx={{ width: 40, height: 40, backgroundColor: "#f7434fcc", padding: "5px" }}>
-              {username.charAt(0).toUpperCase()}
-            </Avatar>
-          </IconButton>
-        </Tooltip>
-      </Box> : <div className='text-danger'>Loading..</div>}
+      {!loading ? (
+        <Box>
+          <Tooltip title="Account settings">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? 'account-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+            >
+              <span className='me-2 text-dark'>{username}</span>
+              <Avatar sx={{ width: 40, height: 40, backgroundColor: "#f7434fcc", padding: "5px" }}>
+                {username.charAt(0).toUpperCase()}
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        </Box>
+      ) : (
+        <div className='text-danger'>Loading..</div>
+      )}
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -134,7 +172,6 @@ export default function UserProfile() {
           <span className='text-dark'>Log-Out</span>
         </MenuItem>
       </Menu>
-      {/* {loading && <div>Loading...</div>} */}
       {error && <div className="error">{error}</div>}
     </>
   );

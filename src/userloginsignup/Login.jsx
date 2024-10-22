@@ -55,7 +55,7 @@ function Login() {
                             </div>
                         </div>
                         {error && <div className="alert alert-danger">{error}</div>}
-                        {message && <div className="alert alert-success">{message}</div>}
+                        {/* {message && <div className="alert alert-success">{message}</div>} */}
 
                         <form id="loginForm" onSubmit={handleSubmit}>
                             <div className="mb-2">
