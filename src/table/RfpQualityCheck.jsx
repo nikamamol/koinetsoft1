@@ -61,7 +61,7 @@ const RfpQualityCheck = () => {
                 setExcelData(data);
             })
             .catch((error) => {
-                console.error('Error reading file:', error);
+                // console.error('Error reading file:', error);
             });
     };
 
@@ -74,7 +74,7 @@ const RfpQualityCheck = () => {
             })
             .catch((error) => {
                 toast.error('Error updating status. Please try again.');
-                console.error('Error updating status:', error);
+                // console.error('Error updating status:', error);
             });
     };
 
@@ -82,7 +82,7 @@ const RfpQualityCheck = () => {
         dispatch(downloadFile({ fileId, filename }))
             .unwrap()
             .catch((error) => {
-                console.error('Error downloading file:', error);
+                // console.error('Error downloading file:', error);
             });
     };
     // Handle row edit and update the excelData state, then call the update API
@@ -137,7 +137,7 @@ const RfpQualityCheck = () => {
 
         } catch (error) {
             toast.error('Error updating file. Please try again.');
-            console.error('Error updating file:', error);
+            // console.error('Error updating file:', error);
         } finally {
             exitEditingMode(); // Close the editing mode after saving
         }

@@ -18,7 +18,7 @@ const VieweUserTable = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${baseUrl}user/getallusers`);
-        console.log('API Response:', response.data);
+        // console.log('API Response:', response.data);
         
         const users = response.data.users;
 
@@ -43,10 +43,10 @@ const VieweUserTable = () => {
           }));
           setData(transformedData);
         } else {
-          console.error('API response is not an array:', users);
+          // console.error('API response is not an array:', users);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
       }
     };
     
@@ -58,7 +58,8 @@ const VieweUserTable = () => {
       await axios.delete(`https://koinetsoft-backend.onrender.com/user/deleteuser/${userId}`);
       setData(data.filter(user => user.id !== userId));
     } catch (error) {
-      console.error('Error deleting user:', error);
+      toast.error('Error deleting user');
+      // console.error('Error deleting user:', error);
     }
   };
 

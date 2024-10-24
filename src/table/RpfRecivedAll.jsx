@@ -23,7 +23,7 @@ const RfpReceivedAll = () => {
     dispatch(fetchFileDataAll())
       .unwrap()
       .then(() => {
-        console.log('File data fetched successfully');
+        // console.log('File data fetched successfully');
       })
       .catch((fetchError) => {
         // console.error('Error fetching file data:', fetchError);

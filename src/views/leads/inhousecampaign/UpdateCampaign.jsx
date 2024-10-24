@@ -122,7 +122,7 @@ function UpdateCampaign({ campaignId }) {
                     zipCodeFilter: campaignData.zipCodeFilter || []
                 });
             } catch (error) {
-                console.error("Error fetching campaign data:", error);
+                // console.error("Error fetching campaign data:", error);
                 toast.error("Failed to fetch campaign data.");
             }
         };
@@ -130,7 +130,7 @@ function UpdateCampaign({ campaignId }) {
         fetchCampaignData();
     }, [dispatch, id]);  // Fetch data on component mount or when `id` changes
 
-    console.log(formData);
+    // console.log(formData);
 
     // Handle form change
     const handleChange = (event) => {
@@ -182,7 +182,7 @@ function UpdateCampaign({ campaignId }) {
             toast.success('Campaign updated successfully');
         } catch (error) {
             toast.error('Failed to update campaign. Please try again.');
-            console.error('Error updating campaign:', error);
+            // console.error('Error updating campaign:', error);
         }
     };
     return (
@@ -193,7 +193,7 @@ function UpdateCampaign({ campaignId }) {
                     </Col>
                     <Col lg={8}>
                         <div className='bgColor rounded-3 shadow'>
-                            <h4 className='fw-bold py-3 ms-3 text_color'>Create Campaign</h4>
+                            <h4 className='fw-bold py-3 ms-3 text_color'>Update Campaign</h4>
                         </div>
 
                         <>
@@ -368,12 +368,10 @@ function UpdateCampaign({ campaignId }) {
                                                                 <label for="campaign_superwiser" className="form-label">Supervisor<span className="text-danger">*</span></label>
                                                                 <select id="supervisor" value={formData.supervisor} onChange={handleChange} name='supervisor' className="form-select">
                                                                     <option value="">Select Supervisor</option>
-                                                                    <option value="ankush surywanshi 1">
-                                                                        Ankush Surywanshi 1
+                                                                    <option value="ankush suryawanshi">
+                                                                        Ankush Suryawanshi
                                                                     </option>
-                                                                    <option value="ankush surywanshi 2">
-                                                                        Ankush Surywanshi 2
-                                                                    </option>
+                                                                  
                                                                 </select>
                                                             </div>
                                                             <div className="mb-2 col-lg-6 ">
@@ -396,6 +394,7 @@ function UpdateCampaign({ campaignId }) {
                                                             name="assets"
                                                             accept=".pdf"  // Accept only PDF files
                                                             multiple
+                                                        
                                                             onChange={handleChange}
                                                         />
                                                     </div>
@@ -549,7 +548,7 @@ function UpdateCampaign({ campaignId }) {
                                                             <div id="div_additional_questions" >
                                                                 {/* <div className="text-center py-2 bg-light">Save</div> */}
                                                                 <button className="btn btn-outline-danger w-100 mt-2">
-                                                                    Save Campaign
+                                                                    Update Campaign
                                                                 </button>
                                                             </div>
                                                         </div>

@@ -14,6 +14,7 @@ import { fetchUserDetails } from '../redux/reducer/registeruser/UserDetails';
 import axios from 'axios';
 import baseUrl from '../constant/ConstantApi';
 import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-toastify';
 
 export default function UserProfile() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -64,13 +65,13 @@ export default function UserProfile() {
 
     // If userId is not present, log out without making the API call
     if (!currentUserId) {
-      console.warn("User ID not found. Fetching user details.");
+      // console.warn("User ID not found. Fetching user details.");
       await dispatch(fetchUserDetails()); // Fetch user details again
       currentUserId = user?._id; // Update userId after fetching
 
       // Check again if userId is available
       if (!currentUserId) {
-        console.warn("User ID still not found after fetching. Logging out without API call.");
+        // console.warn("User ID still not found after fetching. Logging out without API call.");
         clearLocalStorage();
         navigate('/');
         return;
@@ -87,11 +88,9 @@ export default function UserProfile() {
       // Navigate to login page
       navigate('/');
     } catch (error) {
-      console.error('Logout error:', error.message);
-      if (error.response) {
-        console.error('Error response data:', error.response.data);
-        console.error('Error response status:', error.response.status);
-      }
+      toast.error('Logout failed. Please try again.',error.message);
+      // console.error('Logout error:', error.message);
+     
     }
   };
 

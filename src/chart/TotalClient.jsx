@@ -15,7 +15,7 @@ const ApexChart = () => {
   }, [dispatch]);
 
   const clientCount = clients.length;
-  console.log(clientCount);
+  // console.log(clientCount);
 
   const state = {
     series: [clientCount],

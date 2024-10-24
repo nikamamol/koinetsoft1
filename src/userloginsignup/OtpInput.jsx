@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import OtpInput from 'react-otp-input';
 import { useNavigate } from 'react-router-dom';
 import { setOtp, verifyOtp } from '../redux/reducer/registeruser/OtpVerify'; // Adjust the path as necessary
+import { toast } from 'react-toastify';
 
 const MyOtpInput = () => {
     const dispatch = useDispatch();
@@ -24,7 +25,8 @@ const MyOtpInput = () => {
             })
             .catch((err) => {
                 // Handle errors if needed
-                console.error("Verification failed:", err);
+                toast.error("Verification failed:", err);
+                // console.error("Verification failed:", err);
             });
     };
 

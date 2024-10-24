@@ -62,7 +62,7 @@ function ViewLandingPages() {
                               <td>
                                 <p>{template.template_title}</p>
                               </td>
-                              <td>{formatDate(template.createdAt)}</td>
+                              <td>{formatDate(template.date)}</td>
                               <td>
                                 <a className="dropdown-item delete" href={`/viewpage/${template._id}`}>
                                   <RemoveRedEyeIcon />

@@ -47,19 +47,7 @@ const TemplateOne = () => {
         }
     };
 
-    const validateForm = () => {
-        const errors = {};
-        if (!formData.template_title) errors.template_title = 'Title is required';
-        if (!formData.logo) errors.logo = 'Logo is required';
-        if (!formData.banner) errors.banner = 'Banner image is required';
-        if (formType === '0' && !formData.form_link) errors.form_link = 'Client form link is required';
-        if (!formData.receive_comminication) errors.receive_comminication = 'Receive communication is required';
-        if (!formData.document) errors.document = 'Document is required';
-
-        setFormErrors(errors);
-        return Object.keys(errors).length === 0;
-    };
-
+   
     const saveTemplate = () => {
         return new Promise((resolve) => {
             emailEditorRef.current.editor.exportHtml((data) => {
@@ -70,7 +58,7 @@ const TemplateOne = () => {
                     html_content: html
                 }));
                 setIsHtmlSaved(true);
-                console.log('Template saved', design);
+                // console.log('Template saved', design);
                 resolve(html);
             });
         });
@@ -79,7 +67,7 @@ const TemplateOne = () => {
 
 
     const handleSubmit = async () => {
-        if (!validateForm()) return;
+
 
         try {
             // Save the template before submission
@@ -105,7 +93,7 @@ const TemplateOne = () => {
             // Clear all input fields after submission
             clearForm();
         } catch (error) {
-            console.error('Error submitting template:', error.message);
+            // console.error('Error submitting template:', error.message);
             toast.error('Error creating template');
         }
     };
@@ -137,17 +125,17 @@ const TemplateOne = () => {
     };
 
     const onReady = () => {
-        console.log('onReady');
+        // console.log('onReady');
     };
 
-    const handleFormLinkChange = (e) => {
-        const value = e.target.value;
-        setFormLink(value);
-        setFormData((prevData) => ({
-            ...prevData,
-            form_link: value
-        }));
-    };
+    // const handleFormLinkChange = (e) => {
+    //     const value = e.target.value;
+    //     setFormLink(value);
+    //     setFormData((prevData) => ({
+    //         ...prevData,
+    //         form_link: value
+    //     }));
+    // };
 
     return (
         <div>
@@ -177,38 +165,38 @@ const TemplateOne = () => {
                                                         <input type="text" name="template_title" className="form-control" id="template_title" placeholder="Beyond on-demand for DDoS defense" onChange={(e) => setFormData({ ...formData, template_title: e.target.value })} />
                                                         {formErrors.template_title && <div className="text-danger">{formErrors.template_title}</div>}
                                                     </div>
-                                                    <div className="mb-3 col-md-6">
+                                                    {/* <div className="mb-3 col-md-6">
                                                         <label htmlFor="logo" className="form-label">Logo</label> (.png, .jpeg, .jpg, .svg) 200px × 74 px <span className="text-danger"> *</span>
                                                         {logoPreview && <a href={logoPreview} target="_blank" id="view_logo">View Logo</a>}
                                                         <input className="form-control" type="file" id="logo" name="logo" accept=".png, .jpeg, .jpg, .svg" onChange={(e) => handleFileChange(e, setLogoPreview, 'logo')} />
                                                         {formErrors.logo && <div className="text-danger">{formErrors.logo}</div>}
-                                                    </div>
-                                                    <div className="mb-3 col-md-6">
+                                                    </div> */}
+                                                    {/* <div className="mb-3 col-md-6">
                                                         <label htmlFor="banner" className="form-label">Banner Image</label> (.png, .jpeg, .jpg) 1170px × 267 px <span className="text-danger"> *</span>
                                                         {bannerPreview && <a href={bannerPreview} target="_blank" id="view_banner">View Banner</a>}
                                                         <input className="form-control" type="file" id="banner" name="banner" accept=".png, .jpeg, .jpg" onChange={(e) => handleFileChange(e, setBannerPreview, 'banner')} />
                                                         {formErrors.banner && <div className="text-danger">{formErrors.banner}</div>}
-                                                    </div>
-                                                    {formType === '0' && (
+                                                    </div> */}
+                                                    {/* {formType === '0' && (
                                                         <div className="mb-3 col-md-6">
                                                             <label htmlFor="form_link" className="form-label">Client Form Link</label>
                                                             <span className="text-danger"> *</span>
                                                             <input className="form-control" type="text" placeholder="" name="form_link" id="form_link" value={formLink} onChange={handleFormLinkChange} />
                                                             {formErrors.form_link && <div className="text-danger">{formErrors.form_link}</div>}
                                                         </div>
-                                                    )}
-                                                    <div className="mb-3 col-md-6">
+                                                    )} */}
+                                                    {/* <div className="mb-3 col-md-6">
                                                         <label htmlFor="receive_comminication" className="form-label">Receive marketing communications</label>
                                                         <span className="text-danger"> *</span>
                                                         <input className="form-control" type="text" placeholder="I agree to receive marketing communications" name="receive_comminication" id="receive_comminication" onChange={(e) => setFormData({ ...formData, receive_comminication: e.target.value })} />
                                                         {formErrors.receive_comminication && <div className="text-danger">{formErrors.receive_comminication}</div>}
-                                                    </div>
-                                                    <div className="mb-3 col-md-6">
+                                                    </div> */}
+                                                    {/* <div className="mb-3 col-md-6">
                                                         <label htmlFor="document" className="form-label">Document</label> (.pdf, .docx) <span className="text-danger"> *</span>
                                                         {documentPreview && <a href={documentPreview} target="_blank" id="view_document">View Document</a>}
                                                         <input className="form-control" type="file" id="document" name="document" accept=".pdf, .docx" onChange={(e) => handleFileChange(e, setDocumentPreview, 'document')} />
                                                         {formErrors.document && <div className="text-danger">{formErrors.document}</div>}
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                                 <div>
                                                     <label htmlFor="html_content" className="form-label">Create Template</label>

@@ -19,7 +19,7 @@ export const fetchFileData = createAsyncThunk(
             });
             return response.data;
         } catch (error) {
-            console.error("Error fetching file data:", error);
+            // console.error("Error fetching file data:", error);
             return rejectWithValue(error.response ? error.response.data : { message: "An unexpected error occurred." });
         }
     }
@@ -38,7 +38,7 @@ export const fetchFileDataAll = createAsyncThunk(
             });
             return response.data; // Return the data directly from the response
         } catch (error) {
-            console.error('Error fetching all file data:', error); // Log the error for debugging
+            // console.error('Error fetching all file data:', error); // Log the error for debugging
             return rejectWithValue(error.response ? error.response.data : { message: 'An unexpected error occurred.' });
         }
     }
@@ -49,9 +49,9 @@ export const downloadFile = createAsyncThunk(
     async({ fileId, filename }, { rejectWithValue }) => {
         try {
             const token = getToken(); // Retrieve the JWT token
-            console.log(
-                `Starting Excel file download: ${filename} with fileId: ${fileId}`
-            );
+            // console.log(
+            //     `Starting Excel file download: ${filename} with fileId: ${fileId}`
+            // );
 
             const response = await axios.get(
                 `${baseUrl}user/downloadCsvFileById/${fileId}`, {
@@ -62,7 +62,7 @@ export const downloadFile = createAsyncThunk(
                 }
             );
 
-            console.log("Excel file download response received:", response);
+            // console.log("Excel file download response received:", response);
 
             // Create a Blob from the response data
             const blob = new Blob([response.data], {
@@ -87,7 +87,7 @@ export const downloadFile = createAsyncThunk(
 
             return { fileId, filename };
         } catch (error) {
-            console.error("Error during Excel file download:", error);
+            // console.error("Error during Excel file download:", error);
             return rejectWithValue(error.response || error.message);
         }
     }
@@ -107,7 +107,7 @@ export const updateCsvFileById = createAsyncThunk(
             }
 
             // Log updatedData to ensure it is correctly structured
-            console.log("Updated Data:", updatedData);
+            // console.log("Updated Data:", updatedData);
             formData.append("updatedData", JSON.stringify(updatedData)); // Ensure it's a string
 
             const response = await axios.put(
@@ -120,11 +120,11 @@ export const updateCsvFileById = createAsyncThunk(
                 }
             );
 
-            console.log("Response Data:", response.data);
+            // console.log("Response Data:", response.data);
             return response.data; // Return the response data
         } catch (error) {
             const errorMessage = error.response ? error.response.data : error.message;
-            console.error("Error updating file:", errorMessage); // Log the error for debugging
+            // console.error("Error updating file:", errorMessage); // Log the error for debugging
             return rejectWithValue(errorMessage);
         }
     }

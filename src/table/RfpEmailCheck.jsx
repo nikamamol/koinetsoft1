@@ -60,7 +60,7 @@ const RfpEmailCheck = () => {
                 setExcelData(data);
             })
             .catch((error) => {
-                console.error('Error reading file:', error);
+                // console.error('Error reading file:', error);
             });
     };
 

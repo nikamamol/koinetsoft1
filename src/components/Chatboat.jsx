@@ -8,8 +8,7 @@ function Chatbot() {
     const [answeredQuestions, setAnsweredQuestions] = useState([]);
 
     const handleEnd = ({ steps, values }) => {
-        console.log(steps); // The steps taken in the chat
-        console.log(values); // The answers provided by the user
+
     };
 
     // Memoizing the getOptions function

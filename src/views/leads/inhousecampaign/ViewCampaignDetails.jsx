@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
+import { toast } from 'react-toastify';
 
 function ViewCampaignDetails() {
     const { id } = useParams();
@@ -29,7 +30,7 @@ function ViewCampaignDetails() {
         }
     }, [id, dispatch]);
 
-    console.log(currentCampaign);
+    // console.log(currentCampaign);
 
     if (status === 'loading') {
         return <div>Loading...</div>;
@@ -67,7 +68,8 @@ function ViewCampaignDetails() {
                     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
                     saveAs(new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), fileName);
                 } catch (error) {
-                    console.error('Error processing Excel file:', error);
+                    toast.error('Error processing Excel file:', error);
+                    // console.error('Error processing Excel file:', error);
                 }
                 break;
 
