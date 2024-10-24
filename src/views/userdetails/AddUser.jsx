@@ -20,7 +20,7 @@ function AddUser() {
 
   const [formData, setFormData] = useState(initialFormData);
 
-  const userType= localStorage.getItem('role');
+  const userType = localStorage.getItem('role');
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
@@ -150,12 +150,19 @@ function AddUser() {
                           required
                         >
                           <option>--Select Designation--</option>
-                          <option value="ox manager">OX Manager</option>
+                          <option value="">--Select Designation--</option>
+                          <option value="admin">Admin</option>
+                          <option value="user">User</option>
+                          <option value="supervisor">Supervisor</option>
+                          <option value="oxmanager">OX Manager</option>
+                          <option value="developer">Web Developer</option>
+                          <option value="hr">HR Executive </option>
+                          <option value="reasercher">Reaserch Analyst</option>
                           <option value="agent">Agent</option>
-                          <option value="quality">Quality</option>
-                          <option value="delivery">Delivery</option>
                           <option value="client">Client</option>
-                          <option value="guest">Guest</option>
+                          <option value="quality">Quality</option>
+                          <option value="email_marketing">Email Marketing</option>
+                          <option value="delivery">Delivery</option>
                         </Form.Select>
                       </Form.Group>
                       <Form.Group className="mb-3 col-md-6" controlId="supervisor">
@@ -214,7 +221,7 @@ function AddUser() {
                           Other Designation <span className="text-danger">*</span>
                         </Form.Label>
                         <div className="list-group">
-                          {['1', '2', '3', '4','5','6'].map((value) => (
+                          {['1', '2', '3', '4', '5', '6','7','8','9','10'].map((value) => (
                             <Form.Check
                               key={value}
                               type="checkbox"
@@ -229,8 +236,13 @@ function AddUser() {
                                   4: 'Delivery',
                                   5: 'Client',
                                   6: 'Guest',
+                                  7: 'Developer',
+                                  8: 'HR',
+                                  9: 'Reasercher',
+                                  10: 'Email Marketing',
                                 }[value]
                               }
+                           
                               checked={formData.other_designation.includes(value)}
                               onChange={handleChange}
                               className="list-group-item"

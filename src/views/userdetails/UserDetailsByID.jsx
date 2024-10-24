@@ -25,15 +25,15 @@ function UserDetailsByID() {
       try {
         const response = await axios.get(`${baseUrl}user/viewuserbyid/${id}`);
         const userData = response.data.user;
-        
+
         setFormData({
           fullname: userData.fullname || '',
           mobile: userData.mobile || '',
           email: userData.email || '',
-          password: '', // Do not populate password for security reasons
+          password: userData.password || '',  // Decrypted password
           date_of_hiring: userData.date_of_hiring ? userData.date_of_hiring.slice(0, 10) : '',
           designation: userData.designation || '',
-          supervisor: userData.supervisor || '',
+          supervisor: userData.supervisor || '', // Fetch supervisor dynamically
           salary: userData.salary || '',
           shift: userData.shift || '',
           other_designation: userData.other_designation ? userData.other_designation.join(',') : '',
@@ -71,7 +71,7 @@ function UserDetailsByID() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://koinetsoft-backend.onrender.com/user/updateuser/${id}`, formData);
+      await axios.put(`${baseUrl}user/updateuser/${id}`, formData);
       toast.success("User Update Successfully !")
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -139,15 +139,16 @@ function UserDetailsByID() {
                       <div className="mb-3 col-md-6">
                         <label htmlFor="password">Password </label>
                         <input
-                          type="text"
+                          type="password"
                           className="form-control"
                           id="password"
                           name="password"
                           value={formData.password}
                           onChange={handleChange}
                           placeholder="············"
+                          disabled
                         />
-                        <div className="form-text">Enter password if you want to update password or else leave it blank</div>
+                        <div className="form-text">Enter password if you want to update it or else leave it blank</div>
                       </div>
                       <div className="mb-3 col-md-6">
                         <label htmlFor="date_of_hiring">Date of hiring <span className="text-danger">*</span></label>
@@ -172,12 +173,18 @@ function UserDetailsByID() {
                           required
                         >
                           <option value="">--Select Designation--</option>
+                          <option value="admin">Admin</option>
+                          <option value="user">User</option>
                           <option value="supervisor">Supervisor</option>
+                          <option value="oxmanager">OX Manager</option>
+                          <option value="developer">Web Developer</option>
+                          <option value="hr">HR Executive </option>
+                          <option value="reasercher">Reaserch Analyst</option>
                           <option value="agent">Agent</option>
-                          <option value="quality">Quality</option>
-                          <option value="delivery">Delivery</option>
                           <option value="client">Client</option>
-                          <option value="guest">Guest</option>
+                          <option value="quality">Quality</option>
+                          <option value="email_marketing">Email Marketing</option>
+                          <option value="delivery">Delivery</option>
                         </select>
                       </div>
                       <div className="mb-3 col-md-6">
@@ -191,7 +198,7 @@ function UserDetailsByID() {
                           required
                         >
                           <option value="">--Select Supervisor--</option>
-                          <option value="ankush">Ankush</option>
+                          <option value="ankush">Ankush Surywanshi </option>
                         </select>
                       </div>
                       <div className="mb-3 col-md-6">
@@ -232,7 +239,7 @@ function UserDetailsByID() {
                       <div className="mb-3 col-md-12">
                         <label htmlFor="other_designation" className="form-label">Other Designation<span className="text-danger">*</span></label>
                         <div className="list-group">
-                          {['3', '4', '5', '6','7','8'].map(value => (
+                          {['1', '2', '3', '4', '5', '6','7','8','9','10'].map(value => (
                             <label key={value} className="list-group-item">
                               <input
                                 className="form-check-input me-1 checkbox_designation"
@@ -242,12 +249,16 @@ function UserDetailsByID() {
                                 checked={formData.other_designation.split(',').includes(value)}
                                 onChange={handleCheckboxChange}
                               />
-                              {value === '3' && 'Supervisor'}
-                              {value === '4' && 'Agent'}
-                              {value === '5' && 'Quality'}
-                              {value === '6' && 'Delivery'}
-                              {value === '7' && 'Client'}
-                              {value === '8' && 'Guest'}
+                              {value === '1' && 'Supervisor'}
+                              {value === '2' && 'Agent'}
+                              {value === '3' && 'Quality'}
+                              {value === '4' && 'Delivery'}
+                              {value === '5' && 'Client'}
+                              {value === '6' && 'Guest'}
+                              {value === '7' && 'Developer'}
+                              {value === '8' && 'HR'}
+                              {value === '9' && 'Reasercher'}
+                              {value === '10' && 'Email Marketing'}
                             </label>
                           ))}
                         </div>

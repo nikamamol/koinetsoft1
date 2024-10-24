@@ -423,12 +423,10 @@ function CreateCampaign() {
                                   <label for="campaign_superwiser" className="form-label">Supervisor<span className="text-danger">*</span></label>
                                   <select id="supervisor" value={formData.supervisor} onChange={handleChange} name='supervisor' className="form-select">
                                     <option value="">Select Supervisor</option>
-                                    <option value="ankush surywanshi 1">
-                                      Ankush Surywanshi 1
+                                    <option value="ankush surywanshi">
+                                      Ankush Surywanshi 
                                     </option>
-                                    <option value="ankush surywanshi 2">
-                                      Ankush Surywanshi 2
-                                    </option>
+                                
                                   </select>
                                 </div>
                                 <div className="mb-2 col-lg-6 ">
