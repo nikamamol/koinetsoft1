@@ -198,7 +198,7 @@ function UserDetailsByID() {
                           required
                         >
                           <option value="">--Select Supervisor--</option>
-                          <option value="ankush">Ankush Surywanshi </option>
+                          <option value="ankush surywanshi">Ankush Surywanshi </option>
                         </select>
                       </div>
                       <div className="mb-3 col-md-6">

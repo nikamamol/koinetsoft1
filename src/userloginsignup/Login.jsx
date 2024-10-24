@@ -4,14 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { loginUser } from "../redux/reducer/registeruser/Login";
 import LogoImge from "../assets/koinetlogo.png";
 import Hourglass from "../assets/Hourglass.gif";
-import GiftImage from "../assets/robot.gif";  // Add this line to import the gift image
+import GiftImage from "../assets/robot.gif";
 import { toast } from 'react-toastify';
-import BetaImg from "../assets/beta.png"
-
+import BetaImg from "../assets/beta.png";
 
 function Login() {
     const dispatch = useDispatch();
-    const { error, message, isLoading } = useSelector(state => state.auth);
+    const { error, isLoading } = useSelector(state => state.auth);
     const navigate = useNavigate();
     
     const [email, setEmail] = useState('');
@@ -41,7 +40,7 @@ function Login() {
         <div className="container-fluid bgGradinet">
             <div className="row">
                 <div className="col-lg-12 d-flex justify-content-center align-items-center vh-100">
-                    <div className="col-lg-5 col-md-6 col-sm-11 card border-0 shadow p-5 cardbg" style={{ backgroundColor: "#F8F4E1" }}>
+                    <div className="col-lg-5 col-md-6 col-sm-11 card border-0 shadow p-5 cardbg form-animation" style={{ backgroundColor: "#F8F4E1" }}>
                         <div className='text-center'>
                             <p>
                                 <img src={LogoImge} alt="" width={200} height={100} />
@@ -55,8 +54,7 @@ function Login() {
                             </div>
                         </div>
                         {error && <div className="alert alert-danger">{error}</div>}
-                        {/* {message && <div className="alert alert-success">{message}</div>} */}
-
+                        
                         <form id="loginForm" onSubmit={handleSubmit}>
                             <div className="mb-2">
                                 <label htmlFor="email" className="form-label">Email</label>
@@ -88,18 +86,17 @@ function Login() {
                             <div className="g-recaptcha" data-sitekey="6Lf6gQEqAAAAAJKaLIjO4drMp-GMKAvId5yejdE5"></div>
 
                             <div className="text-center mt-3">
-                                {isLoading ? <div><img src={Hourglass} alt="" height={40} width={40} /></div> : <button type="submit" className="btn btn-danger rounded-5 w-50" >Log In </button>}
+                                {isLoading ? <div><img src={Hourglass} alt="" height={40} width={40} /></div> : <button type="submit" className="btn btn-danger rounded-5 w-50">Log In</button>}
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
 
-            {/* Gift Image */}
             <img
-                src={GiftImage}  // Use the imported image here
+                src={GiftImage}
                 alt="Gift"
-                 className="d-none d-lg-block"
+                className="d-none d-lg-block"
                 style={{
                     position: 'fixed',
                     bottom: '20px',
