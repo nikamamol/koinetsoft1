@@ -3,42 +3,60 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MaterialReactTable } from 'material-react-table';
 import { IconButton, Tooltip, Checkbox } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate } from 'react-router-dom'; // If using React Router for navigation
-import { fetchFiles } from '../redux/reducer/rpf/operationcsvupload'; // Adjust import path as needed
+import { useNavigate } from 'react-router-dom';
+import { fetchFiles } from '../redux/reducer/rpf/operationcsvupload';
 import Hourglass from "../assets/Hourglass.gif";
-import Unauthorised from "../assets/401Unauthorised.png"
-
-
+import Unauthorised from "../assets/401Unauthorised.png";
+import baseUrl from '../constant/ConstantApi';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const RfpActive = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // For redirection
+  const navigate = useNavigate();
   const { files, status, error } = useSelector((state) => state.files);
 
   const [checkboxes, setCheckboxes] = useState({});
+  const [localFiles, setLocalFiles] = useState([]);
   const userType = localStorage.getItem('role');
-  const allowedRoles = ['oxmanager','admin']; // Specify allowed roles
-
+  const allowedRoles = ['oxmanager', 'admin'];
 
   useEffect(() => {
     // Fetch files if the user is authorized
     dispatch(fetchFiles());
+  }, [dispatch]);
 
-  }, [dispatch, navigate]);
+  useEffect(() => {
+    if (status === 'succeeded') {
+      setLocalFiles(files); // Sync local state with fetched files
+    }
+  }, [status, files]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
   };
 
-  const handleDownload = (fileId, filename) => {
-    // Implement download logic
-    alert(`Downloading ${filename} (ID: ${fileId})`);
-  };
+  const handleDelete = async (fileId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this file?");
+    if (!confirmDelete) return;
 
-  const handleDelete = (fileId) => {
-    // Implement delete logic
-    alert(`Deleting file with ID: ${fileId}`);
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) throw new Error("No token found");
+
+      await axios.delete(`${baseUrl}user/deleteOperationCsvFileById/${fileId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setLocalFiles((prevFiles) => prevFiles.filter((file) => file._id !== fileId)); // Update state immediately
+      toast.success('File deleted successfully');
+    } catch (err) {
+      console.error(err);
+      alert('Failed to delete file');
+    }
   };
 
   const handleCheckboxChange = (fileId, status, checked) => {
@@ -51,7 +69,7 @@ const RfpActive = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: '_id', // Use correct key for the unique identifier
+        accessorKey: '_id',
         header: 'S.No',
         size: 50,
         Cell: ({ row }) => row.index + 1,
@@ -114,31 +132,34 @@ const RfpActive = () => {
     ],
     [checkboxes]
   );
+
   if (!allowedRoles.includes(userType)) {
-    return <div className='text-center mt-2 '>
-    <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-    <p className='text-danger'>You do not have permission to view this content.</p>
-  </div>;
+    return (
+      <div className='text-center mt-2'>
+        <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+        <p className='text-danger'>You do not have permission to view this content.</p>
+      </div>
+    );
   }
+
   return (
     <div>
+      {status === 'loading' && (
+        <div className='text-center mt-5'>
+          <img src={Hourglass} alt="" height={40} width={40} />
+        </div>
+      )}
 
-      {status === 'loading' &&  <>
-            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
-        </>}
-
-      {status === 'succeeded' && files.length > 0 ? (
+      {status === 'succeeded' && localFiles.length > 0 ? (
         <MaterialReactTable
           columns={columns}
-          data={files}
-        // other props if needed
+          data={localFiles}
         />
-      ) : status === 'succeeded' && files.length === 0 ? (
+      ) : status === 'succeeded' && localFiles.length === 0 ? (
         <p>No files available</p>
       ) : (
         <p></p>
       )}
-      
     </div>
   );
 };
