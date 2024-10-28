@@ -159,6 +159,9 @@ function ResponsiveDrawer(props) {
   const handleNavigation = (path) => {
     navigate(path);
   };
+  const handleSuppressClick = () => {
+    navigate("/rfp/tal-suppress-files"); // Define the route path here
+  };
 
   const userType = localStorage.getItem('role');
   const drawer = (
@@ -410,6 +413,18 @@ function ResponsiveDrawer(props) {
         {/* RPF Sub-menus */}
         <Collapse in={isCollapseRFP} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
+          <ListItem disablePadding sx={{ display: "block" }} onClick={handleSuppressClick}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: "center",
+                  px: 6,
+                }}
+              >
+                <ListItemText primary="TalSuppress Files" />
+                {/* {openRA ? <ExpandLessIcon /> : <ExpandMoreIcon />} */}
+              </ListItemButton>
+            </ListItem>
             {/* RA Team */}
             <ListItem disablePadding sx={{ display: "block" }} onClick={handleRAClick}>
               <ListItemButton

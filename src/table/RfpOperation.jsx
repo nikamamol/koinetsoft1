@@ -157,6 +157,8 @@ const RfpActive = () => {
         />
       ) : status === 'succeeded' && localFiles.length === 0 ? (
         <p>No files available</p>
+      ) : status === 'failed' ? (
+        <p>Error fetching files: {error}</p> // Display error if fetch fails
       ) : (
         <p></p>
       )}

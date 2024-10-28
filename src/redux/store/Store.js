@@ -32,6 +32,8 @@ import unwantedLeadsFileUploadReducer from "../reducer/rpf/unwantedLeads";
 import CsvsliceByUnwantedLeads from "../reducer/rpf/getUnwantedLeads";
 import userSessionReducer from "../reducer/registeruser/Logout";
 import userReducer from "../reducer/registeruser/UserDetails"
+import suprressionFileUploadReducer from '../reducer/rpf/uploadSuppression'
+import suppressionsReducer from "../reducer/rpf/getsepparation"
 
 const store = configureStore({
     reducer: {
@@ -69,6 +71,8 @@ const store = configureStore({
         csvFileCheckedbyUnwantedLeads: CsvsliceByUnwantedLeads,
         user: userReducer,
         userSession: userSessionReducer,
+        suprressionFileUpload: suprressionFileUploadReducer,
+        suppressions: suppressionsReducer,
     },
 });
 

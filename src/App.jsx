@@ -85,6 +85,7 @@ import EmailCheckedShowDelivery from './views/rfp/EmailCheckedShowDelivery';
 import QualitycheckedShowDelivery from './views/rfp/QualitycheckedShowDelivery';
 import UpdateCampaign from './views/leads/inhousecampaign/UpdateCampaign';
 import Chatbot from './components/Chatboat';
+import TalSuppressionFile from './views/rfp/TalSuppressionFile';
 
 
 
@@ -133,6 +134,7 @@ function App() {
             <Route path="/user/:id" element={<UserDetailsByID />} />
             {/* RFP */}
             <Route path="/rfp/operatinfinalcheck" element={<OperationCheck />} />
+            <Route path="/rfp/tal-suppress-files" element={<TalSuppressionFile />} />
             <Route path="/rfp/expired" element={<Expired />} />
             <Route path="/rfp/received" element={<Received />} />
             <Route path="/rfp/receivedall" element={<RecivedAll />} />
