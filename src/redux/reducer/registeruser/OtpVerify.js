@@ -5,7 +5,7 @@ import baseUrl from "../../../constant/ConstantApi";
 // Async thunk for verifying OTP
 export const verifyOtp = createAsyncThunk(
     "otp/verifyOtp",
-    async (otp, { rejectWithValue }) => {
+    async(otp, { rejectWithValue }) => {
         try {
             const response = await axios.post(
                 `${baseUrl}user/verify-otp`, { otp }
@@ -17,13 +17,11 @@ export const verifyOtp = createAsyncThunk(
             localStorage.setItem("username", username);
             localStorage.setItem("role", role);
 
+            // This should print the username to the console
+
             return { token, username, role }; // Return both token and username if needed
         } catch (error) {
-            // If the OTP does not match, customize the error message
-            if (error.response && error.response.status === 400) {
-                return rejectWithValue("OTP does not match. Please try again.");
-            }
-            return rejectWithValue("Error verifying OTP");
+            return rejectWithValue(error.response || "Error verifying OTP");
         }
     }
 );
@@ -52,7 +50,7 @@ const otpSlice = createSlice({
             })
             .addCase(verifyOtp.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload; // Set error message
+                state.error = action.payload;
             });
     },
 });

@@ -19,15 +19,14 @@ const MyOtpInput = () => {
 
     const handleSubmit = () => {
         dispatch(verifyOtp(otp))
-            .unwrap()
+            .unwrap() // Unwraps the promise and allows you to handle the result
             .then(() => {
-                // Navigate to the dashboard if verification is successful
                 navigate("/dashboard");
             })
             .catch((err) => {
-                // Show alert if OTP verification fails
-                toast.error(err); // Show the error message received from the thunk
-                console.error("Verification failed:", err);
+                // Handle errors if needed
+                toast.error("Verification failed:", err);
+                // console.error("Verification failed:", err);
             });
     };
 
