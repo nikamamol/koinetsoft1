@@ -127,7 +127,7 @@ function TalSuppressionFile() {
                                             {/* Drag and Drop Area */}
                                             <div
                                                 {...getRootProps()}
-                                                className={`dropzone mt-3 p-3 border border-dashed rounded-3 ${isDragActive ? 'active' : ''}`}
+                                                className={`dropzone mt-2 p-3 border border-dashed rounded-3 ${isDragActive ? 'active' : ''}`}
                                                 style={{ textAlign: 'center' }}
                                             >
                                                 <input {...getInputProps()} />
@@ -142,18 +142,18 @@ function TalSuppressionFile() {
 
                                             {/* Show the selected file name */}
                                             {file && (
-                                                <div className="mt-3">
+                                                <div className="mt-2">
                                                     <strong>Selected File:</strong> {file.name}
                                                 </div>
                                             )}
 
                                             {/* Fallback file input */}
-                                            <Form.Group controlId="formFile" className="mt-3">
+                                            <Form.Group controlId="formFile" className="mt-2">
                                                 <Form.Label>Or upload a file manually</Form.Label>
                                                 <Form.Control type="file" onChange={handleFileChange} />
                                             </Form.Group>
 
-                                            <div className='mt-3'>
+                                            <div className='mt-2'>
                                                 <Button variant="success" onClick={handleFileUpload} disabled={uploadStatus === 'loading'}>
                                                     <SendIcon /> Send
                                                 </Button>

@@ -4,7 +4,8 @@ import { Button } from 'react-bootstrap';
 import OtpInput from 'react-otp-input';
 import { useNavigate } from 'react-router-dom';
 import { setOtp, verifyOtp } from '../redux/reducer/registeruser/OtpVerify'; // Adjust the path as necessary
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyOtpInput = () => {
     const dispatch = useDispatch();
@@ -19,19 +20,18 @@ const MyOtpInput = () => {
 
     const handleSubmit = () => {
         dispatch(verifyOtp(otp))
-            .unwrap() // Unwraps the promise and allows you to handle the result
+            .unwrap()
             .then(() => {
                 navigate("/dashboard");
             })
             .catch((err) => {
-                // Handle errors if needed
-                toast.error("Verification failed:", err);
-                // console.error("Verification failed:", err);
+                toast.error("Incorrect OTP. Please try again.");
             });
     };
 
     return (
         <div className="container">
+            <ToastContainer position="top-center" autoClose={3000} />
             <div className="row">
                 <div className="col-lg-12 d-flex justify-content-center align-items-center vh-100 p-5">
                     <div className="MyInput p-5">
@@ -53,7 +53,7 @@ const MyOtpInput = () => {
                                         width: "54px",
                                         height: "54px",
                                         fontSize: "12px",
-                                        color: "#000", // Make sure this is applied
+                                        color: "#000",
                                         fontWeight: "400",
                                         caretColor: "blue",
                                         marginRight: "10px"

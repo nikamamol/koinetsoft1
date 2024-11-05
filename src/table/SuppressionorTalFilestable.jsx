@@ -99,7 +99,7 @@ function SuppressionorTalFilestable() {
     }
 
     // Render unauthorized message
-    if (userRole !== 'researcher' && userRole !== 'admin' && userRole !== 'oxmanager') {
+    if (userRole !== 'reasercher' && userRole !== 'admin' && userRole !== 'oxmanager') {
         return (
             <div className='text-center mt-2'>
                 <img src={Unauthorised} alt="unauthorised" width={400} height={300} />

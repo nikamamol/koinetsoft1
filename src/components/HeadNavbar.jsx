@@ -421,7 +421,7 @@ function ResponsiveDrawer(props) {
                   px: 6,
                 }}
               >
-                <ListItemText primary="TalSuppress Files" />
+                <ListItemText primary="Tal-Suppress Files" />
                 {/* {openRA ? <ExpandLessIcon /> : <ExpandMoreIcon />} */}
               </ListItemButton>
             </ListItem>
