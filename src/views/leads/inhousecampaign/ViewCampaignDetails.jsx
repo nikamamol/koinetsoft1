@@ -52,44 +52,53 @@ function ViewCampaignDetails() {
         return '';
     };
     const downloadFile = (fileData, fileName, fileType) => {
-        // Convert fileData to a Uint8Array
         const arrayBuffer = new Uint8Array(fileData).buffer;
 
-        switch (fileType) {
-            case 'csv':
-                // Handle CSV files
-                const csvText = new TextDecoder().decode(new Uint8Array(arrayBuffer));
-                saveAs(new Blob([csvText], { type: 'text/csv' }), fileName);
-                break;
+        const mimeTypes = {
+            csv: 'text/csv',
+            excel: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            pdf: 'application/pdf',
+            doc: 'application/msword',
+            docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        };
 
-            case 'excel':
-                // Handle Excel files
-                try {
+        try {
+            switch (fileType) {
+                case 'csv': {
+                    const csvText = new TextDecoder().decode(new Uint8Array(arrayBuffer));
+                    const csvBlob = new Blob([csvText], { type: mimeTypes.csv });
+                    saveAs(csvBlob, `${fileName}.csv`);
+                    break;
+                }
+                case 'excel': {
                     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
                     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-                    saveAs(new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), fileName);
-                } catch (error) {
-                    toast.error('Error processing Excel file:', error);
-                    // console.error('Error processing Excel file:', error);
+                    const excelBlob = new Blob([excelBuffer], { type: mimeTypes.excel });
+                    saveAs(excelBlob, `${fileName}.xlsx`);
+                    break;
                 }
-                break;
-
-            case 'pdf':
-                // Handle PDF files
-                const pdfBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
-                saveAs(pdfBlob, fileName);
-                break;
-
-            case 'doc':
-            case 'docx':
-                // Handle DOC/DOCX files
-                const docBlob = new Blob([arrayBuffer], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-                saveAs(docBlob, fileName);
-                break;
-
-            default:
-                console.error('Unsupported file type');
-                break;
+                case 'pdf': {
+                    const pdfBlob = new Blob([arrayBuffer], { type: mimeTypes.pdf });
+                    saveAs(pdfBlob, `${fileName}.pdf`);
+                    break;
+                }
+                case 'doc': {
+                    const docBlob = new Blob([arrayBuffer], { type: mimeTypes.doc });
+                    saveAs(docBlob, `${fileName}.doc`);
+                    break;
+                }
+                case 'docx': {
+                    const docxBlob = new Blob([arrayBuffer], { type: mimeTypes.docx });
+                    saveAs(docxBlob, `${fileName}.docx`);
+                    break;
+                }
+                default:
+                    console.error(`Unsupported file type: ${fileType}`);
+                    toast.error('Unsupported file type.');
+            }
+        } catch (error) {
+            console.error(`Error processing ${fileType} file:`, error);
+            toast.error(`Error processing ${fileType} file.`);
         }
     };
 
@@ -278,11 +287,10 @@ function ViewCampaignDetails() {
                                                 <p>No assets available for download.</p>
                                             )}
                                         </Tab.Pane>
-
                                         <Tab.Pane eventKey="script">
                                             {currentCampaign.script?.map((file, index) => {
-                                                const fileName = file?.name || `file_${index}.xlsx`; // Default filename with index
-                                                const fileType = 'doc'; // Adjust based on file type (assuming .doc for example)
+                                                const fileName = file?.originalname || `file_${index}.doc`; // DOC format assumed, update if needed
+                                                const fileType = 'doc'; // Explicitly setting the file type to DOC
                                                 const fileData = file?.content?.data;
 
                                                 return (
@@ -298,6 +306,7 @@ function ViewCampaignDetails() {
                                                 );
                                             })}
                                         </Tab.Pane>
+
 
                                         <Tab.Pane eventKey="suppression">
                                             {currentCampaign.suppressionList?.map((file, index) => {
