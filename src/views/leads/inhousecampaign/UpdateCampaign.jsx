@@ -164,10 +164,10 @@ function UpdateCampaign({ campaignId }) {
             }
         });
 
-        // Append files
+        // Append files with original names
         Object.keys(files).forEach(key => {
             Array.from(files[key]).forEach(file => {
-                payload.append(key, file); // Append file data
+                payload.append(key, file);  // Append the file to the payload
             });
         });
 
@@ -182,9 +182,9 @@ function UpdateCampaign({ campaignId }) {
             toast.success('Campaign updated successfully');
         } catch (error) {
             toast.error('Failed to update campaign. Please try again.');
-            // console.error('Error updating campaign:', error);
         }
     };
+
     return (
         <div>
             <Container fluid className='my-5 '>
@@ -371,7 +371,7 @@ function UpdateCampaign({ campaignId }) {
                                                                     <option value="ankush suryawanshi">
                                                                         Ankush Suryawanshi
                                                                     </option>
-                                                                  
+
                                                                 </select>
                                                             </div>
                                                             <div className="mb-2 col-lg-6 ">
@@ -394,7 +394,6 @@ function UpdateCampaign({ campaignId }) {
                                                             name="assets"
                                                             accept=".pdf"  // Accept only PDF files
                                                             multiple
-                                                        
                                                             onChange={handleChange}
                                                         />
                                                     </div>
@@ -413,17 +412,32 @@ function UpdateCampaign({ campaignId }) {
                                                         />
                                                     </div>
 
-
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="suppression" className="form-label">Suppression</label> (.csv) <span className="text-danger" id="validation_suppression"> *</span>
-                                                        <input className="form-control" type="file" id="suppression" name="suppression" accept=".pdf, .xlsx, .xls, .csv" multiple onChange={handleChange} />
+                                                        <input
+                                                            className="form-control"
+                                                            type="file"
+                                                            id="suppression"
+                                                            name="suppression"
+                                                            accept=".pdf, .xlsx, .xls, .csv"
+                                                            multiple
+                                                            onChange={handleChange}
+                                                        />
                                                     </div>
 
                                                     <div className="mb-3 col-md-6">
                                                         <label htmlFor="tal" className="form-label">TAL</label> (.csv) <span className="text-danger" id="validation_tal"> *</span>
-                                                        <input className="form-control" type="file" id="tal" name="tal" accept=".pdf,.xlsx, .xls, .csv" multiple onChange={handleChange} />
+                                                        <input
+                                                            className="form-control"
+                                                            type="file"
+                                                            id="tal"
+                                                            name="tal"
+                                                            accept=".pdf,.xlsx, .xls, .csv"
+                                                            multiple
+                                                            onChange={handleChange}
+                                                        />
                                                     </div>
-                                                    {/* third part */}
+
                                                     <div className="">
                                                         <div className="text-center py-2 bg-light">Additional</div>
                                                     </div>

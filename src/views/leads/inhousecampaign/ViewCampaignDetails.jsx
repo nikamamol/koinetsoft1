@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun } from 'docx';
 import { toast } from 'react-toastify';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 function ViewCampaignDetails() {
     const { id } = useParams();
@@ -94,6 +95,8 @@ function ViewCampaignDetails() {
 
 
     const asset = currentCampaign.assets[0]?.content?.data;
+
+
     const fileName = currentCampaign.assets[0]?.originalname || 'file.xlsx'; // Default filename
     const fileType = 'excel'; // Adjust based on file type
 
@@ -261,38 +264,81 @@ function ViewCampaignDetails() {
                                     </Nav>
                                     <Tab.Content>
                                         <Tab.Pane eventKey="active">
-                                            {asset && (
-                                                <Button className="mt-3" onClick={() => downloadFile(asset, fileName, 'pdf')}>
-                                                    Download {fileName}
-                                                </Button>
+                                            {currentCampaign.assets && currentCampaign.assets.length > 0 ? (
+                                                currentCampaign.assets.map((asset, index) => (
+                                                    <Button
+                                                        key={index}
+                                                        className="mt-3 me-2"
+                                                        onClick={() => downloadFile(asset.content.data, asset.originalname, 'pdf')}
+                                                    >
+                                                        <CloudDownloadIcon />  {asset.originalname}
+                                                    </Button>
+                                                ))
+                                            ) : (
+                                                <p>No assets available for download.</p>
                                             )}
                                         </Tab.Pane>
 
                                         <Tab.Pane eventKey="script">
-                                            {script2 && (
-                                                <Button className="mt-3" onClick={() => downloadFile(script2, fileName2, 'doc')}>
-                                                    Download: ({fileName2})
-                                                </Button>
-                                            )}
+                                            {currentCampaign.script?.map((file, index) => {
+                                                const fileName = file?.name || `file_${index}.xlsx`; // Default filename with index
+                                                const fileType = 'doc'; // Adjust based on file type (assuming .doc for example)
+                                                const fileData = file?.content?.data;
+
+                                                return (
+                                                    fileData && (
+                                                        <Button
+                                                            key={index}
+                                                            className="mt-3 me-2"
+                                                            onClick={() => downloadFile(fileData, fileName, fileType)}
+                                                        >
+                                                            <CloudDownloadIcon /> {fileName}
+                                                        </Button>
+                                                    )
+                                                );
+                                            })}
                                         </Tab.Pane>
+
                                         <Tab.Pane eventKey="suppression">
-                                            {suppressionList3 && (
-                                                <Button className='mt-3' onClick={() => downloadFile(
-                                                    suppressionList3,
-                                                    fileName3, fileType3)}>
-                                                    Download : ({fileName3})
-                                                </Button>
-                                            )}
+                                            {currentCampaign.suppressionList?.map((file, index) => {
+                                                const fileName = file?.originalname || `file_${index}.xlsx`; // Default filename with index
+                                                const fileType = 'excel'; // Adjust based on file type
+                                                const fileData = file?.content?.data;
+
+                                                return (
+                                                    fileData && (
+                                                        <Button
+                                                            key={index}
+                                                            className="mt-3 me-2"
+                                                            onClick={() => downloadFile(fileData, fileName, fileType)}
+                                                        >
+                                                            <CloudDownloadIcon />  {fileName}
+                                                        </Button>
+                                                    )
+                                                );
+                                            })}
                                         </Tab.Pane>
+
                                         <Tab.Pane eventKey="tal">
-                                            {tal4 && (
-                                                <Button className='mt-3' onClick={() => downloadFile(
-                                                    tal4,
-                                                    fileName4, fileType4)}>
-                                                    Download : ({fileName4})
-                                                </Button>
-                                            )}
+                                            {currentCampaign.tal?.map((file, index) => {
+                                                const fileName = file?.originalname || `file_${index}.xlsx`; // Default filename with index
+                                                const fileType = 'excel'; // Adjust based on file type (assuming excel in this case)
+                                                const fileData = file?.content?.data;
+
+                                                return (
+                                                    fileData && (
+                                                        <Button
+                                                            key={index}
+                                                            className="mt-3 me-2"
+                                                            onClick={() => downloadFile(fileData, fileName, fileType)}
+                                                        >
+                                                            <CloudDownloadIcon />  {fileName}
+                                                        </Button>
+                                                    )
+                                                );
+                                            })}
                                         </Tab.Pane>
+
                                     </Tab.Content>
                                 </Tab.Container>
                             </div>
