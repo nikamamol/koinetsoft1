@@ -193,6 +193,10 @@ function ViewCampaignDetails() {
                                             <span className="fw-bold">Target:</span>
                                             <span>{currentCampaign.target}</span>
                                         </p>
+                                        <p className="card-text d-flex justify-content-between">
+                                            <span className="fw-bold">Note:</span>
+                                            <span>{currentCampaign.note}</span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -243,9 +247,14 @@ function ViewCampaignDetails() {
                                             <span>{currentCampaign.noOfContacts}</span>
                                         </p>
                                         <p className="card-text d-flex justify-content-between">
-                                            <span className="fw-bold">Note:</span>
-                                            <span>{currentCampaign.note}</span>
+                                            <span className="fw-bold">Delivery Day:</span>
+                                            <span>{currentCampaign.deliveryDays}</span>
                                         </p>
+                                        <p className="card-text d-flex justify-content-between">
+                                            <span className="fw-bold">Delivery Type</span>
+                                            <span>{currentCampaign.deliveryType}</span>
+                                        </p>
+                                        
                                     </div>
                                 </div>
                             </div>

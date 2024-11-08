@@ -99,6 +99,8 @@ function CreateCampaign() {
     geo: '',
     industry: '',
     note: '',
+    deliveryType: '',
+    deliveryDays: '',
     suppressionList: [],  // Only one entry for suppressionList
     abmList: [],          // Only one entry for abmList
     contactsPerCampaign: false,
@@ -204,6 +206,8 @@ function CreateCampaign() {
         geo: '',
         industry: '',
         note: '',
+        deliveryType: '',
+        deliveryDays: '',
         suppressionList: [],  // Reset suppressionList
         abmList: [],          // Reset abmList
         contactsPerCampaign: false,
@@ -392,6 +396,59 @@ function CreateCampaign() {
                               </div>
                             </div>
 
+
+                            <div className="mb-3 col-md-6">
+                              <label htmlFor="deliveryType" className="form-label">Delivery Type</label>
+                              <select
+                                id="deliveryType"
+                                value={formData.deliveryType}
+                                name="deliveryType"
+                                onChange={handleChange}
+
+                                className="form-select"
+                              >
+                                <option value="Daily">Daily</option>
+                                <option value="Twice in a Week">Twice in a Week</option>
+                                <option value="Weekly">Weekly</option>
+                                <option value="Forthnight">Forthnight</option>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Quaterly">Quaterly</option>
+
+                              </select>
+                              {/* <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_sample">View Sample</a>
+                          <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_landing">View Landing Page</a> */}
+                            </div>
+                            <div className="mb-3 col-md-6">
+                              <label htmlFor="deliveryDays" className="form-label">Delivery Day</label>
+                              <select
+                                id="deliveryDays"
+                                value={formData.deliveryDays}
+                                name="deliveryDays"
+                                onChange={handleChange}
+
+                                className="form-select"
+                              >
+                                <option value="Daily">Daily</option>
+                                <option value="Mon">Mon</option>
+                                <option value="Tue">Tue</option>
+                                <option value="Wed">Wed</option>
+                                <option value="Thu">Thu</option>
+                                <option value="Fri">Fri</option>
+                                <option value="Mon-Tue">Mon-Tue</option>
+                                <option value="Mon-Wed">Mon-Wed</option>
+                                <option value="Mon-Thu">Mon-Thu</option>
+                                <option value="Mon-Fri">Mon-Fri</option>
+                                <option value="Tue-Wed">Tue-Wed</option>
+                                <option value="Tue-Thu">Tue-Thu</option>
+                                <option value="Tue-Fri">Tue-Fri</option>
+                                <option value="Wed-Thu">Wed-Thu</option>
+                                <option value="Wed-Fri">Wed-Fri</option>
+                                <option value="Thu-Fri">Thu-Fri</option>
+
+                              </select>
+                              {/* <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_sample">View Sample</a>
+                          <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_landing">View Landing Page</a> */}
+                            </div>
                             <div className="mb-3 col-md-6">
                               <label htmlFor="template" className="form-label">Landing Page</label>
                               <select
@@ -424,9 +481,9 @@ function CreateCampaign() {
                                   <select id="supervisor" value={formData.supervisor} onChange={handleChange} name='supervisor' className="form-select">
                                     <option value="">Select Supervisor</option>
                                     <option value="Ankush Surywanshi">
-                                      Ankush Surywanshi 
+                                      Ankush Surywanshi
                                     </option>
-                                
+
                                   </select>
                                 </div>
                                 <div className="mb-2 col-lg-6 ">
@@ -792,7 +849,7 @@ function CreateCampaign() {
                                   <button className="btn btn-outline-danger w-100 mt-2">
                                     Save Campaign
                                   </button>
-                                  
+
                                 </div>
                               </div>
                             </div>

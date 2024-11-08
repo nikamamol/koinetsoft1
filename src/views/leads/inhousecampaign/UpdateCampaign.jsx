@@ -37,6 +37,8 @@ function UpdateCampaign({ campaignId }) {
         geo: '',
         industry: '',
         note: '',
+        deliveryType: '',
+        deliveryDays: '',
         suppressionList: [],
         abmList: [],
         contactsPerCampaign: false,
@@ -104,6 +106,8 @@ function UpdateCampaign({ campaignId }) {
                     geo: campaignData.geo || '',
                     industry: campaignData.industry || '',
                     note: campaignData.note || '',
+                    deliveryType: campaignData.deliveryType || '',
+                    deliveryDays: campaignData.deliveryDays || '',
                     suppressionList: campaignData.suppressionList || [],
                     abmList: campaignData.abmList || [],
                     contactsPerCampaign: campaignData.contactsPerCampaign || false,
@@ -133,21 +137,22 @@ function UpdateCampaign({ campaignId }) {
     // console.log(formData);
 
     // Handle form change
-    const handleChange = (event) => {
-        const { name, type, files } = event.target;
+   const handleChange = (event) => {
+    const { name, type, value, files } = event.target;
 
-        if (type === 'file') {
-            setFiles(prevFiles => ({
-                ...prevFiles,
-                [name]: Array.from(files)  // Replace the previous files with the new ones
-            }));
-        } else {
-            setFormData(prevFormData => ({
-                ...prevFormData,
-                [name]: event.target.value
-            }));
-        }
-    };
+    if (type === 'file') {
+        setFiles((prevFiles) => ({
+            ...prevFiles,
+            [name]: Array.from(files),
+        }));
+    } else {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
+    }
+};
+
 
     // Handle form submission
     const handleSubmit = async (e) => {
@@ -335,6 +340,58 @@ function UpdateCampaign({ campaignId }) {
                                                                 id="cpl"
                                                             />
                                                         </div>
+                                                    </div>
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="deliveryType" className="form-label">Delivery Type</label>
+                                                        <select
+                                                            id="deliveryType"
+                                                            value={formData.deliveryType}
+                                                            name="deliveryType"
+                                                            onChange={handleChange}
+
+                                                            className="form-select"
+                                                        >
+                                                            <option value="Daily">Daily</option>
+                                                            <option value="Twice in a Week">Twice in a Week</option>
+                                                            <option value="Weekly">Weekly</option>
+                                                            <option value="Forthnight">Forthnight</option>
+                                                            <option value="Monthly">Monthly</option>
+                                                            <option value="Quaterly">Quaterly</option>
+
+                                                        </select>
+                                                        {/* <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_sample">View Sample</a>
+                          <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_landing">View Landing Page</a> */}
+                                                    </div>
+                                                    <div className="mb-3 col-md-6">
+                                                        <label htmlFor="deliveryDays" className="form-label">Delivery Day</label>
+                                                        <select
+                                                            id="deliveryDays"
+                                                            value={formData.deliveryDays}
+                                                            name="deliveryDays"
+                                                            onChange={handleChange}
+
+                                                            className="form-select"
+                                                        >
+                                                            <option value="Daily">Daily</option>
+                                                            <option value="Mon">Mon</option>
+                                                            <option value="Tue">Tue</option>
+                                                            <option value="Wed">Wed</option>
+                                                            <option value="Thu">Thu</option>
+                                                            <option value="Fri">Fri</option>
+                                                            <option value="Mon-Tue">Mon-Tue</option>
+                                                            <option value="Mon-Wed">Mon-Wed</option>
+                                                            <option value="Mon-Thu">Mon-Thu</option>
+                                                            <option value="Mon-Fri">Mon-Fri</option>
+                                                            <option value="Tue-Wed">Tue-Wed</option>
+                                                            <option value="Tue-Thu">Tue-Thu</option>
+                                                            <option value="Tue-Fri">Tue-Fri</option>
+                                                            <option value="Wed-Thu">Wed-Thu</option>
+                                                            <option value="Wed-Fri">Wed-Fri</option>
+                                                            <option value="Thu-Fri">Thu-Fri</option>
+
+                                                        </select>
+                                                        {/* <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_sample">View Sample</a>
+                          <a href="#" style={{ display: formData.template ? 'block' : 'none' }} target="_blank" id="view_landing">View Landing Page</a> */}
                                                     </div>
 
                                                     <div className="mb-3 col-md-6">
