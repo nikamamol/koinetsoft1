@@ -30,6 +30,9 @@ function ViewCampaignDetails() {
             dispatch(fetchCampaignById(id));
         }
     }, [id, dispatch]);
+    useEffect(() => {
+        dispatch(fetchCsvFilesbyOPMaster()); // Dispatch the action to fetch files
+    }, [dispatch]);
 
     // console.log(currentCampaign);
 
@@ -247,14 +250,15 @@ function ViewCampaignDetails() {
                                             <span>{currentCampaign.noOfContacts}</span>
                                         </p>
                                         <p className="card-text d-flex justify-content-between">
-                                            <span className="fw-bold">Delivery Day:</span>
-                                            <span>{currentCampaign.deliveryDays}</span>
-                                        </p>
-                                        <p className="card-text d-flex justify-content-between">
                                             <span className="fw-bold">Delivery Type</span>
                                             <span>{currentCampaign.deliveryType}</span>
                                         </p>
-                                        
+                                        <p className="card-text d-flex justify-content-between">
+                                            <span className="fw-bold">Delivery Day:</span>
+                                            <span>{currentCampaign.deliveryDays}</span>
+                                        </p>
+
+
                                     </div>
                                 </div>
                             </div>

@@ -6,7 +6,7 @@ import SendIcon from '@mui/icons-material/Send';
 import BackupIcon from '@mui/icons-material/Backup';
 import { useDropzone } from 'react-dropzone';
 import { fetchCampaigns } from '../../redux/reducer/createcampaign/GetCampaignData';
-import { uploadOpMaster } from '../../redux/reducer/rpf/operationMasterCsvFile'; 
+import { uploadOpMaster } from '../../redux/reducer/rpf/operationMasterCsvFile';
 
 import OperationMasterTab from '../../table/OperationMasterTab';
 import { fetchCsvFilesbyOPMaster } from '../../redux/reducer/rpf/getoperationMasterCsvFile';
@@ -21,6 +21,7 @@ function OperationMaster() {
   const { campaigns, status } = useSelector((state) => state.campaigns);
   const { loading, csvFiles } = useSelector((state) => state.opmasterFileUpload || {}); // Ensure this matches your slice
 
+  console.log(campaigns, 'campaigns');
   const userRole = localStorage.getItem('role');
 
   useEffect(() => {
@@ -66,6 +67,7 @@ function OperationMaster() {
 
     formData.append('campaignName', selectedCampaignData?.campaignName || '');
     formData.append('campaignCode', selectedCampaignData?.campaignCode || '');
+    formData.append('clientSelect', selectedCampaignData?.clientSelect || '');
     formData.append('file', selectedFile);
 
     dispatch(uploadOpMaster(formData)) // Dispatch the correct action
@@ -116,6 +118,23 @@ function OperationMaster() {
                         )}
                       </Form.Control>
                     </Form.Group>
+                    <br />
+                    <Form.Label>Select Client</Form.Label>
+                    <Form.Control as="select" onChange={handleCampaignChange} >
+                      <option value="">Select Client</option>
+                      {status === 'loading' && <option>Loading campaigns...</option>}
+                      {status === 'failed' && <option>Error loading campaigns</option>}
+                      {status === 'succeeded' && campaigns.length > 0 ? (
+                        campaigns.map((campaign) => (
+                          <option key={campaign._id} value={campaign._id}>
+                            {campaign.clientSelect}
+                          </option>
+                        ))
+                      ) : (
+                        status === 'succeeded' && <option>No campaigns found</option>
+                      )}
+                    </Form.Control>
+
 
                     <div
                       {...getRootProps()}

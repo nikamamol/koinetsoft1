@@ -90,6 +90,11 @@ const RfpActive = () => {
         size: 150,
       },
       {
+        accessorKey: 'clientSelect',
+        header: 'Client Name',
+        size: 150,
+      },
+      {
         accessorKey: 'createdAt',
         header: 'Date',
         size: 150,

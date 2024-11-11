@@ -57,6 +57,7 @@ const RfpOperationAll = () => {
     // State to store Excel data and selected file info
     const [excelData, setExcelData] = useState([]);
     const [currentFileName, setCurrentFileName] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     // Use Redux selectors to access the state
     const { files, status, error } = useSelector((state) => state.rfp);
@@ -66,7 +67,7 @@ const RfpOperationAll = () => {
     useEffect(() => {
 
         dispatch(fetchFiles()); // Dispatch the action to fetch files
-
+        setIsLoading(false);
     }, [dispatch, navigate]);
 
     const handleDownload = async (file) => {
@@ -124,6 +125,7 @@ const RfpOperationAll = () => {
             { accessorKey: '_id', header: 'S.No', size: 50, Cell: ({ row }) => row.index + 1 },
             { accessorKey: 'originalname', header: 'Filename', size: 200 },
             { accessorKey: 'campaignName', header: 'Campaign Name', size: 200 },
+            { accessorKey: 'clientSelect', header: 'Client Name', size: 200 },
             { accessorKey: 'campaignCode', header: 'Campaign Code', size: 150 },
             { accessorKey: 'createdAt', header: 'Date', size: 150, Cell: ({ cell }) => formatDate(cell.getValue()) },
             {
@@ -161,25 +163,21 @@ const RfpOperationAll = () => {
 
     if (!allowedRoles.includes(userType)) {
         return <div className='text-center mt-2 '>
-        <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-        <p className='text-danger'>You do not have permission to view this content.</p>
-      </div>;
+            <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+            <p className='text-danger'>You do not have permission to view this content.</p>
+        </div>;
     }
     return (
         <div>
-            {excelData.length === 0 ? (
-                <MaterialReactTable columns={columns} data={files} />
+            {isLoading ? (
+                <div className="text-center mt-3">
+                    <img src={Hourglass} alt="Loading..." width={50} height={50} />
+                </div>
             ) : (
-                <>
-                    {currentFileName && (
-                        <div className='p-4 bg_color_Email my-3 fw-bold text-center'>
-                            File name: {currentFileName}
-                        </div>
-                    )}
 
-                    <SpreadsheetViewer data={excelData} />
+                <MaterialReactTable columns={columns} data={files} />
 
-                </>
+
             )}
         </div>
     );

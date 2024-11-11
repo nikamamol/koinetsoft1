@@ -48,6 +48,11 @@ const OperationMasterTab = () => {
             size: 200,
         },
         {
+            accessorKey: 'clientSelect',
+            header: 'Client Name',
+            size: 200,
+        },
+        {
             accessorKey: 'campaignCode',
             header: 'Campaign Code',
             size: 150,

@@ -59,9 +59,11 @@ function OperationCheck() {
 
     const formData = new FormData();
     const selectedCampaignData = campaigns.find(c => c._id === selectedCampaign);
-    
+
     formData.append('campaignName', selectedCampaignData?.campaignName || '');
     formData.append('campaignCode', selectedCampaignData?.campaignCode || '');
+    formData.append('clientSelect', selectedCampaignData?.clientSelect || '');
+
     formData.append('file', selectedFile);
 
     dispatch(uploadOperationFile(formData))
@@ -99,6 +101,8 @@ function OperationCheck() {
                       <Form.Label>Select Campaign</Form.Label>
                       <Form.Control as="select" onChange={handleCampaignChange} value={selectedCampaign}>
                         <option value="">Select Campaign</option>
+                        {status === 'loading' && <option>Loading campaigns...</option>}
+                        {status === 'failed' && <option>Error loading campaigns</option>}
                         {status === 'succeeded' && campaigns.length > 0 ? (
                           campaigns.map((campaign) => (
                             <option key={campaign._id} value={campaign._id}>
@@ -106,12 +110,28 @@ function OperationCheck() {
                             </option>
                           ))
                         ) : (
-                          <option>Loading campaigns...</option>
+                          status === 'succeeded' && <option>No campaigns found</option>
                         )}
                       </Form.Control>
                     </Form.Group>
+                    <br />
+                    <Form.Label>Select Client</Form.Label>
+                    <Form.Control as="select" onChange={handleCampaignChange} >
+                      <option value="">Select Client</option>
+                      {status === 'loading' && <option>Loading campaigns...</option>}
+                      {status === 'failed' && <option>Error loading campaigns</option>}
+                      {status === 'succeeded' && campaigns.length > 0 ? (
+                        campaigns.map((campaign) => (
+                          <option key={campaign._id} value={campaign._id}>
+                            {campaign.clientSelect}
+                          </option>
+                        ))
+                      ) : (
+                        status === 'succeeded' && <option>No campaigns found</option>
+                      )}
+                    </Form.Control>
 
-                    {/* Drag and Drop Area */}
+
                     <div
                       {...getRootProps()}
                       className={`dropzone mt-3 p-3 border border-dashed rounded-3 bg-primary text-white ${isDragActive ? 'active' : ''}`}
@@ -133,26 +153,20 @@ function OperationCheck() {
                       )}
                     </div>
 
-                    {/* Show the selected file name */}
                     {selectedFile && (
                       <div className="mt-3">
                         <strong>Selected File:</strong> {selectedFile.name}
                       </div>
                     )}
 
-                    {/* Fallback file input */}
                     <Form.Group controlId="formFile" className="mt-3">
                       <Form.Label>Or upload a file manually</Form.Label>
                       <Form.Control type="file" onChange={handleFileChange} />
                     </Form.Group>
 
                     <div className="mt-3">
-                      <Button
-                        variant="success"
-                        onClick={handleFileUpload}
-                        disabled={uploadStatus === 'loading'}
-                      >
-                        <SendIcon /> Send
+                      <Button variant="success" onClick={handleFileUpload} >
+                        <SendIcon /> Upload
                       </Button>
                     </div>
                   </Form>
