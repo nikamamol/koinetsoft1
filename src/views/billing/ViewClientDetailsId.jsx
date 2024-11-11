@@ -447,7 +447,7 @@ function ViewClientDetailsId() {
                                             <Button variant="primary" onClick={handleUpdateClient} disabled={clientStatus === 'loading'}>
                                                 {clientStatus === 'loading' ? 'Updating...' : 'Update'}
                                             </Button>
-                                            <Link variant="danger" className="ms-2 btn btn-danger" to='/billing/viewClient'>Back</Link>
+                                            <Link variant="danger" className="ms-2 btn btn-danger" to='/billing/vieweClient'>Back</Link>
                                         </div>
                                     </Form>
                                 </div>

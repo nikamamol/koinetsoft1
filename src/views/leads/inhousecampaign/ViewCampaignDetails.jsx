@@ -30,9 +30,6 @@ function ViewCampaignDetails() {
             dispatch(fetchCampaignById(id));
         }
     }, [id, dispatch]);
-    useEffect(() => {
-        dispatch(fetchCsvFilesbyOPMaster()); // Dispatch the action to fetch files
-    }, [dispatch]);
 
     // console.log(currentCampaign);
 

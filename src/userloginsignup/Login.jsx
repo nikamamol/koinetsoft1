@@ -86,7 +86,7 @@ function Login() {
                             <div className="g-recaptcha" data-sitekey="6Lf6gQEqAAAAAJKaLIjO4drMp-GMKAvId5yejdE5"></div>
 
                             <div className="text-center mt-3">
-                                {isLoading ? <div><img src={Hourglass} alt="" height={40} width={40} /></div> : <button type="submit" className="btn btn-danger rounded-5 w-50">Log In</button>}
+                                {isLoading ? <div><img src={Hourglass} alt="hourglass" height={40} width={40} /></div> : <button type="submit" className="btn btn-danger rounded-5 w-50">Log In</button>}
                             </div>
                         </form>
                     </div>
