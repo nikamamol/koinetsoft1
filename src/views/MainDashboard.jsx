@@ -15,6 +15,7 @@ import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData'
 import { fetchFiles } from '../redux/reducer/rpf/operatilallfile';
 import { fetchCsvFilesbyUnwantedLeads } from "../redux/reducer/rpf/getUnwantedLeads"
 import UserProfile from '../userloginsignup/UserProfile';
+import SaleExpenceProfit from '../chart/SaleExpenceProfit';
 
 function MainDashboard() {
     const [currentMonth, setCurrentMonth] = useState('');
@@ -175,6 +176,7 @@ function MainDashboard() {
 
                         </div>
 
+                        <SaleExpenceProfit />
                         <div className="col-lg-12 col-md-4 order-1 my-4">
                             <div className="row">
                                 {[
@@ -275,9 +277,6 @@ function MainDashboard() {
                         </div>
                         {/* table */}
                         <DashboardTable />
-
-
-
                     </Col>
                 </Row>
             </Container>
