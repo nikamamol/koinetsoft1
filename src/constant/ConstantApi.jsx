@@ -10,3 +10,4 @@ export default baseUrl;
 // Test
 // npm run build
 // npm run preview
+// npm run dev
