@@ -134,11 +134,10 @@ function App() {
       <ToastContainer />
       <Layout>
         <Chatbot />
-        <Suspense fallback={<div className='d-flex justify-content-center align-items-center h-100'>
+        <Suspense fallback={<div className='d-flex justify-content-center align-items-center vh-100'>
           <img src={Loading} alt="Loading.." />
         </div>}>
           <Routes>
-
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/enterotp" element={<OtpInput />} />
