@@ -8,12 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserDetails } from '../../redux/reducer/registeruser/UserDetails';
 import axios from 'axios';
 import baseUrl from '../../constant/ConstantApi';
+import io from 'socket.io-client'; // Import socket.io-client
 
 function ChatApp() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const [file, setFile] = useState(null);
+  const [socket, setSocket] = useState(null);
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
@@ -22,6 +24,20 @@ function ChatApp() {
   useEffect(() => {
     dispatch(fetchUserDetails());
     fetchMessages(); // Load messages on component mount
+
+    // Set up the socket connection
+    const socketIo = io(baseUrl); // Connect to the server (replace baseUrl with your server's URL)
+    setSocket(socketIo);
+
+    // Listen for new messages from the server
+    socketIo.on('newMessage', (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
+    // Clean up the socket connection on unmount
+    return () => {
+      socketIo.disconnect();
+    };
   }, [dispatch]);
 
   // Format the time to display with the message
@@ -41,7 +57,6 @@ function ChatApp() {
 
       // Format time in 24-hour format (HH:mm) for each message
       const formattedMessages = response.data.map((message) => {
-        // Assuming message.time is a valid Date string or timestamp
         const time = new Date(message.time); // Convert to Date object
         const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format time as HH:mm
 
@@ -96,8 +111,6 @@ function ChatApp() {
     }
   };
 
-
-
   // Simulate bot response
   const handleReceiverMessage = () => {
     const botMessage = {
@@ -132,33 +145,31 @@ function ChatApp() {
       <Row>
         <Col lg={3}></Col>
         <Col lg={8}>
-
-          <Row className="justify-content-center">
-            <Col xs={12} md={8} lg={12}>
-              {/* Header like WhatsApp */}
-              <Card className="h-100 shadow">
-                <Card.Body className="d-flex flex-column p-0">
-                  {/* Header */}
-                  <div className="d-flex align-items-center p-3 border-bottom bg-success text-white">
-                    <h3>Chat Section</h3>
-                  </div>
-
+          <Row className="justify-content-center align-items-center vh-100 my-10 ">
+            <Col xs={12} md={8} lg={12} className="d-flex flex-column h-100 ">
+              <div className="d-flex align-items-center p-3 border-bottom bg-success text-white mt-5">
+                <h3 className='mt-2'>Chat Section</h3>
+              </div>
+              <Card className="shadow w-100 mt-10" style={{ height: '65%' }}>
+                <Card.Body className="d-flex flex-column p-0 h-100">
                   {/* Messages Section */}
                   <div className="flex-grow-1 overflow-auto p-3 bg-light">
                     {messages.map((message, index) => (
                       <div
                         key={index}
-                        className={`d-flex align-items-start mb-3 ${message.sender === user?.username ? 'flex-row-reverse' : ''}`}
+                        className={`d-flex align-items-start mb-3 ${message.sender === user?.username ? 'flex-row-reverse' : ''
+                          }`}
                       >
                         <Image
-                          src="https://via.placeholder.com/40"
+                          src="#"
                           roundedCircle
                           className={`me-2 ${message.sender === user?.username ? 'ms-2' : ''}`}
                         />
                         <div
-                          className={`p-2 rounded ${message.sender === user?.username ? 'bg-info text-dark' : 'bg-white text-dark'}`}
+                          className={`p-2 rounded ${message.sender === user?.username ? 'bg-info text-dark' : 'bg-white text-dark'
+                            }`}
                         >
-                          <div className='d-flex justify-content-between'>
+                          <div className="d-flex justify-content-between">
                             <div className="small text-muted text-end me-5">{message.sender}</div>
                             <div className="small text-muted text-end">{message.time}</div>
                           </div>
@@ -176,8 +187,8 @@ function ChatApp() {
                     )}
                   </div>
 
-                  {/* Input Section */}
-                  <div className="d-flex p-3 border-top bg-white align-items-center bg-info">
+                  {/* Footer (Input Section) */}
+                  <div className="d-flex p-3 border-top bg-white align-items-center">
                     <Button
                       variant="light"
                       className="me-2 rounded-pill shadow-sm"
@@ -200,13 +211,20 @@ function ChatApp() {
                       <FileUploadIcon />
                     </Button>
                     <Form.Control
-                      type="text"
+                      as="textarea"
                       value={input}
                       placeholder="Type a message..."
                       onChange={(e) => setInput(e.target.value)}
-                      className="me-2 rounded-pill shadow-sm flex-grow-1"
+                      className="me-2 rounded shadow-sm flex-grow-1"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault(); // Prevents new line from being added
+                          handleSendMessage();
+                        }
+                      }}
                     />
-                    <Button variant="success" onClick={handleSendMessage} className="rounded-pill shadow-sm">
+
+                    <Button variant="success" onClick={handleSendMessage} className="rounded-pill shadow-sm p-2">
                       <SendIcon />
                     </Button>
                   </div>
@@ -214,6 +232,7 @@ function ChatApp() {
               </Card>
             </Col>
           </Row>
+
 
         </Col>
       </Row>
