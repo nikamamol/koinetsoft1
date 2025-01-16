@@ -8,7 +8,7 @@ import CampaignRevenue from "../chart/CampaignRevenue"
 import ClaintRevenue from "../chart/ClaintRevenue"
 import TotalClient from "../chart/TotalClient"
 import DashboardTable from '../table/DashboardTable';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchClients } from '../redux/reducer/billing/ClientSlice';
 import { fetchCampaigns } from '../redux/reducer/createcampaign/GetCampaignData';
@@ -22,6 +22,7 @@ function MainDashboard() {
     const [currentYear, setCurrentYear] = useState('');
     const [totalLeads, setTotalLeads] = useState(0);
     const [totalUnwantedLeads, setTotalUnwantedLeads] = useState(0);
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
     // Fetch campaigns and clients from Redux state
@@ -39,6 +40,9 @@ function MainDashboard() {
 
 
     // Fetch campaigns and other data from Redux (Assumed already done in your code)
+    const handlePunchIn = () => {
+        navigate('/user/attendance');
+    };
 
     useEffect(() => {
         // Get the current month and year
@@ -156,7 +160,7 @@ function MainDashboard() {
 
                                                     />
                                                     <p>I have arrived and am starting work for the day</p>
-                                                    <button type="submit" className="btn btn-outline-primary">Punch In</button>
+                                                    <button onClick={handlePunchIn} className="btn btn-outline-primary">Punch In</button>
                                                 </form>
                                             </div>
                                         </div>
