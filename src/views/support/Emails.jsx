@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Col, Container, Row, Form, Button, Image, Card, Spinner } from 'react-bootstrap';
 import SendIcon from '@mui/icons-material/Send';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ImageIcon from '@mui/icons-material/Image';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserDetails } from '../../redux/reducer/registeruser/UserDetails';
 import axios from 'axios';
@@ -20,6 +19,8 @@ function ChatApp() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
+  const messagesEndRef = useRef(null); // Ref to scroll to the bottom
+
   useEffect(() => {
     dispatch(fetchUserDetails());
     fetchMessages();
@@ -35,6 +36,12 @@ function ChatApp() {
       socketIo.disconnect();
     };
   }, [dispatch]);
+
+ 
+  useEffect(() => {
+    // Scroll to the bottom when messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const formatTime = (date) => {
     const hours = date.getHours();
@@ -55,7 +62,7 @@ function ChatApp() {
         return { ...message, time: formattedTime };
       });
 
-      setMessages(formattedMessages);
+      setMessages(formattedMessages.reverse()); // Reverse the messages to show the latest at the bottom
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
@@ -100,12 +107,8 @@ function ChatApp() {
   };
 
   const handleReceiverMessage = () => {
-    const botMessage = {
-      text: 'This is a response from the bot.',
-      sender: 'bot',
-      time: formatTime(new Date()),
-    };
-    setMessages((prevMessages) => [...prevMessages, botMessage]);
+  
+    setMessages((prevMessages) => [...prevMessages]);
     setTyping(false);
   };
 
@@ -128,10 +131,10 @@ function ChatApp() {
       <Row>
         <Col lg={3}></Col>
         <Col lg={8}>
-          <Row className="justify-content-center align-items-center vh-100 my-10 ">
-            <Col xs={12} md={8} lg={12} className="d-flex flex-column h-100 ">
+          <Row className="justify-content-center align-items-center vh-100 my-10">
+            <Col xs={12} md={8} lg={12} className="d-flex flex-column h-100">
               <div className="d-flex align-items-center p-3 border-bottom bg-success text-white mt-5">
-                <h3 className='mt-2'>Chat Section</h3>
+                <h3 className="mt-2">Chat Section</h3>
               </div>
               <Card className="shadow w-100 mt-10" style={{ height: '65%' }}>
                 <Card.Body className="d-flex flex-column p-0 h-100">
@@ -140,8 +143,7 @@ function ChatApp() {
                     {messages.map((message, index) => (
                       <div
                         key={index}
-                        className={`d-flex align-items-start mb-3 ${message.sender === user?.username ? 'flex-row-reverse' : ''
-                          }`}
+                        className={`d-flex align-items-start mb-3 ${message.sender === user?.username ? 'flex-row-reverse' : ''}`}
                       >
                         <Image
                           src="#"
@@ -149,8 +151,7 @@ function ChatApp() {
                           className={`me-2 ${message.sender === user?.username ? 'ms-2' : ''}`}
                         />
                         <div
-                          className={`p-2 rounded ${message.sender === user?.username ? 'bg-info text-dark' : 'bg-white text-dark'
-                            }`}
+                          className={`p-2 rounded ${message.sender === user?.username ? 'bg-info text-dark' : 'bg-white text-dark'}`}
                         >
                           <div className="d-flex justify-content-between">
                             <div className="small text-muted text-end me-5">{message.sender}</div>
@@ -168,6 +169,9 @@ function ChatApp() {
                         <span className="text-success">Typing...</span>
                       </div>
                     )}
+
+                    {/* Scroll to bottom */}
+                    <div ref={messagesEndRef} />
                   </div>
 
                   {/* Footer (Input Section) */}
@@ -186,7 +190,7 @@ function ChatApp() {
                     >
                       <ImageIcon />
                     </Button>
-          
+
                     <Form.Control
                       as="textarea"
                       value={input}
@@ -209,8 +213,6 @@ function ChatApp() {
               </Card>
             </Col>
           </Row>
-
-
         </Col>
       </Row>
     </Container>
