@@ -20,53 +20,42 @@ function ChatApp() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
 
-
   useEffect(() => {
     dispatch(fetchUserDetails());
-    fetchMessages(); // Load messages on component mount
+    fetchMessages();
 
-    // Set up the socket connection
-    const socketIo = io(baseUrl); // Connect to the server (replace baseUrl with your server's URL)
+    const socketIo = io(baseUrl);
     setSocket(socketIo);
 
-    // Listen for new messages from the server
     socketIo.on('newMessage', (newMessage) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
-    // Clean up the socket connection on unmount
     return () => {
       socketIo.disconnect();
     };
   }, [dispatch]);
 
-  // Format the time to display with the message
   const formatTime = (date) => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
   };
 
-  // Fetch all messages from the backend
   const fetchMessages = async () => {
     try {
-      const token = localStorage.getItem('authToken'); // Get the token from local storage
+      const token = localStorage.getItem('authToken');
       const response = await axios.get(`${baseUrl}user/get_all_message`, {
         headers: { "authorization": `Bearer ${token}` },
       });
 
-      // Format time in 24-hour format (HH:mm) for each message
       const formattedMessages = response.data.map((message) => {
-        const time = new Date(message.time); // Convert to Date object
-        const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format time as HH:mm
-
-        return {
-          ...message,
-          time: formattedTime, // Update time field with formatted time
-        };
+        const time = new Date(message.time);
+        const formattedTime = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        return { ...message, time: formattedTime };
       });
 
-      setMessages(formattedMessages); // Update the state with formatted messages
+      setMessages(formattedMessages);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
@@ -76,11 +65,10 @@ function ChatApp() {
     if (input.trim()) {
       const userMessage = {
         text: input,
-        sender: user?.username, // Use the username
+        sender: user?.username,
         time: formatTime(new Date()),
       };
 
-      // Optimistically update the UI
       setMessages((prevMessages) => [...prevMessages, userMessage]);
       setInput('');
       setTyping(false);
@@ -101,7 +89,7 @@ function ChatApp() {
         });
 
         if (response.status === 201) {
-          fetchMessages(); // Reload messages from the backend
+          fetchMessages();
         } else {
           console.error('Failed to send message:', response.data);
         }
@@ -111,7 +99,6 @@ function ChatApp() {
     }
   };
 
-  // Simulate bot response
   const handleReceiverMessage = () => {
     const botMessage = {
       text: 'This is a response from the bot.',
@@ -123,20 +110,16 @@ function ChatApp() {
   };
 
   const handleUploadFile = (event) => {
-    setFile(event.target.files[0]); // Handle file input
+    setFile(event.target.files[0]);
   };
 
   const handleUploadImage = () => {
-    console.log('Upload Image Clicked');
-  };
-
-  const handleUpload = () => {
-    console.log('Upload Clicked');
+    document.getElementById('fileInput').click();
   };
 
   useEffect(() => {
     if (messages.length > 0 && messages[messages.length - 1].sender === 'user') {
-      setTimeout(handleReceiverMessage, 2000); // Simulate bot response after 2 seconds
+      setTimeout(handleReceiverMessage, 2000);
     }
   }, [messages]);
 
@@ -203,13 +186,7 @@ function ChatApp() {
                     >
                       <ImageIcon />
                     </Button>
-                    <Button
-                      variant="light"
-                      className="me-2 rounded-pill shadow-sm"
-                      onClick={handleUpload}
-                    >
-                      <FileUploadIcon />
-                    </Button>
+          
                     <Form.Control
                       as="textarea"
                       value={input}
