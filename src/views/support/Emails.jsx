@@ -204,7 +204,6 @@ function ChatApp() {
                         }
                       }}
                     />
-
                     <Button variant="success" onClick={handleSendMessage} className="rounded-pill shadow-sm p-2">
                       <SendIcon />
                     </Button>
