@@ -220,7 +220,7 @@ function App() {
               <Route path="/billing/createnewinvoice" element={<CreateNewInvoice />} />
               <Route path="/billing/ViewInvoiceById/:id" element={<ViewInvoiceById />} />
               {/* support */}
-              <Route path="/support/email" element={<Emails />} />
+              <Route path="/support/chat" element={<Emails />} />
               <Route path="/support/onlinechat" element={<OnlineChat />} />
               {/* settings */}
               <Route path="/settings/ipwhitelist_blocklist" element={<IpWhiteList_BlockList />} />

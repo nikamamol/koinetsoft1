@@ -944,7 +944,7 @@ function ResponsiveDrawer(props) {
         <Collapse in={isCollapseSupport} timeout="auto" unmountOnExit>
           {[
             // { text: 'Online Chat', path: '/support/onlinechat' },
-            { text: 'Email', path: '/support/email' },
+            { text: 'Chat Section', path: '/support/chat' },
 
           ].map((item) => (
             <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
