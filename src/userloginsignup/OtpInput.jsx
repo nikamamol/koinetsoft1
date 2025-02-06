@@ -24,9 +24,16 @@ const MyOtpInput = () => {
             .then(() => {
                 navigate("/dashboard");
             })
-            .catch((err) => {
+            .catch(() => {
                 toast.error("Incorrect OTP. Please try again.");
             });
+    };
+
+    // Handle Enter Key Press
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            handleSubmit();
+        }
     };
 
     return (
@@ -47,6 +54,7 @@ const MyOtpInput = () => {
                             renderInput={(props) => (
                                 <input
                                     {...props}
+                                    onKeyDown={handleKeyDown}  // Added Enter key support
                                     style={{
                                         border: "1px solid transparent",
                                         borderRadius: "8px",
