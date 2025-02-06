@@ -54,6 +54,7 @@ function ResponsiveDrawer(props) {
   const [openRA, setOpenRA] = React.useState(false);
   const [openQuality, setOpenQuality] = React.useState(false);
   const [openEmail, setOpenEmail] = React.useState(false);
+  const [openBench, setOpenBench] = React.useState(false);
   const [openOperation, setOpenOperation] = React.useState(false);
   const [isCollapseEnterprise, setIsCollapseEnterprise] = React.useState(false);
   const [isCollapseAgencies, setIsCollapseAgencies] = React.useState(false);
@@ -151,6 +152,9 @@ function ResponsiveDrawer(props) {
 
   const handleEmailClick = () => {
     setOpenEmail(!openEmail);
+  };
+  const handleBenchClick = () => {
+    setOpenBench(!openBench);
   };
 
   const handleOperationClick = () => {
@@ -497,40 +501,50 @@ function ResponsiveDrawer(props) {
             </Collapse>
 
             {/* Email Team */}
-            <ListItem disablePadding sx={{ display: "block" }} onClick={handleEmailClick}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: "center",
-                  px: 7,
-                }}
-              >
-                <ListItemText primary="Email Team" />
-                {openEmail ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            <ListItem disablePadding sx={{ display: "block" }} onClick={() => setOpenEmail(!openEmail)}>
+        <ListItemButton sx={{ minHeight: 48, justifyContent: "center", px: 7 }}>
+          <ListItemText primary="Email Team" />
+          {openEmail ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </ListItemButton>
+      </ListItem>
+      <Collapse in={openEmail} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          {[
+            { text: "PreQA Done", path: "/rfp/emailcheck" },
+            { text: "Quality Done", path: "/rfp/qualitydoneshowemail" },
+            { text: "Email Checked", path: "/rfp/emcheckedfilesand_upload" },
+            { text: "Email Master", path: "/rfp/emmasterfile" },
+          ].map((item) => (
+            <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
+              <ListItemButton sx={{ minHeight: 48, justifyContent: "center", px: 2.5 }}>
+                <ListItemText primary={item.text} />
               </ListItemButton>
             </ListItem>
-            <Collapse in={openEmail} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {[
-                  { text: "PreQA Done", path: "/rfp/emailcheck" },
-                  { text: "Quality Done", path: "/rfp/qualitydoneshowemail" },
-                  { text: "Email Checked", path: "/rfp/emcheckedfilesand_upload" },
-                  { text: "Email Master", path: "/rfp/emmasterfile" },
-                ].map((item) => (
-                  <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
-                    <ListItemButton
-                      sx={{
-                        minHeight: 48,
-                        justifyContent: "center",
-                        px: 2.5,
-                      }}
-                    >
-                      <ListItemText primary={item.text} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Collapse>
+          ))}
+        </List>
+        <ListItem disablePadding sx={{ display: "block" }} onClick={() => setOpenBench(!openBench)} >
+        <ListItemButton sx={{ minHeight: 48, justifyContent: "center", px: 7 }}>
+          <ListItemText primary="Benchmark" />
+          {openBench ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </ListItemButton>
+      </ListItem>
+      <Collapse in={openBench} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          {[
+            { text: "Create Email Template", path: "/benchmark/createassets" },
+          ].map((item) => (
+            <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>
+              <ListItemButton sx={{ minHeight: 48, justifyContent: "center", px: 2.5 }}>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Collapse>
+      </Collapse>
+
+      {/* Benchmark Section */}
+    
 
             {/* Operation Team */}
             <ListItem disablePadding sx={{ display: "block" }} onClick={handleOperationClick}>

@@ -108,6 +108,8 @@ const EmailCheckedShowDelivery = lazy(() => import('./views/rfp/EmailCheckedShow
 const QualitycheckedShowDelivery = lazy(() => import('./views/rfp/QualitycheckedShowDelivery'));
 const TalSuppressionFile = lazy(() => import('./views/rfp/TalSuppressionFile'));
 import Loading from "./assets/Loading.gif"
+import Createassets from './views/rfp/benchmark/Createassets';
+import ViewAsset from './views/rfp/benchmark/ViewAsset';
 // Other components
 const Chatbot = lazy(() => import('./components/Chatboat'));
 
@@ -184,6 +186,7 @@ function App() {
               <Route path="/agency/myengencies" element={<MyEngencies />} />
               <Route path="/agency/inviteagency" element={<InviteAgencies />} />
               <Route path="/agency/viewAgencyDetails/:id" element={<ViewAgencyDetailsById />} />
+        
               {/* enterprise */}
               <Route path="/enterprise/MyEnterprise" element={<MyEnterprise />} />
               <Route path="/enterprise/inviteEnterprise" element={<InviteEnterprise />} />
@@ -219,6 +222,7 @@ function App() {
               <Route path="/billing/viewInvoice" element={<ViewInvoice />} />
               <Route path="/billing/createnewinvoice" element={<CreateNewInvoice />} />
               <Route path="/billing/ViewInvoiceById/:id" element={<ViewInvoiceById />} />
+              <Route path="/benchmark/createassets" element={<Createassets />} />
               {/* support */}
               <Route path="/support/chat" element={<Emails />} />
               <Route path="/support/onlinechat" element={<OnlineChat />} />
@@ -226,6 +230,10 @@ function App() {
               <Route path="/settings/ipwhitelist_blocklist" element={<IpWhiteList_BlockList />} />
               {/* library */}
               <Route path="/library/voiceLibrary" element={<VoiceLibrary />} />
+
+              {/* start 03022025 */}
+              <Route path="/benchmark/viewbenchmarkAsset/:id" element={<ViewAsset />} />
+
             </Route>
           </Routes>
         </Suspense>
