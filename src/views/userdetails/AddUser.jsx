@@ -149,7 +149,7 @@ function AddUser() {
                           onChange={handleChange}
                           required
                         >
-                          <option>--Select Designation--</option>
+                        
                           <option value="">--Select Designation--</option>
                           <option value="admin">Admin</option>
                           <option value="user">User</option>

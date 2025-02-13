@@ -110,6 +110,7 @@ const TalSuppressionFile = lazy(() => import('./views/rfp/TalSuppressionFile'));
 import Loading from "./assets/Loading.gif"
 import Createassets from './views/rfp/benchmark/Createassets';
 import ViewAsset from './views/rfp/benchmark/ViewAsset';
+import Calendar from './table/Calender';
 // Other components
 const Chatbot = lazy(() => import('./components/Chatboat'));
 
@@ -233,6 +234,7 @@ function App() {
 
               {/* start 03022025 */}
               <Route path="/benchmark/viewbenchmarkAsset/:id" element={<ViewAsset />} />
+              <Route path="/user/calender" element={<Calendar />} />
 
             </Route>
           </Routes>
