@@ -94,7 +94,7 @@ function TalSuppressionFile() {
                         <div className='bgColor rounded-3 shadow'>
                             <h4 className='fw-bold py-3 ms-3 text_color'>Suppression or Tal Files</h4>
                         </div>
-                        {(userRole === "oxmanager" ||  userRole === "admin") && (
+                        {(userRole === "oxmanager" ||  userRole === "admin" || userRole === "teamleader") && (
                             <div className='my-3 d-flex justify-content-end'>
                                 <Button variant="primary" className='p-2' onClick={handleShow}>
                                     <CloudUploadIcon /> Upload or Drag 'n' drop RPF File

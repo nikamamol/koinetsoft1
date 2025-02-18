@@ -111,6 +111,7 @@ import Loading from "./assets/Loading.gif"
 import Createassets from './views/rfp/benchmark/Createassets';
 import ViewAsset from './views/rfp/benchmark/ViewAsset';
 import Calendar from './table/Calender';
+import Preqatlview from './views/rfp/Preqatlview';
 // Other components
 const Chatbot = lazy(() => import('./components/Chatboat'));
 
@@ -167,6 +168,7 @@ function App() {
               <Route path="/rfp/tal-suppress-files" element={<TalSuppressionFile />} />
               <Route path="/rfp/expired" element={<Expired />} />
               <Route path="/rfp/received" element={<Received />} />
+              <Route path="/rfp/preqatl" element={<Preqatlview />} />
               <Route path="/rfp/receivedall" element={<RecivedAll />} />
               <Route path="/rfp/qualitycheck" element={<QualityCheck />} />
               <Route path="/rfp/emailcheck" element={<EmailCheck />} />

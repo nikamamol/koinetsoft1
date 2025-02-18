@@ -1,41 +1,46 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getRatLCsvFiles, updateFileStatusQuality } from '../redux/reducer/rpf/uploadratl'; // Import your Redux actions
 import { MaterialReactTable } from 'material-react-table';
-import { fetchFileDataAll, readFile, updateFileStatus, updateCsvFileById, downloadFile } from '../redux/reducer/rpf/getcsvfiledata';
 import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import Hourglass from "../assets/Hourglass.gif";
-import Unauthorised from "../assets/401Unauthorised.png"
-
-
-
+import Unauthorised from "../assets/401Unauthorised.png";
 import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
+import baseUrl from '../constant/ConstantApi';
+import axios from 'axios';
 
 const RfpQualityCheck = () => {
     const dispatch = useDispatch();
-    const { files, error, status } = useSelector((state) => ({
-        files: state.fileData.files,
-        error: state.fileData.error,
-        status: state.fileData.status,
-    }));
+    const { ratlFiles, status, error } = useSelector((state) => state.fileUploadtl || []);
 
+    console.log(ratlFiles);
     const [checkboxes, setCheckboxes] = useState({});
     const [excelData, setExcelData] = useState([]);
     const [currentFileName, setCurrentFileName] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [updatedData, setUpdatedData] = useState([]);
 
+    // Fetch files on initial render or status changes
     useEffect(() => {
         if (status === 'idle') {
-            dispatch(fetchFileDataAll());
+            dispatch(getRatLCsvFiles());
         }
     }, [status, dispatch]);
 
+    // Log and verify file IDs when ratlFiles change
+    useEffect(() => {
+        console.log('Ratl Files:', ratlFiles);
+        ratlFiles.forEach((file) => {
+            console.log('File ID:', file._id);  // Log the file ID to ensure it's correct
+        });
+    }, [ratlFiles]);
+
     useEffect(() => {
         const updatedCheckboxes = {};
-        files.forEach(file => {
+        ratlFiles.forEach(file => {
             file.status.forEach(statusItem => {
                 if (statusItem.userType === 'Quality') {
                     updatedCheckboxes[statusItem._id] = statusItem.checked;
@@ -43,10 +48,33 @@ const RfpQualityCheck = () => {
             });
         });
         setCheckboxes(updatedCheckboxes);
-    }, [files]);
+    }, [ratlFiles]);
 
+    // Handle checkbox change
+    const handleCheckboxChange = async (fileId, statusId, checked) => {
+        try {
+            console.log("File ID:", fileId, "Status ID:", statusId, "Checked:", checked);
+
+            const fileToUpdate = ratlFiles.find(file => file._id === fileId);
+            if (!fileToUpdate) return;
+
+            const updatedStatus = fileToUpdate.status.map(statusItem =>
+                statusItem._id === statusId ? { ...statusItem, checked } : statusItem
+            );
+
+            await axios.put(`${baseUrl}user/updateStatus_rl_tl/${fileId}`, { status: updatedStatus });
+
+            setCheckboxes(prev => ({ ...prev, [statusId]: checked }));
+            toast.success('Status updated successfully!');
+        } catch (error) {
+            toast.error('Error updating status. Please try again.');
+        }
+    };
+
+
+    // Handle file read and Excel file parsing
     const handleRead = (fileId) => {
-        const file = files.find(file => file.fileId === fileId);
+        const file = ratlFiles.find(file => file._id === fileId); // Use _id here to match the file
         if (file) {
             setCurrentFileName(file.filename);
             setSelectedFile(file); // Set selected file for update
@@ -61,44 +89,55 @@ const RfpQualityCheck = () => {
                 setExcelData(data);
             })
             .catch((error) => {
-                // console.error('Error reading file:', error);
+                toast.error('Error reading file');
             });
     };
 
-    const handleCheckboxChange = (fileId, statusId, checked) => {
-        dispatch(updateFileStatus({ fileId, statusId, checked }))
-            .unwrap()
-            .then(() => {
-                setCheckboxes(prev => ({ ...prev, [statusId]: checked }));
-                toast.success('Status updated successfully!');
-            })
-            .catch((error) => {
-                toast.error('Error updating status. Please try again.');
-                // console.error('Error updating status:', error);
-            });
-    };
+    // Handle checkbox change for file status (Quality or Email)
 
+    
+
+    // Handle downloading file
     const handleDownload = (fileId, filename) => {
-        dispatch(downloadFile({ fileId, filename }))
-            .unwrap()
-            .catch((error) => {
-                // console.error('Error downloading file:', error);
-            });
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            toast.error("You must be logged in to download files.");
+            return;
+        }
+
+        const downloadUrl = `${baseUrl}user/downloadCsvFileByIdRa/${fileId}`; // Correct URL
+        fetch(downloadUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                throw new Error('Error downloading file');
+            }
+        })
+        .then(blob => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        })
+        .catch(error => {
+            toast.error("Error downloading file: " + error.message);
+        });
     };
-    // Handle row edit and update the excelData state, then call the update API
+
+    // Save Excel row edits
     const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
         try {
-            // Create a new array from excelData to update the values
             const updatedExcelData = [...excelData];
             const rowIndex = row.index + 2; // Adjust for header row
+            updatedExcelData[rowIndex] = Object.values(values);
 
-            // Update the row with the new values
-            updatedExcelData[rowIndex] = Object.values(values); // Map values to the row
-
-            // Set updatedExcelData to excelData
             setExcelData(updatedExcelData);
-
-            // Create a Blob from the updated data
             const worksheet = XLSX.utils.aoa_to_sheet(updatedExcelData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -114,51 +153,54 @@ const RfpQualityCheck = () => {
 
             let newFile;
             const formData = new FormData();
-
-            // Check selectedFile to ensure it's valid
-            if (selectedFile && selectedFile.filename && selectedFile.fileId) {
+            if (selectedFile && selectedFile.filename && selectedFile._id) { // Use _id here instead of fileId
                 newFile = new File([blob], selectedFile.filename, { type: blob.type });
                 formData.append('file', newFile);
-                if (selectedFile.path) {
-                    formData.append('path', selectedFile.path);
-                }
+                if (selectedFile.path) formData.append('path', selectedFile.path);
             } else {
-                throw new Error("Invalid selectedFile object: No file selected or invalid fileId.");
+                throw new Error("No valid file selected.");
             }
 
             formData.append('updatedData', JSON.stringify(updatedExcelData));
-            await dispatch(updateCsvFileById({
-                fileId: selectedFile.fileId,
+            await dispatch(updateFileStatusQuality({
+                fileId: selectedFile._id, // Use _id here for correct file reference
                 fileData: { file: newFile, path: selectedFile.path },
                 updatedData: updatedExcelData,
             })).unwrap();
 
             toast.success('File updated successfully!');
-
         } catch (error) {
-            toast.error('Error updating file. Please try again.');
-            // console.error('Error updating file:', error);
+            toast.error('Error updating file');
         } finally {
-            exitEditingMode(); // Close the editing mode after saving
+            exitEditingMode();
         }
     };
 
+    // Filter files based on role
     const role = localStorage.getItem('role');
-
     const filteredFiles = useMemo(() => {
-        if (role !== 'quality' && role !== 'oxmanager' && role !== 'admin') return [];
-        return files.filter(file =>
-            file.status.some(statusItem => statusItem.userType === 'Quality')
-        );
-    }, [files, role]);
+        if (!Array.isArray(ratlFiles) || !ratlFiles.length) {
+            return [];
+        }
 
+        if (role !== 'quality' && role !== 'oxmanager' && role !== 'admin') {
+            return [];
+        }
+
+        return ratlFiles.filter(file => {
+            return Array.isArray(file?.status) &&
+                file.status.some(statusItem => statusItem?.userType === 'Quality');
+        });
+    }, [ratlFiles, role]);
+
+    // Define table columns for Excel and RAT L Files
     const excelColumns = useMemo(() => {
         if (excelData.length > 0) {
-            const headers = excelData[1]; // First row contains headers
+            const headers = excelData[1];
             return headers.map((header, index) => ({
-                accessorKey: `${index}`, // String literal for unique accessor keys
-                header, // Use header directly
-                enableEditing: true, // Allow editing of cells
+                accessorKey: `${index}`,
+                header,
+                enableEditing: true,
             }));
         }
         return [];
@@ -177,33 +219,25 @@ const RfpQualityCheck = () => {
         return [];
     }, [excelData]);
 
+    const numberedFiles = useMemo(() => {
+        return filteredFiles.map((file, index) => ({
+            ...file,
+            serialNumber: index + 1,
+            formattedDate: new Date(file.createdAt).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+            }),
+        }));
+    }, [filteredFiles]);
+
     const columns = useMemo(
         () => [
-            {
-                accessorKey: 'serialNumber',
-                header: 'S.No',
-                size: 50,
-            },
-            {
-                accessorKey: 'filename',
-                header: 'Filename',
-                size: 200,
-            },
-            {
-                accessorKey: 'campaignName',
-                header: 'Campaign Name',
-                size: 200,
-            },
-            {
-                accessorKey: 'campaignCode',
-                header: 'Campaign Code',
-                size: 200,
-            },
-            {
-                accessorKey: 'createdAt',
-                header: 'Date',
-                size: 150,
-            },
+            { accessorKey: 'serialNumber', header: 'S.No', size: 50 },
+            { accessorKey: 'originalname', header: 'Filename', size: 200 },
+            { accessorKey: 'campaignName', header: 'Campaign Name', size: 200 },
+            { accessorKey: 'campaignCode', header: 'Campaign Code', size: 100 },
+            { accessorKey: 'formattedDate', header: 'Date', size: 150 },
             {
                 accessorKey: 'status',
                 header: 'Status',
@@ -217,8 +251,7 @@ const RfpQualityCheck = () => {
                                     <Checkbox
                                         color="success"
                                         checked={checkboxes[statusItem._id] || false}
-                                        disabled={role !== 'quality'}
-                                        onChange={(e) => handleCheckboxChange(row.original.fileId, statusItem._id, e.target.checked)}
+                                        onChange={(e) => handleCheckboxChange(row.original._id, statusItem._id, e.target.checked)}
                                     />
                                     {statusItem.userType}
                                 </div>
@@ -234,13 +267,8 @@ const RfpQualityCheck = () => {
                         <Tooltip title="Download File">
                             <IconButton >
                                 <CloudDownloadIcon
-
-                                    style={{
-                                        color: "black",
-                                        width: '30px',
-                                        height: '30px'
-                                    }}
-                                    onClick={() => handleDownload(row.original.fileId, row.original.filename)}
+                                    style={{ color: "black", width: '30px', height: '30px' }}
+                                    onClick={() => handleDownload(row.original._id, row.original.filename)} // Use _id here
                                 />
                             </IconButton>
                         </Tooltip>
@@ -252,25 +280,24 @@ const RfpQualityCheck = () => {
         [handleRead, handleCheckboxChange, checkboxes]
     );
 
-
     if (status === "loading") return (
-        <>
-            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
-        </>
-    )
+        <div className='text-center mt-5'>
+            <img src={Hourglass} alt="" height={40} width={40} />
+        </div>
+    );
     if (status === 'failed') return <div>Error: {error}</div>;
 
     if (role !== 'quality' && role !== 'admin' && role !== 'oxmanager') {
-        return <div className='text-center mt-2 '>
-        <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-        <p className='text-danger'>You do not have permission to view this content.</p>
-      </div>;
+        return <div className='text-center mt-2'>
+            <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+            <p className='text-danger'>You do not have permission to view this content.</p>
+        </div>;
     }
 
     return (
         <div>
             {excelData.length === 0 ? (
-                <MaterialReactTable columns={columns} data={filteredFiles} />
+                <MaterialReactTable columns={columns} data={numberedFiles} />
             ) : (
                 <MaterialReactTable
                     columns={excelColumns}

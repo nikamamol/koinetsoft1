@@ -1,40 +1,44 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getRatLCsvFiles, updateFileStatusEmail } from '../redux/reducer/rpf/uploadratl'; // Import your Redux actions
 import { MaterialReactTable } from 'material-react-table';
+import { Checkbox, IconButton, Tooltip } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { fetchFileDataAll, updateFileStatusEmail, readFile, updateCsvFileById, downloadFile } from '../redux/reducer/rpf/getcsvfiledata';
-import { Checkbox, IconButton, Tooltip, Button } from '@mui/material';
-import { toast } from 'react-toastify';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import Hourglass from "../assets/Hourglass.gif";
-import Unauthorised from "../assets/401Unauthorised.png"
-
-
-
+import Unauthorised from "../assets/401Unauthorised.png";
+import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
+import baseUrl from '../constant/ConstantApi';
+import axios from 'axios';
 
 const RfpEmailCheck = () => {
     const dispatch = useDispatch();
-    const { files, error, status } = useSelector((state) => ({
-        files: state.fileData.files,
-        error: state.fileData.error,
-        status: state.fileData.status,
-    }));
+    const { ratlFiles, status, error } = useSelector((state) => state.fileUploadtl || []);
 
     const [checkboxes, setCheckboxes] = useState({});
     const [excelData, setExcelData] = useState([]);
     const [currentFileName, setCurrentFileName] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
+    const [updatedData, setUpdatedData] = useState([]);
 
+    // Fetch files on initial render or status changes
     useEffect(() => {
         if (status === 'idle') {
-            dispatch(fetchFileDataAll());
+            dispatch(getRatLCsvFiles());
         }
     }, [status, dispatch]);
-    const userType = localStorage.getItem('role')
+
+    // Log and verify file IDs when ratlFiles change
+    useEffect(() => {
+        ratlFiles.forEach((file) => {
+            console.log('File ID:', file._id);  // Log the file ID to ensure it's correct
+        });
+    }, [ratlFiles]);
+
     useEffect(() => {
         const updatedCheckboxes = {};
-        files.forEach(file => {
+        ratlFiles.forEach(file => {
             file.status.forEach(statusItem => {
                 if (statusItem.userType === 'Email Marketing') {
                     updatedCheckboxes[statusItem._id] = statusItem.checked;
@@ -42,13 +46,35 @@ const RfpEmailCheck = () => {
             });
         });
         setCheckboxes(updatedCheckboxes);
-    }, [files]);
+    }, [ratlFiles]);
 
+    // Handle checkbox change
+    const handleCheckboxChange = async (fileId, statusId, checked) => {
+        try {
+            console.log("File ID:", fileId, "Status ID:", statusId, "Checked:", checked);
+
+            const fileToUpdate = ratlFiles.find(file => file._id === fileId);
+            if (!fileToUpdate) return;
+
+            const updatedStatus = fileToUpdate.status.map(statusItem =>
+                statusItem._id === statusId ? { ...statusItem, checked } : statusItem
+            );
+
+            await axios.put(`${baseUrl}user/updateStatus_rl_tl/${fileId}`, { status: updatedStatus });
+
+            setCheckboxes(prev => ({ ...prev, [statusId]: checked }));
+            toast.success('Status updated successfully!');
+        } catch (error) {
+            toast.error('Error updating status. Please try again.');
+        }
+    };
+
+    // Handle file read and Excel file parsing
     const handleRead = (fileId) => {
-        const file = files.find(file => file.fileId === fileId);
+        const file = ratlFiles.find(file => file._id === fileId); // Use _id here to match the file
         if (file) {
             setCurrentFileName(file.filename);
-            setSelectedFile(file);
+            setSelectedFile(file); // Set selected file for update
         }
         dispatch(readFile({ fileId }))
             .unwrap()
@@ -60,187 +86,218 @@ const RfpEmailCheck = () => {
                 setExcelData(data);
             })
             .catch((error) => {
-                // console.error('Error reading file:', error);
+                toast.error('Error reading file');
             });
     };
 
-    const handleCheckboxChange = (fileId, statusId, checked) => {
-        dispatch(updateFileStatusEmail({ fileId, statusId, checked }))
-            .unwrap()
-            .then(() => {
-                setCheckboxes(prev => ({ ...prev, [statusId]: checked }));
-                toast.success('Status updated successfully!');
-            })
-            .catch((error) => {
-                toast.error('Error updating status. Please try again.');
-                // console.error('Error updating status:', error);
-            });
-    };
-
+    // Handle downloading file
     const handleDownload = (fileId, filename) => {
-        dispatch(downloadFile({ fileId, filename }))
-            .unwrap()
-            .catch((error) => {
-                // console.error('Error downloading file:', error);
-                toast.error('Error downloading file. Please try again.');
-            });
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            toast.error("You must be logged in to download files.");
+            return;
+        }
+
+        const downloadUrl = `${baseUrl}user/downloadCsvFileByIdRa/${fileId}`; // Correct URL
+        fetch(downloadUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                throw new Error('Error downloading file');
+            }
+        })
+        .then(blob => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        })
+        .catch(error => {
+            toast.error("Error downloading file: " + error.message);
+        });
     };
 
-    const handleUpdateFile = async () => {
-        if (selectedFile && excelData.length > 0) {
-            try {
-                const worksheet = XLSX.utils.aoa_to_sheet(excelData);
-                const workbook = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    // Save Excel row edits
+    const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
+        try {
+            const updatedExcelData = [...excelData];
+            const rowIndex = row.index + 2; // Adjust for header row
+            updatedExcelData[rowIndex] = Object.values(values);
 
-                const binaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
-                const buffer = new ArrayBuffer(binaryString.length);
-                const view = new Uint8Array(buffer);
-                for (let i = 0; i < binaryString.length; i++) {
-                    view[i] = binaryString.charCodeAt(i) & 0xFF;
-                }
+            setExcelData(updatedExcelData);
+            const worksheet = XLSX.utils.aoa_to_sheet(updatedExcelData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
-                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                const newFile = new File([blob], selectedFile.filename, { type: blob.type });
-
-                const formData = new FormData();
-                formData.append('file', newFile);
-                if (selectedFile.path) {
-                    formData.append('path', selectedFile.path);
-                }
-
-                await dispatch(updateCsvFileById({
-                    fileId: selectedFile.fileId,
-                    fileData: { file: newFile, path: selectedFile.path },
-                    updatedData: excelData,
-                })).unwrap();
-
-                toast.success('File updated successfully!');
-            } catch (error) {
-                toast.error('Error updating file. Please try again.');
-                // console.error('Error updating file:', error);
+            const binaryString = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
+            const buffer = new ArrayBuffer(binaryString.length);
+            const view = new Uint8Array(buffer);
+            for (let i = 0; i < binaryString.length; i++) {
+                view[i] = binaryString.charCodeAt(i) & 0xFF;
             }
-        } else {
-            toast.error('No file selected or empty data.');
+
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            let newFile;
+            const formData = new FormData();
+            if (selectedFile && selectedFile.filename && selectedFile._id) { // Use _id here instead of fileId
+                newFile = new File([blob], selectedFile.filename, { type: blob.type });
+                formData.append('file', newFile);
+                if (selectedFile.path) formData.append('path', selectedFile.path);
+            } else {
+                throw new Error("No valid file selected.");
+            }
+
+            formData.append('updatedData', JSON.stringify(updatedExcelData));
+            await dispatch(updateFileStatusEmail({
+                fileId: selectedFile._id, // Use _id here for correct file reference
+                fileData: { file: newFile, path: selectedFile.path },
+                updatedData: updatedExcelData,
+            })).unwrap();
+
+            toast.success('File updated successfully!');
+        } catch (error) {
+            toast.error('Error updating file');
+        } finally {
+            exitEditingMode();
         }
     };
 
+    // Filter files based on role
     const role = localStorage.getItem('role');
-
     const filteredFiles = useMemo(() => {
-        if (role !== 'email_marketing' && role !== 'admin' && role !== 'oxmanager') return [];
-        return files.filter(file =>
-            file.status.some(statusItem => statusItem.userType === 'Email Marketing')
-        );
-    }, [files, role]);
+        if (!Array.isArray(ratlFiles) || !ratlFiles.length) {
+            return [];
+        }
 
-    const columns = useMemo(() => [
-        {
-            accessorKey: 'serialNumber',
-            header: 'S.No',
-            size: 50,
-        },
-        {
-            accessorKey: 'filename',
-            header: 'Filename',
-            size: 200,
-        },
-        {
-            accessorKey: 'campaignName',
-            header: 'Campaign Name',
-            size: 200,
-        },
-        {
-            accessorKey: 'campaignCode',
-            header: 'Campaign Code',
-            size: 200,
-        },
-        {
-            accessorKey: 'createdAt',
-            header: 'Date',
-            size: 150,
-        },
-        {
-            accessorKey: 'status',
-            header: 'Status',
-            size: 100,
-            Cell: ({ row }) => (
-                <div>
-                    {row.original.status
-                        .filter(statusItem => statusItem.userType === 'Email Marketing')
-                        .map((statusItem) => (
-                            <div key={statusItem._id} style={{ display: 'flex', alignItems: 'center' }}>
-                                {role === 'email_marketing' ? ( // Check if the role is 'email_marketing'
+        if (role !== 'email_marketing' && role !== 'oxmanager' && role !== 'admin') {
+            return [];
+        }
+
+        return ratlFiles.filter(file => {
+            return Array.isArray(file?.status) &&
+                file.status.some(statusItem => statusItem?.userType === 'Email Marketing');
+        });
+    }, [ratlFiles, role]);
+
+    // Define table columns for Excel and RAT L Files
+    const excelColumns = useMemo(() => {
+        if (excelData.length > 0) {
+            const headers = excelData[1];
+            return headers.map((header, index) => ({
+                accessorKey: `${index}`,
+                header,
+                enableEditing: true,
+            }));
+        }
+        return [];
+    }, [excelData]);
+
+    const excelTableData = useMemo(() => {
+        if (excelData.length > 1) {
+            return excelData.slice(2).map((row, rowIndex) => {
+                const rowData = {};
+                row.forEach((cell, cellIndex) => {
+                    rowData[cellIndex] = cell;
+                });
+                return rowData;
+            });
+        }
+        return [];
+    }, [excelData]);
+
+    const numberedFiles = useMemo(() => {
+        return filteredFiles.map((file, index) => ({
+            ...file,
+            serialNumber: index + 1,
+            formattedDate: new Date(file.createdAt).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+            }),
+        }));
+    }, [filteredFiles]);
+
+    const columns = useMemo(
+        () => [
+            { accessorKey: 'serialNumber', header: 'S.No', size: 50 },
+            { accessorKey: 'originalname', header: 'Filename', size: 200 },
+            { accessorKey: 'campaignName', header: 'Campaign Name', size: 200 },
+            { accessorKey: 'campaignCode', header: 'Campaign Code', size: 100 },
+            { accessorKey: 'formattedDate', header: 'Date', size: 150 },
+            {
+                accessorKey: 'status',
+                header: 'Status',
+                size: 100,
+                Cell: ({ row }) => (
+                    <div>
+                        {row.original.status
+                            .filter(statusItem => statusItem.userType === 'Email Marketing')
+                            .map((statusItem) => (
+                                <div key={statusItem._id} style={{ display: 'flex', alignItems: 'center' }}>
                                     <Checkbox
                                         color="success"
                                         checked={checkboxes[statusItem._id] || false}
-                                        onChange={(e) => handleCheckboxChange(row.original.fileId, statusItem._id, e.target.checked)}
+                                        onChange={(e) => handleCheckboxChange(row.original._id, statusItem._id, e.target.checked)}
                                     />
-                                ) : (
-                                    <Checkbox
-                                        color="success"
-                                        checked={checkboxes[statusItem._id] || false}
-                                        disabled // Disable checkbox for unauthorized roles
-                                    />
-                                )}
-                                {statusItem.userType}
-                            </div>
-                        ))}
-                </div>
-            ),
-        },
+                                    {statusItem.userType}
+                                </div>
+                            ))}
+                    </div>
+                ),
+            },
+            {
+                accessorKey: 'actions',
+                header: 'Actions',
+                Cell: ({ row }) => (
+                    <div className="d-flex gap-3">
+                        <Tooltip title="Download File">
+                            <IconButton >
+                                <CloudDownloadIcon
+                                    style={{ color: "black", width: '30px', height: '30px' }}
+                                    onClick={() => handleDownload(row.original._id, row.original.filename)} // Use _id here
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                ),
+                size: 150,
+            },
+        ],
+        [handleRead, handleCheckboxChange, checkboxes]
+    );
 
-        {
-            accessorKey: 'actions',
-            header: 'Actions',
-            Cell: ({ row }) => (
-                <div className="d-flex gap-3">
-
-                    <Tooltip title="Download File">
-                        <IconButton>
-                            <CloudDownloadIcon
-                                style={{ color: "black", width: '30px', height: '30px' }}
-                                onClick={() => handleDownload(row.original.fileId, row.original.filename)}
-                            />
-                        </IconButton>
-                    </Tooltip>
-                </div>
-            ),
-            size: 150,
-        },
-    ], [handleRead, handleCheckboxChange, checkboxes]);
-
-    if (status === 'loading') return (
-        <>
-            <div className='text-center mt-5'><img src={Hourglass} alt="" height={40} width={40} /></div>
-        </>
-    )
+    if (status === "loading") return (
+        <div className='text-center mt-5'>
+            <img src={Hourglass} alt="" height={40} width={40} />
+        </div>
+    );
     if (status === 'failed') return <div>Error: {error}</div>;
 
     if (role !== 'email_marketing' && role !== 'admin' && role !== 'oxmanager') {
-        return (
-            <div className='text-center mt-2 '>
-                <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
-                <p className='text-danger'>You do not have permission to view this content.</p>
-            </div>
-        );
+        return <div className='text-center mt-2'>
+            <img src={Unauthorised} alt="unauthorised" width={400} height={300} />
+            <p className='text-danger'>You do not have permission to view this content.</p>
+        </div>;
     }
 
     return (
         <div>
-
             {excelData.length === 0 ? (
-                <MaterialReactTable columns={columns} data={filteredFiles} />
+                <MaterialReactTable columns={columns} data={numberedFiles} />
             ) : (
                 <MaterialReactTable
-                    columns={columns}
-                    data={excelData.map((row, rowIndex) => {
-                        const rowData = {};
-                        row.forEach((cell, cellIndex) => {
-                            rowData[cellIndex] = cell;
-                        });
-                        return rowData;
-                    })}
+                    columns={excelColumns}
+                    data={excelTableData}
+                    editingMode="row"
+                    enableEditing
+                    onEditingRowSave={handleSaveRowEdits}
                 />
             )}
         </div>

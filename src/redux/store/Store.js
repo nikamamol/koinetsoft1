@@ -33,7 +33,8 @@ import CsvsliceByUnwantedLeads from "../reducer/rpf/getUnwantedLeads";
 import userSessionReducer from "../reducer/registeruser/Logout";
 import userReducer from "../reducer/registeruser/UserDetails"
 import suprressionFileUploadReducer from '../reducer/rpf/uploadSuppression'
-import suppressionsReducer from "../reducer/rpf/getsepparation"
+import suppressionsReducer from "../reducer/rpf/getsepparation";
+import fileUploadSliceRatL from "../reducer/rpf/uploadratl";
 
 const store = configureStore({
     reducer: {
@@ -73,6 +74,7 @@ const store = configureStore({
         userSession: userSessionReducer,
         suprressionFileUpload: suprressionFileUploadReducer,
         suppressions: suppressionsReducer,
+        fileUploadtl: fileUploadSliceRatL,
     },
 });
 

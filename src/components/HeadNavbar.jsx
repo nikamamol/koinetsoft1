@@ -448,6 +448,7 @@ function ResponsiveDrawer(props) {
                 {[
                   { text: "PreQA", path: "/rfp/received" },
                   { text: "PreQA All", path: "/rfp/receivedall" },
+                  { text: "PreQA TL", path: "/rfp/preqatl" },
                   { text: "PreQA Master", path: "/rfp/receivedmaster" },
                 ].map((item) => (
                   <ListItem key={item.text} disablePadding sx={{ display: "block" }} onClick={() => handleNavigation(item.path)}>

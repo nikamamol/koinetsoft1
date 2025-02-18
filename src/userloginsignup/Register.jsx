@@ -116,17 +116,19 @@ const Register = () => {
                                         required
                                     >
                                         <option value="admin">Admin</option>
-                                        <option value="user">User</option>
-                                        <option value="supervisor">Supervisor</option>
-                                        <option value="oxmanager">OX Manager</option>
-                                        <option value="developer">Web Developer</option>
-                                        <option value="hr">HR Executive </option>
-                                        <option value="reasercher">Reaserch Analyst</option>
-                                        <option value="agent">Agent</option>
-                                        <option value="client">Client</option>
-                                        <option value="quality">Quality</option>
-                                        <option value="email_marketing">Email Marketing</option>
-                                        <option value="delivery">Delivery</option>
+<option value="user">User</option>
+<option value="teamleader">Team Lead</option>
+<option value="supervisor">Supervisor</option>
+<option value="oxmanager">OX Manager</option>
+<option value="developer">Web Developer</option>
+<option value="hr">HR Executive</option>
+<option value="reasercher">Research Analyst</option>
+<option value="agent">Agent</option>
+<option value="client">Client</option>
+<option value="quality">Quality</option>
+<option value="email_marketing">Email Marketing</option>
+<option value="delivery">Delivery</option>
+
                                     </Form.Control>
                                 </Form.Group>
                                 <div className="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
