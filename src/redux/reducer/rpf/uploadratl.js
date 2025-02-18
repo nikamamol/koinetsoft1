@@ -14,7 +14,7 @@ export const uploadRatLFile = createAsyncThunk(
                 },
             };
 
-            const response = await axios.post(`${baseUrl}user/uploadratL`, formData, config);
+            const response = await axios.post(`${baseUrl}user/uploadratl`, formData, config);
             return response.data;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data || "Upload failed");
