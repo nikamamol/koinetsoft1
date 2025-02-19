@@ -5,6 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Col, Container, Row } from 'react-bootstrap';
 import axios from 'axios';
+import baseUrl from '../constant/ConstantApi';
 
 const localizer = momentLocalizer(moment);
 
@@ -57,7 +58,7 @@ const Calendar = () => {
       };
   
       try {
-        const response = await axios.post('http://localhost:4000/user/createCalendarEvent', newEvent);
+        const response = await axios.post(`${baseUrl}user/createCalendarEvent`, newEvent);
         const savedEvent = response.data;
   
         // Assuming your backend returns the saved event with an ID
@@ -96,7 +97,7 @@ const Calendar = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/user/eventsGet');
+        const response = await axios.get(`${baseUrl}user/eventsGet`);
         const eventsFromAPI = response.data.map((event) => ({
           ...event,
           start: new Date(event.start),
@@ -141,7 +142,7 @@ const Calendar = () => {
   
     try {
       const response = await axios.put(
-        `http://localhost:4000/user/eventUpdate/${selectedEvent.id}`,
+        `${baseUrl}user/eventUpdate/${selectedEvent.id}`,
         updatedEvent
       );
   
@@ -173,7 +174,7 @@ const Calendar = () => {
   
   const handleDeleteEvent = async () => {
     try {
-      await axios.delete(`http://localhost:4000/user/eventDelete/${selectedEvent.id}`);
+      await axios.delete(`${baseUrl}user/eventDelete/${selectedEvent.id}`);
       setEvents(events.filter((e) => e.id !== selectedEvent.id));
       setIsPopupOpen(false);
       setSelectedEvent(null);
