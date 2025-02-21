@@ -7,6 +7,8 @@ import Hourglass from "../assets/Hourglass.gif";
 import GiftImage from "../assets/robot.gif";
 import { toast } from 'react-toastify';
 import BetaImg from "../assets/beta.png";
+import { TextField, InputAdornment, IconButton } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 function Login() {
     const dispatch = useDispatch();
@@ -15,6 +17,8 @@ function Login() {
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const [showPassword, setShowPassword] = useState(false);
     
 
     useEffect(() => {
@@ -57,29 +61,34 @@ function Login() {
                         {error && <div className="alert alert-danger">{error}</div>}
                         
                         <form id="loginForm" onSubmit={handleSubmit}>
-                            <div className="mb-2">
-                                <label htmlFor="email" className="form-label">Email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    className="form-control"
-                                    aria-describedby="emailHelp"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <div className="mb-2">
-                                <label htmlFor="password" className="form-label">Password</label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    className="form-control"
+                        <TextField
+    label="Email"
+    type="email"
+    variant="outlined"
+    fullWidth
+    required
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+/>
+<br /><br />
+                            <TextField
+                                    label="Password"
+                                    type={showPassword ? "text" : "password"}
+                                    variant="outlined"
+                                    fullWidth
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                 />
-                            </div>
                             <div className="mb-2 form-check">
                                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                                 <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
